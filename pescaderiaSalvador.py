@@ -126,11 +126,7 @@ def extraer_informacion_facturas(pdf_path):
     return facturas
 
 def main():
-    # Solicitar nombre del archivo sin extensión
-    nombre_archivo = input("Introduce el nombre del archivo PDF (sin .pdf): ").strip()
-    pdf_path = f"{nombre_archivo}.pdf"  # Agregar extensión automáticamente
-    excel_path = f"{nombre_archivo}.xlsx"  # Nombre del Excel basado en el PDF
-
+    pdf_path = "Las Yucas.pdf"
     facturas = extraer_informacion_facturas(pdf_path)
     
     # Definir las columnas exactas para el Excel (sin incluir Total Factura)
@@ -144,8 +140,9 @@ def main():
     df = pd.DataFrame(facturas, columns=columnas)
     
     # Exportar a Excel
-    df.to_excel(excel_path, index=False)
-    print(f"Se han extraído {len(facturas)} facturas y exportado a {excel_path}")
+    output_excel = "facturas.xlsx"
+    df.to_excel(output_excel, index=False)
+    print(f"Se han extraído {len(facturas)} facturas y exportado a {output_excel}")
     
     # Mostrar por consola las facturas con % I.V.A. distinto de 10
     print("Facturas con % I.V.A. distinto de 10:")
