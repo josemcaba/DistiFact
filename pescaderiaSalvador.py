@@ -43,7 +43,7 @@ def extraer_informacion_facturas(pdf_path):
             base_str = base.group(1)
             datos_factura["Base I.V.A."] = base_str
             try:
-                base_valor = float(base_str.replace(",", "."))
+                base_valor = round(float(base_str.replace(",", ".")), 2)
             except:
                 base_valor = 0.0
         else:
@@ -56,7 +56,7 @@ def extraer_informacion_facturas(pdf_path):
             iva_str = iva.group(1)
             datos_factura["Cuota I.V.A."] = iva_str
             try:
-                iva_valor = float(iva_str.replace(",", "."))
+                iva_valor = round(float(iva_str.replace(",", ".")), 2)
             except:
                 iva_valor = 0.0
         else:
@@ -79,19 +79,19 @@ def extraer_informacion_facturas(pdf_path):
         datos_factura["% R. Equiv."] = 0
         datos_factura["Cuota R. Equiv."] = 0
         
-        # Extraer Total Factura usando primero un patrón más específico.
+        # Extraer Total Factura
         total_match = re.search(r"IVA\s*[\d,\.]+\s*Total\s*([\d,\.]+)\s*€", seccion)
         if not total_match:
             total_match = re.search(r"Total\s*([\d,\.]+)\s*€", seccion)
         if total_match:
             total_str = total_match.group(1)
             try:
-                total_valor = float(total_str.replace(",", "."))
+                total_valor = round(float(total_str.replace(",", ".")), 2)
             except:
                 total_valor = 0.0
         else:
             total_valor = 0.0
-        datos_factura["Total Factura"] = total_valor  # Este campo se usará solo para la comprobación
+        datos_factura["Total Factura"] = total_valor  # Solo para verificación
         
         # Extraer NIF/DNI y Nombre a partir de la línea después de "logo"
         lines = seccion.splitlines()
@@ -126,7 +126,7 @@ def extraer_informacion_facturas(pdf_path):
     return facturas
 
 def main():
-    pdf_path = "Las Yucas.pdf"  # Ruta del archivo PDF
+    pdf_path = "Las Yucas.pdf"
     facturas = extraer_informacion_facturas(pdf_path)
     
     # Definir las columnas exactas para el Excel (sin incluir Total Factura)
@@ -137,7 +137,6 @@ def main():
         "NIF/DNI", "Nombre"
     ]
     
-    # Crear el DataFrame (sin la columna Total Factura)
     df = pd.DataFrame(facturas, columns=columnas)
     
     # Exportar a Excel
@@ -158,20 +157,21 @@ def main():
             )
     
     # Verificar que la suma de Base I.V.A. + Cuota I.V.A. coincide con el Total Factura
-    print("\nFacturas en las que la suma de Base I.V.A. y Cuota I.V.A. NO coincide con el Total Factura:")
+    print("\nFacturas con diferencia entre Total Factura e Importe Calculado:")
     for factura in facturas:
         try:
-            base_valor = float(str(factura.get("Base I.V.A.", 0)).replace(",", "."))
-            cuota_valor = float(str(factura.get("Cuota I.V.A.", 0)).replace(",", "."))
-            total_factura = float(factura.get("Total Factura", 0))
-            # Tolerancia de 0.01 para redondeo
-            if abs((base_valor + cuota_valor) - total_factura) > 0.01:
+            base_valor = round(float(str(factura.get("Base I.V.A.", 0)).replace(",", ".")), 2)
+            cuota_valor = round(float(str(factura.get("Cuota I.V.A.", 0)).replace(",", ".")), 2)
+            total_factura = factura.get("Total Factura", 0)
+            importe_calculado = round(base_valor + cuota_valor, 2)  # Redondeo a 2 decimales
+            if abs(importe_calculado - total_factura) > 0.01:
                 print(
                     f"Num. Factura: {factura.get('Num. Factura')}, "
                     f"Fecha Fact.: {factura.get('Fecha Fact.')}, "
                     f"Base I.V.A.: {factura.get('Base I.V.A.')}, "
                     f"Cuota I.V.A.: {factura.get('Cuota I.V.A.')}, "
-                    f"Total Factura: {factura.get('Total Factura')}"
+                    f"Total Factura: {total_factura}, "
+                    f"Importe Calculado: {importe_calculado}"
                 )
         except Exception as e:
             print(f"Error al procesar la factura {factura.get('Num. Factura')}: {e}")
