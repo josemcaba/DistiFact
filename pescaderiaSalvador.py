@@ -66,9 +66,7 @@ def extraer_total_factura(seccion):
     Extrae el total de la factura de una sección de texto.
     Retorna el valor como flotante o 0 si no se encuentra.
     """
-    total_match = re.search(r"IVA\s*[\d,\.]+\s*Total\s*([\d,\.]+)\s*€", seccion)
-    if not total_match:
-        total_match = re.search(r"Total\s*([\d,\.]+)\s*€", seccion)
+    total_match = re.search(r"Total\s*([\d,\.]+)\s*€?", seccion)
     return convertir_a_float(total_match.group(1)) if total_match else 0.0
 
 def validar_nif(nif):
@@ -299,4 +297,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
