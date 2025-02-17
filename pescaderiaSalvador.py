@@ -219,9 +219,50 @@ def extraer_informacion_facturas(pdf_path):
     facturas = [procesar_seccion(seccion) for seccion in secciones if procesar_seccion(seccion)]
     return facturas
 
-def exportar_a_excel(facturas, excel_path):
+def clasificar_facturas(facturas):
     """
-    Exporta los datos de las facturas a un archivo Excel.
+    Clasifica las facturas en correctas y con errores.
+    Retorna dos listas: facturas_correctas y facturas_con_errores.
+    """
+    facturas_correctas = []
+    facturas_con_errores = []
+
+    for factura in facturas:
+        errores = []
+
+        # Verificar % I.V.A.
+        if factura.get("% I.V.A.", 0) != 10:
+            errores.append("% I.V.A. distinto de 10")
+
+        # Verificar diferencias en el total
+        base_valor = convertir_a_float(factura.get("Base I.V.A.", 0))
+        cuota_valor = convertir_a_float(factura.get("Cuota I.V.A.", 0))
+        total_factura = factura.get("Total Factura", 0)
+        importe_calculado = round(base_valor + cuota_valor, 2)
+        if abs(importe_calculado - total_factura) > 0.01:
+            errores.append("Diferencia en el total")
+
+        # Verificar fecha incorrecta
+        fecha_fact = factura.get("Fecha Fact.", 0)
+        if fecha_fact != 0 and not validar_fecha(fecha_fact):
+            errores.append("Fecha incorrecta")
+
+        # Verificar NIF inválido
+        nif = factura.get("NIF/DNI", 0)
+        if nif == "NIF Inválido":
+            errores.append("NIF inválido")
+
+        if errores:
+            factura["Errores"] = ", ".join(errores)
+            facturas_con_errores.append(factura)
+        else:
+            facturas_correctas.append(factura)
+
+    return facturas_correctas, facturas_con_errores
+
+def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
+    """
+    Exporta las facturas correctas y con errores a archivos Excel separados.
     """
     columnas = [
         "Num. Factura", "Fecha Fact.", "Fecha Oper.", "Concepto",
@@ -230,60 +271,17 @@ def exportar_a_excel(facturas, excel_path):
         "NIF/DNI", "Nombre"
     ]
 
-    df = pd.DataFrame(facturas, columns=columnas)
-    df.to_excel(excel_path, index=False)
-    print(f"Se han extraído {len(facturas)} facturas y exportado a {excel_path}")
+    # Exportar facturas correctas
+    if facturas_correctas:
+        df_correctas = pd.DataFrame(facturas_correctas, columns=columnas)
+        df_correctas.to_excel(excel_path.replace(".xlsx", "_correctas.xlsx"), index=False)
+        print(f"Se han exportado {len(facturas_correctas)} facturas correctas.")
 
-def verificar_facturas(facturas):
-    """
-    Verifica las facturas y muestra aquellas con % I.V.A. distinto de 10, diferencias en el total,
-    fechas incorrectas o NIF inválido.
-    """
-    print("Facturas con % I.V.A. distinto de 10:")
-    for factura in facturas:
-        if factura.get("% I.V.A.", 0) != 10:
-            print(
-                f"Num. Factura: {factura.get('Num. Factura')}, "
-                f"Fecha Fact.: {factura.get('Fecha Fact.')}, "
-                f"Base I.V.A.: {factura.get('Base I.V.A.')}, "
-                f"Cuota I.V.A.: {factura.get('Cuota I.V.A.')}, "
-                f"% I.V.A.: {factura.get('% I.V.A.')}"
-            )
-
-    print("\nFacturas con diferencia entre Total Factura e Importe Calculado:")
-    for factura in facturas:
-        base_valor = convertir_a_float(factura.get("Base I.V.A.", 0))
-        cuota_valor = convertir_a_float(factura.get("Cuota I.V.A.", 0))
-        total_factura = factura.get("Total Factura", 0)
-        importe_calculado = round(base_valor + cuota_valor, 2)
-
-        if abs(importe_calculado - total_factura) > 0.01:
-            print(
-                f"Num. Factura: {factura.get('Num. Factura')}, "
-                f"Fecha Fact.: {factura.get('Fecha Fact.')}, "
-                f"Base I.V.A.: {factura.get('Base I.V.A.')}, "
-                f"Cuota I.V.A.: {factura.get('Cuota I.V.A.')}, "
-                f"Total Factura: {total_factura}, "
-                f"Importe Calculado: {importe_calculado}"
-            )
-
-    print("\nFacturas con fecha incorrecta:")
-    for factura in facturas:
-        fecha_fact = factura.get("Fecha Fact.", 0)
-        if fecha_fact != 0 and not validar_fecha(fecha_fact):
-            print(
-                f"Num. Factura: {factura.get('Num. Factura')}, "
-                f"Fecha Fact.: {fecha_fact}"
-            )
-
-    print("\nFacturas con NIF inválido:")
-    for factura in facturas:
-        nif = factura.get("NIF/DNI", 0)
-        if nif == "NIF Inválido":
-            print(
-                f"Num. Factura: {factura.get('Num. Factura')}, "
-                f"NIF/DNI: {nif}"
-            )
+    # Exportar facturas con errores
+    if facturas_con_errores:
+        df_errores = pd.DataFrame(facturas_con_errores, columns=columnas + ["Errores"])
+        df_errores.to_excel(excel_path.replace(".xlsx", "_errores.xlsx"), index=False)
+        print(f"Se han exportado {len(facturas_con_errores)} facturas con errores.")
 
 def main():
     nombre_archivo = input("Introduce el nombre del archivo PDF (sin .pdf): ").strip()
@@ -292,8 +290,8 @@ def main():
 
     facturas = extraer_informacion_facturas(pdf_path)
     if facturas:
-        exportar_a_excel(facturas, excel_path)
-        verificar_facturas(facturas)
+        facturas_correctas, facturas_con_errores = clasificar_facturas(facturas)
+        exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path)
 
 if __name__ == "__main__":
     main()
