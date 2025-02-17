@@ -137,32 +137,32 @@ def validar_cif(cif):
     else:
         return digito_control == digito_calculado or digito_control in "JABCDEFGHI"[int(digito_calculado)]
 
-def extraer_nombre_y_nif(seccion):
+def extraer_nombre_cliente(seccion):
     """
-    Extrae el nombre y el NIF/DNI del cliente de una sección de texto.
-    Retorna un diccionario con "Nombre" y "NIF/DNI".
+    Extrae el nombre del cliente a partir del patrón "Pescadería Marengo".
+    Se asume que en la sección aparece una línea con el formato:
+    "Pescadería Marengo [Nombre del cliente]"
+
+    Retorna el nombre del cliente (cadena) o 0 si no se encuentra.
     """
-    lines = [line.strip() for line in seccion.splitlines() if line.strip()]
-    datos = {"Nombre": 0, "NIF/DNI": 0}
+    nombre = re.search(r"Pescadería\s*Marengo\s*(.+)", seccion)
+    return nombre.group(1).strip() if nombre else 0
 
-    if "logo" in lines:
-        idx_logo = lines.index("logo")
-        if len(lines) > idx_logo + 1:
-            linea_nombres = lines[idx_logo + 1]
-            if "Pescadería Marengo" in linea_nombres:
-                datos["Nombre"] = linea_nombres.replace("Pescadería Marengo", "").strip()
-            else:
-                datos["Nombre"] = linea_nombres
+def extraer_nif_cliente(seccion):
+    """
+    Extrae el NIF del cliente a partir del patrón "33384986-A".
+    Se asume que en la sección aparece una línea con el formato:
+    "33384986-A [NIF del cliente]"
 
-        if len(lines) > idx_logo + 3:
-            nif_line = lines[idx_logo + 3]
-            tokens = nif_line.split()
-            if len(tokens) >= 2:
-                # Eliminar caracteres no alfanuméricos y convertir a mayúsculas
-                nif_limpio = re.sub(r"[^a-zA-Z0-9]", "", tokens[1]).upper()
-                datos["NIF/DNI"] = nif_limpio if validar_nif(nif_limpio) else "NIF Inválido"
-
-    return datos
+    Retorna el NIF validado (cadena) si se encuentra y es válido, 
+    "NIF Inválido" si la validación falla o 0 si no se encuentra.
+    """
+    nif = re.search(r"33384986-A\s*(.+)", seccion)
+ 
+    if nif:
+        nif = re.sub(r"[^a-zA-Z0-9]", "", nif.group(1)).upper()
+        return nif if validar_nif(nif) else "NIF Inválido"
+    return 0
 
 def procesar_seccion(seccion):
     """
@@ -185,17 +185,15 @@ def procesar_seccion(seccion):
         "Cuota I.R.P.F.": 0,
         "% R. Equiv.": 0,
         "Cuota R. Equiv.": 0,
-        "Total Factura": extraer_total_factura(seccion),
+        "Nombre": extraer_nombre_cliente(seccion),
+        "NIF/DNI": extraer_nif_cliente(seccion),
+        "Total Factura": extraer_total_factura(seccion)
     }
 
     # Calcular % I.V.A.
     base_valor = convertir_a_float(datos_factura["Base I.V.A."])
     iva_valor = convertir_a_float(datos_factura["Cuota I.V.A."])
     datos_factura["% I.V.A."] = int(round((iva_valor / base_valor) * 100)) if base_valor else 0
-
-    # Extraer nombre y NIF/DNI
-    datos_cliente = extraer_nombre_y_nif(seccion)
-    datos_factura.update(datos_cliente)
 
     return datos_factura
 
@@ -214,8 +212,6 @@ def extraer_informacion_facturas(pdf_path):
             texto = pagina.extract_text()
             if texto:
                 texto_completo += texto + "\n"
-
-    print(texto_completo)
 
     secciones = re.split(r"(?=Fecha emisión)", texto_completo)
     facturas = [procesar_seccion(seccion) for seccion in secciones if procesar_seccion(seccion)]
