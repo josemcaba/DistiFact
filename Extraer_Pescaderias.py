@@ -29,7 +29,9 @@ def validar_fecha(fecha_str):
     Si es válida, retorna la fecha en formato dd/mm/aaaa.
     Si no, retorna False.
     """
-    # Primero se valida la estructura general con una expresión regular
+    # Primero eliminamos puntos y comas
+    fecha_str = re.sub(r"[.,]", "", fecha_str)
+    # Se valida la estructura general con una expresión regular
     if not re.match(r"^\d{1,2}/\d{1,2}/(\d{2}|\d{4})$", fecha_str):
         return False
 
@@ -49,7 +51,7 @@ def extraer_fecha(seccion):
     Extrae la fecha de emisión de una sección de texto.
     Retorna la fecha como cadena o 0 si no se encuentra.
     """
-    fecha = re.search(r"Fecha emisión\s*([\d/]+)", seccion)
+    fecha = re.search(r"Fecha emisión\s*(.*)", seccion)
     return fecha.group(1) if fecha else 0
 
 def extraer_base_iva(seccion):
@@ -168,6 +170,8 @@ def extraer_nif_cliente(seccion, nif_proveedor):
  
     if nif:
         nif = re.sub(r"[^a-zA-Z0-9]", "", nif.group(1)).upper()
+        if nif == 'X3581661W':
+            nif = 'X3586116W'
         return nif if validar_nif(nif) else "NIF Inválido"
     return 0
 
