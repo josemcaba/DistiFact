@@ -48,23 +48,23 @@ def extraer_fecha(seccion):
 def extraer_base_iva(seccion):
     """
     Extrae la base imponible del IVA de una sección de texto.
-    Retorna el valor como cadena o 0 si no se encuentra.
+    Retorna el valor como float o 0.0 si no se encuentra.
     """
     base = re.search(r"Base\s*([\d,\.]+)", seccion)
-    return base.group(1) if base else 0
+    return convertir_a_float(base.group(1)) if base else 0.0
 
 def extraer_cuota_iva(seccion):
     """
     Extrae la cuota de IVA de una sección de texto.
-    Retorna el valor como cadena o 0 si no se encuentra.
+    Retorna el valor como float o 0.0 si no se encuentra.
     """
     iva = re.search(r"IVA\s*([\d,\.]+)", seccion)
-    return iva.group(1) if iva else 0
+    return convertir_a_float(iva.group(1)) if iva else 0.0
 
 def extraer_total_factura(seccion):
     """
     Extrae el total de la factura de una sección de texto.
-    Retorna el valor como flotante o 0 si no se encuentra.
+    Retorna el valor como flotante o 0.0 si no se encuentra.
     """
     total_match = re.search(r"Total\s*([\d,\.]+)\s*€?", seccion)
     return convertir_a_float(total_match.group(1)) if total_match else 0.0
@@ -148,7 +148,7 @@ def extraer_nombre_cliente(seccion, nombre_proveedor):
     nombre = re.search(rf"{nombre_proveedor}\s*(.+)", seccion)
     return nombre.group(1).strip() if nombre else 0
 
-def extraer_nif_cliente(seccion, NIF_proveedor):
+def extraer_nif_cliente(seccion, nif_proveedor):
     """
     Extrae el NIF del cliente a partir del patrón "25041071-M".
     Se asume que en la sección aparece una línea con el formato:
@@ -157,14 +157,14 @@ def extraer_nif_cliente(seccion, NIF_proveedor):
     Retorna el NIF validado (cadena) si se encuentra y es válido, 
     "NIF Inválido" si la validación falla o 0 si no se encuentra.
     """
-    nif = re.search(rf"{NIF_proveedor}\s*(.+)", seccion)
+    nif = re.search(rf"{nif_proveedor}\s*(.+)", seccion)
  
     if nif:
         nif = re.sub(r"[^a-zA-Z0-9]", "", nif.group(1)).upper()
         return nif if validar_nif(nif) else "NIF Inválido"
     return 0
 
-def procesar_seccion(seccion, nombre_proveedor, NIF_proveedor):
+def procesar_seccion(seccion, nombre_proveedor, nif_proveedor):
     """
     Procesa una sección de texto para extraer los datos de una factura.
     Retorna un diccionario con los datos de la factura.
@@ -180,24 +180,24 @@ def procesar_seccion(seccion, nombre_proveedor, NIF_proveedor):
         "Base I.V.A.": extraer_base_iva(seccion),
         "Cuota I.V.A.": extraer_cuota_iva(seccion),
         "Base I.R.P.F.": extraer_base_iva(seccion),
-        "Base R. Equiv.": extraer_base_iva(seccion),
         "% I.R.P.F.": 0,
         "Cuota I.R.P.F.": 0,
+        "Base R. Equiv.": extraer_base_iva(seccion),
         "% R. Equiv.": 0,
         "Cuota R. Equiv.": 0,
         "Nombre": extraer_nombre_cliente(seccion, nombre_proveedor),
-        "NIF/DNI": extraer_nif_cliente(seccion, NIF_proveedor),
+        "NIF/DNI": extraer_nif_cliente(seccion, nif_proveedor),
         "Total Factura": extraer_total_factura(seccion)
     }
 
     # Calcular % I.V.A.
-    base_valor = convertir_a_float(datos_factura["Base I.V.A."])
-    iva_valor = convertir_a_float(datos_factura["Cuota I.V.A."])
+    base_valor = datos_factura["Base I.V.A."]
+    iva_valor = datos_factura["Cuota I.V.A."]
     datos_factura["% I.V.A."] = int(round((iva_valor / base_valor) * 100)) if base_valor else 0
 
     return datos_factura
 
-def extraer_informacion_facturas(pdf_path, nombre_proveedor, NIF_proveedor):
+def extraer_informacion_facturas(pdf_path, nombre_proveedor, nif_proveedor):
     """
     Extrae la información de las facturas de un archivo PDF.
     Retorna una lista de diccionarios con los datos de las facturas.
@@ -214,8 +214,8 @@ def extraer_informacion_facturas(pdf_path, nombre_proveedor, NIF_proveedor):
                 texto_completo += texto + "\n"
 
     secciones = re.split(r"(?=Fecha emisión)", texto_completo)
-    facturas = [procesar_seccion(seccion, nombre_proveedor, NIF_proveedor) for seccion in secciones \
-                                            if procesar_seccion(seccion, nombre_proveedor, NIF_proveedor)]
+    facturas = [procesar_seccion(seccion, nombre_proveedor, nif_proveedor) for seccion in secciones \
+                                            if procesar_seccion(seccion, nombre_proveedor, nif_proveedor)]
     return facturas
 
 def clasificar_facturas(facturas):
@@ -233,14 +233,6 @@ def clasificar_facturas(facturas):
         if factura.get("% I.V.A.", 0) != 10:
             errores.append("% I.V.A. distinto de 10")
 
-        # Verificar diferencias en el total
-        base_valor = convertir_a_float(factura.get("Base I.V.A.", 0))
-        cuota_valor = convertir_a_float(factura.get("Cuota I.V.A.", 0))
-        total_factura = factura.get("Total Factura", 0)
-        importe_calculado = round(base_valor + cuota_valor, 2)
-        if abs(importe_calculado - total_factura) > 0.01:
-            errores.append("Diferencia en el total")
-
         # Verificar fecha incorrecta
         fecha_fact = factura.get("Fecha Fact.", 0)
         if fecha_fact != 0 and not validar_fecha(fecha_fact):
@@ -250,6 +242,15 @@ def clasificar_facturas(facturas):
         nif = factura.get("NIF/DNI", 0)
         if nif == "NIF Inválido":
             errores.append("NIF inválido")
+
+
+        # Verificar diferencias en el total
+        base_valor = factura.get("Base I.V.A.", 0)
+        cuota_valor = factura.get("Cuota I.V.A.", 0)
+        total_factura = factura.get("Total Factura", 0)
+        importe_calculado = round(base_valor + cuota_valor, 2)
+        if abs(importe_calculado - total_factura) > 0.01:
+            errores.append(f"Diferencia en total factura ({importe_calculado} != {total_factura})")
 
         if errores:
             factura["Errores"] = ", ".join(errores)
@@ -269,27 +270,67 @@ def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
         "Base R. Equiv.", "% R. Equiv.", "Cuota R. Equiv.",
         "NIF/DNI", "Nombre"
     ]
-
+    
     # Exportar facturas correctas
     if facturas_correctas:
         df_correctas = pd.DataFrame(facturas_correctas, columns=columnas)
+        df_correctas = df_correctas.sort_values(by=columnas[0])
         df_correctas.to_excel(excel_path.replace(".xlsx", "_correctas.xlsx"), index=False)
         print(f"Se han exportado {len(facturas_correctas)} facturas correctas.")
+    else:
+        print("No hay facturas correctas para exportar.")
 
     # Exportar facturas con errores
     if facturas_con_errores:
         df_errores = pd.DataFrame(facturas_con_errores, columns=columnas + ["Errores"])
+        df_errores = df_errores.sort_values(by=columnas[0])
         df_errores.to_excel(excel_path.replace(".xlsx", "_errores.xlsx"), index=False)
         print(f"Se han exportado {len(facturas_con_errores)} facturas con errores.")
+    else:
+        print("No hay facturas con errores para exportar.")
+
+def mostrar_menu():
+    print("Menú de opciones:")
+    print("1. Pescadería Marengo")
+    print("2. Pescadería Salvador")
+    print("3. Salir")
+
+    while True:
+        try:
+            opcion = int(input("Elige una opción (1-3): "))
+
+            if opcion == 1:
+                nombre = "Pescadería Marengo"
+                nif = "33384986-A"
+                print(f"Has elegido {nombre} ({nif})")
+                break
+            elif opcion == 2:
+                nombre = "Pescadería Salvador"
+                nif = "25041071-M"
+                print(f"Has elegido {nombre} ({nif})")
+                break
+            elif opcion == 3:
+                print("Saliendo del menú...")
+                return None, None  # Salir sin asignar valores
+            else:
+                print("Opción no válida. Por favor, elige una opción entre 1 y 3.")
+        except ValueError:
+            print("Entrada no válida. Introduce un número entre 1 y 3.")
+
+    # Devolver las variables asignadas
+    return nombre, nif
 
 def main():
+    nombre_proveedor, nif_proveedor = mostrar_menu()
     nombre_archivo = input("Nombre del archivo PDF (sin .pdf): ").strip()
-    nombre_proveedor = input("Nombre del proveedor igual que en factura: ").strip()
-    NIF_proveedor = input("NIF del proveedor igual que en factura: ").strip()
-    pdf_path = f"FACTURAS/{nombre_archivo}.pdf"
-    excel_path = f"{nombre_archivo}.xlsx"
+    if nombre_proveedor is None:
+        print("Hasta luego.")
+        return
 
-    facturas = extraer_informacion_facturas(pdf_path, nombre_proveedor, NIF_proveedor)
+    pdf_path = f"{nombre_proveedor}/{nombre_archivo}.pdf"
+    excel_path = f"{nombre_proveedor}/{nombre_archivo}.xlsx"
+
+    facturas = extraer_informacion_facturas(pdf_path, nombre_proveedor, nif_proveedor)
     if facturas:
         facturas_correctas, facturas_con_errores = clasificar_facturas(facturas)
         exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path)
