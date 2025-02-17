@@ -24,18 +24,25 @@ def extraer_numero_factura(seccion):
 
 def validar_fecha(fecha_str):
     """
-    Valida que una fecha tenga el formato dd/mm/aaaa y sea una fecha válida.
-    Retorna True si es válida, False en caso contrario.
+    Valida que una fecha esté en alguno de los formatos:
+    dd/mm/aa, dd/mm/aaaa, mm/dd/aa o mm/dd/aaaa.
+    Si es válida, retorna la fecha en formato dd/mm/aaaa.
+    Si no, retorna False.
     """
-    if not re.match("^\d{1,2}/\d{1,2}/(\d{2}|\d{4})$", fecha_str):
+    # Primero se valida la estructura general con una expresión regular
+    if not re.match(r"^\d{1,2}/\d{1,2}/(\d{2}|\d{4})$", fecha_str):
         return False
 
-    try:
-        # Intentar convertir la cadena a un objeto datetime
-        datetime.strptime(fecha_str, "%d/%m/%Y")
-        return True
-    except ValueError:
-        return False
+    # Se definen los formatos posibles
+    formatos = ["%d/%m/%Y", "%d/%m/%y", "%m/%d/%Y", "%m/%d/%y"]
+    for fmt in formatos:
+        try:
+            dt = datetime.strptime(fecha_str, fmt)
+            return dt.strftime("%d/%m/%Y")
+        except ValueError:
+            continue
+
+    return False
 
 def extraer_fecha(seccion):
     """
@@ -233,16 +240,26 @@ def clasificar_facturas(facturas):
         if factura.get("% I.V.A.", 0) != 10:
             errores.append("% I.V.A. distinto de 10")
 
-        # Verificar fecha incorrecta
+        # # Verificar fecha incorrecta
+        # fecha_fact = factura.get("Fecha Fact.", 0)
+        # if fecha_fact != 0 and not validar_fecha(fecha_fact):
+        #     errores.append("Fecha incorrecta")
+
+        # Verificar fecha incorrecta y formatear si es correcta
         fecha_fact = factura.get("Fecha Fact.", 0)
-        if fecha_fact != 0 and not validar_fecha(fecha_fact):
-            errores.append("Fecha incorrecta")
+        if fecha_fact != 0:
+            fecha_valida = validar_fecha(fecha_fact)
+            if fecha_valida:
+                # Reemplazar el valor de la fecha por el formato dd/mm/aaaa
+                factura["Fecha Fact."] = fecha_valida
+                factura["Fecha Oper."] = fecha_valida
+            else:
+                errores.append("Fecha incorrecta")
 
         # Verificar NIF inválido
         nif = factura.get("NIF/DNI", 0)
         if nif == "NIF Inválido":
             errores.append("NIF inválido")
-
 
         # Verificar diferencias en el total
         base_valor = factura.get("Base I.V.A.", 0)
