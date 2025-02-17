@@ -137,34 +137,34 @@ def validar_cif(cif):
     else:
         return digito_control == digito_calculado or digito_control in "JABCDEFGHI"[int(digito_calculado)]
 
-def extraer_nombre_cliente(seccion):
+def extraer_nombre_cliente(seccion, nombre_proveedor):
     """
-    Extrae el nombre del cliente a partir del patrón "Pescadería Marengo".
+    Extrae el nombre del cliente a partir del patrón "Pescadería Salvador".
     Se asume que en la sección aparece una línea con el formato:
-    "Pescadería Marengo [Nombre del cliente]"
+    "Pescadería Salvador [Nombre del cliente]"
 
     Retorna el nombre del cliente (cadena) o 0 si no se encuentra.
     """
-    nombre = re.search(r"Pescadería\s*Marengo\s*(.+)", seccion)
+    nombre = re.search(rf"{nombre_proveedor}\s*(.+)", seccion)
     return nombre.group(1).strip() if nombre else 0
 
-def extraer_nif_cliente(seccion):
+def extraer_nif_cliente(seccion, NIF_proveedor):
     """
-    Extrae el NIF del cliente a partir del patrón "33384986-A".
+    Extrae el NIF del cliente a partir del patrón "25041071-M".
     Se asume que en la sección aparece una línea con el formato:
-    "33384986-A [NIF del cliente]"
+    "25041071-M [NIF del cliente]"
 
     Retorna el NIF validado (cadena) si se encuentra y es válido, 
     "NIF Inválido" si la validación falla o 0 si no se encuentra.
     """
-    nif = re.search(r"33384986-A\s*(.+)", seccion)
+    nif = re.search(rf"{NIF_proveedor}\s*(.+)", seccion)
  
     if nif:
         nif = re.sub(r"[^a-zA-Z0-9]", "", nif.group(1)).upper()
         return nif if validar_nif(nif) else "NIF Inválido"
     return 0
 
-def procesar_seccion(seccion):
+def procesar_seccion(seccion, nombre_proveedor, NIF_proveedor):
     """
     Procesa una sección de texto para extraer los datos de una factura.
     Retorna un diccionario con los datos de la factura.
@@ -185,8 +185,8 @@ def procesar_seccion(seccion):
         "Cuota I.R.P.F.": 0,
         "% R. Equiv.": 0,
         "Cuota R. Equiv.": 0,
-        "Nombre": extraer_nombre_cliente(seccion),
-        "NIF/DNI": extraer_nif_cliente(seccion),
+        "Nombre": extraer_nombre_cliente(seccion, nombre_proveedor),
+        "NIF/DNI": extraer_nif_cliente(seccion, NIF_proveedor),
         "Total Factura": extraer_total_factura(seccion)
     }
 
@@ -197,7 +197,7 @@ def procesar_seccion(seccion):
 
     return datos_factura
 
-def extraer_informacion_facturas(pdf_path):
+def extraer_informacion_facturas(pdf_path, nombre_proveedor, NIF_proveedor):
     """
     Extrae la información de las facturas de un archivo PDF.
     Retorna una lista de diccionarios con los datos de las facturas.
@@ -214,7 +214,8 @@ def extraer_informacion_facturas(pdf_path):
                 texto_completo += texto + "\n"
 
     secciones = re.split(r"(?=Fecha emisión)", texto_completo)
-    facturas = [procesar_seccion(seccion) for seccion in secciones if procesar_seccion(seccion)]
+    facturas = [procesar_seccion(seccion, nombre_proveedor, NIF_proveedor) for seccion in secciones \
+                                            if procesar_seccion(seccion, nombre_proveedor, NIF_proveedor)]
     return facturas
 
 def clasificar_facturas(facturas):
@@ -282,11 +283,13 @@ def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
         print(f"Se han exportado {len(facturas_con_errores)} facturas con errores.")
 
 def main():
-    nombre_archivo = input("Introduce el nombre del archivo PDF (sin .pdf): ").strip()
+    nombre_archivo = input("Nombre del archivo PDF (sin .pdf): ").strip()
+    nombre_proveedor = input("Nombre del proveedor igual que en factura: ").strip()
+    NIF_proveedor = input("NIF del proveedor igual que en factura: ").strip()
     pdf_path = f"FACTURAS/{nombre_archivo}.pdf"
     excel_path = f"{nombre_archivo}.xlsx"
 
-    facturas = extraer_informacion_facturas(pdf_path)
+    facturas = extraer_informacion_facturas(pdf_path, nombre_proveedor, NIF_proveedor)
     if facturas:
         facturas_correctas, facturas_con_errores = clasificar_facturas(facturas)
         exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path)
