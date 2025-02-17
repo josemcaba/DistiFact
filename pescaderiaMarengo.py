@@ -149,8 +149,8 @@ def extraer_nombre_y_nif(seccion):
         idx_logo = lines.index("logo")
         if len(lines) > idx_logo + 1:
             linea_nombres = lines[idx_logo + 1]
-            if "Pescadería Salvador" in linea_nombres:
-                datos["Nombre"] = linea_nombres.replace("Pescadería Salvador", "").strip()
+            if "Pescadería Marengo" in linea_nombres:
+                datos["Nombre"] = linea_nombres.replace("Pescadería Marengo", "").strip()
             else:
                 datos["Nombre"] = linea_nombres
 
@@ -214,6 +214,8 @@ def extraer_informacion_facturas(pdf_path):
             texto = pagina.extract_text()
             if texto:
                 texto_completo += texto + "\n"
+
+    print(texto_completo)
 
     secciones = re.split(r"(?=Fecha emisión)", texto_completo)
     facturas = [procesar_seccion(seccion) for seccion in secciones if procesar_seccion(seccion)]
@@ -285,7 +287,7 @@ def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
 
 def main():
     nombre_archivo = input("Introduce el nombre del archivo PDF (sin .pdf): ").strip()
-    pdf_path = f"{nombre_archivo}.pdf"
+    pdf_path = f"FACTURAS/{nombre_archivo}.pdf"
     excel_path = f"{nombre_archivo}.xlsx"
 
     facturas = extraer_informacion_facturas(pdf_path)
