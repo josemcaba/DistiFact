@@ -27,7 +27,7 @@ def validar_fecha(fecha_str):
     Valida que una fecha tenga el formato dd/mm/aaaa y sea una fecha válida.
     Retorna True si es válida, False en caso contrario.
     """
-    if not re.match(r"^\d{2}/\d{2}/\d{4}$", fecha_str):
+    if not re.match("^\d{1,2}/\d{1,2}/(\d{2}|\d{4})$", fecha_str):
         return False
 
     try:
@@ -97,7 +97,7 @@ def validar_dni(dni):
     """
     letras = "TRWAGMYFPDXBNJZSQVHLCKE"
     numero = int(dni[:-1])
-    letra_calculada = letras[num % 23]
+    letra_calculada = letras[numero % 23]
     return dni[-1].upper() == letra_calculada
 
 def validar_nie(nie):
