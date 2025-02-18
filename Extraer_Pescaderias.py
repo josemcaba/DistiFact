@@ -240,14 +240,10 @@ def clasificar_facturas(facturas):
     for factura in facturas:
         errores = []
 
-        # Verificar % I.V.A.
-        if factura.get("% I.V.A.", 0) != 10:
-            errores.append("% I.V.A. distinto de 10")
-
-        # # Verificar fecha incorrecta
-        # fecha_fact = factura.get("Fecha Fact.", 0)
-        # if fecha_fact != 0 and not validar_fecha(fecha_fact):
-        #     errores.append("Fecha incorrecta")
+        # Verificar Núm. Factura
+        numfact = factura.get("Num. Factura", 0)
+        if numfact == 0:
+            errores.append("Num. Factura no encontrado")
 
         # Verificar fecha incorrecta y formatear si es correcta
         fecha_fact = factura.get("Fecha Fact.", 0)
@@ -260,10 +256,20 @@ def clasificar_facturas(facturas):
             else:
                 errores.append("Fecha incorrecta")
 
-        # Verificar NIF inválido
+        # Verificar % I.V.A.
+        if factura.get("% I.V.A.", 0) != 10:
+            errores.append("% I.V.A. distinto de 10")
+      
+        # Verificar NIF
         nif = factura.get("NIF/DNI", 0)
-        if nif == "NIF Inválido":
+        if nif == 0:
+            errores.append("NIF no encontrado")
+        elif nif == "NIF Inválido":
             errores.append("NIF inválido")
+
+        # Verificar Nombre del cliente
+        if factura.get("Nombre", 0) == 0:
+            errores.append("Nombre del cliente no encontrado")
 
         # Verificar diferencias en el total
         base_valor = factura.get("Base I.V.A.", 0)
@@ -345,7 +351,7 @@ def main():
     nombre_proveedor, nif_proveedor = mostrar_menu()
     nombre_archivo = input("Nombre del archivo PDF (sin .pdf): ").strip()
     if nombre_proveedor is None:
-        print("Hasta luego.")
+        print("Hasta luego!")
         return
 
     pdf_path = f"{nombre_proveedor}/{nombre_archivo}.pdf"
