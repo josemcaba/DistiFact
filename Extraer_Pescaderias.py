@@ -270,6 +270,8 @@ def clasificar_facturas(facturas):
         # Verificar Nombre del cliente
         if factura.get("Nombre", 0) == 0:
             errores.append("Nombre del cliente no encontrado")
+        elif len(factura.get("Nombre", 0)) > 40:
+            errores.append("Nombre del cliente demasiado largo. Máximo 40 caracteres.")
 
         # Verificar diferencias en el total
         base_valor = factura.get("Base I.V.A.", 0)
