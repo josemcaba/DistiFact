@@ -59,14 +59,13 @@ def validar_dni(dni):
     letras = "TRWAGMYFPDXBNJZSQVHLCKE"
     numero = int(dni[:-1])
     letra_calculada = letras[numero % 23]
-    return dni[-1].upper() == letra_calculada
+    return dni[-1] == letra_calculada
 
 def validar_nie(nie):
     """
     Valida un NIE español.
     """
     # Convertir la primera letra a un número
-    nie = nie.upper()
     if nie[0] == "X":
         nie = "0" + nie[1:]
     elif nie[0] == "Y":
@@ -80,7 +79,6 @@ def validar_cif(cif):
     """
     Valida un CIF español.
     """
-    cif = cif.upper()
     letra = cif[0]
     numero = cif[1:-1]
     digito_control = cif[-1]

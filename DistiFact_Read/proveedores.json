@@ -1,14 +1,4 @@
 {
-    "1": {
-        "nombre": "Pescadería Marengo",
-        "nif": "33384986-A"
-    },
-    "7": {
-        "nombre": "Pescadería Salvador",
-        "nif": "25041071-M"
-    },
-    "4": {
-        "nombre": "Jose Manuel",
-        "nif": "123456789"
-    }
+    "1": {"nombre": "Pescadería Marengo", "nif": "33384986-A"},
+    "2": {"nombre": "Pescadería Salvador", "nif": "25041071-M"}
 }
