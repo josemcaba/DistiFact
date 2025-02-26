@@ -161,7 +161,7 @@ def clasificar_facturas(facturas):
 
         # Verificar % I.V.A.
         if factura.get("% I.V.A.", 0) != 10:
-            errores.append("% I.V.A. distinto de 10")
+            errores.append("% I.V.A. es distinto de 10")
       
         # Verificar NIF
         nif = factura.get("NIF/DNI", 0)
