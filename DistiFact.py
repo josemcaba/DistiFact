@@ -3,7 +3,7 @@ import re
 import pandas as pd
 import os
 import funciones_comunes as ft
-from mostrar_menu import mostrar_menu
+from mostrar_menu import seleccionar_proveedor, seleccionar_tipo_PDF
 
 def extraer_numero_factura(seccion):
     """
@@ -48,7 +48,6 @@ def extraer_total_factura(seccion):
     total_match = re.search(r"Total\s*([\d,\.]+)\s*€?", seccion)
     return ft.convertir_a_float(total_match.group(1)) if total_match else 0.0
 
-
 def extraer_nombre_cliente(seccion, nombre_proveedor):
     """
     Extrae el nombre del cliente a partir del patrón "Pescadería Salvador".
@@ -92,6 +91,7 @@ def procesar_seccion(seccion, nombre_proveedor, nif_proveedor):
         "Fecha Oper.": extraer_fecha(seccion),
         "Concepto": 700,
         "Base I.V.A.": extraer_base_iva(seccion),
+        "% I.V.A.": 0,
         "Cuota I.V.A.": extraer_cuota_iva(seccion),
         "Base I.R.P.F.": extraer_base_iva(seccion),
         "% I.R.P.F.": 0,
@@ -99,8 +99,8 @@ def procesar_seccion(seccion, nombre_proveedor, nif_proveedor):
         "Base R. Equiv.": extraer_base_iva(seccion),
         "% R. Equiv.": 0,
         "Cuota R. Equiv.": 0,
-        "Nombre": extraer_nombre_cliente(seccion, nombre_proveedor),
         "NIF/DNI": extraer_nif_cliente(seccion, nif_proveedor),
+        "Nombre": extraer_nombre_cliente(seccion, nombre_proveedor),
         "Total Factura": extraer_total_factura(seccion)
     }
 
@@ -151,7 +151,7 @@ def clasificar_facturas(facturas):
         # Verificar fecha incorrecta y formatear si es correcta
         fecha_fact = factura.get("Fecha Fact.", 0)
         if fecha_fact != 0:
-            fecha_valida = ft.validar_fecha(fecha_fact)
+            fecha_valida = ft.validar_fecha(fecha_fact, is_eeuu=True)
             if fecha_valida:
                 # Reemplazar el valor de la fecha por el formato dd/mm/aaaa
                 factura["Fecha Fact."] = fecha_valida
@@ -198,7 +198,8 @@ def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
     """
     columnas = [
         "Num. Factura", "Fecha Fact.", "Fecha Oper.", "Concepto",
-        "Base I.V.A.", "% I.V.A.", "Cuota I.V.A.", "Base I.R.P.F.", "% I.R.P.F.", "Cuota I.R.P.F.",
+        "Base I.V.A.", "% I.V.A.", "Cuota I.V.A.", 
+        "Base I.R.P.F.", "% I.R.P.F.", "Cuota I.R.P.F.",
         "Base R. Equiv.", "% R. Equiv.", "Cuota R. Equiv.",
         "NIF/DNI", "Nombre"
     ]
@@ -222,10 +223,18 @@ def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
         print("No hay facturas con errores para exportar.")
 
 def main():
-    nombre_proveedor, nif_proveedor = mostrar_menu()
+    is_PDF_texto = seleccionar_tipo_PDF()
+    if is_PDF_texto is None:
+        return
+    json_file='proveedores_PDFtext.json' if is_PDF_texto else 'proveedores_PDFimagen.json'
+    
+    nombre_proveedor, nif_proveedor = seleccionar_proveedor(json_file)
     if nombre_proveedor is None:
         return
-    nombre_archivo = input("Nombre del archivo PDF (sin .pdf): ").strip()
+    nombre_archivo = input("Nombre del archivo PDF sin '.pdf' (merged): ").strip()
+    if not nombre_archivo:
+        nombre_archivo = "merged"
+    print()
 
     pdf_path = f"{nombre_proveedor}/{nombre_archivo}.pdf"
     excel_path = f"{nombre_proveedor}/{nombre_archivo}.xlsx"
@@ -234,6 +243,7 @@ def main():
     if facturas:
         facturas_correctas, facturas_con_errores = clasificar_facturas(facturas)
         exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path)
+    print()
 
 if __name__ == "__main__":
     main()

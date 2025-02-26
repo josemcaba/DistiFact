@@ -11,10 +11,14 @@ def convertir_a_float(valor_str):
     except (ValueError, AttributeError):
         return 0.0
 
-def validar_fecha(fecha_str):
+def validar_fecha(fecha_str, is_eeuu=False):
     """
     Valida que una fecha esté en alguno de los formatos:
-    dd/mm/aa, dd/mm/aaaa, mm/dd/aa o mm/dd/aaaa.
+    desde dd/mm/aaaa hasta d/m/aa.
+    
+    Si no is_euro tambien valida los formatos:
+    desde mm/dd/aaaa hasta m/d/aa.
+    
     Si es válida, retorna la fecha en formato dd/mm/aaaa.
     Si no, retorna False.
     """
@@ -23,7 +27,10 @@ def validar_fecha(fecha_str):
         return False
 
     # Se definen los formatos posibles
-    formatos = ["%d/%m/%Y", "%d/%m/%y", "%m/%d/%Y", "%m/%d/%y"]
+    formatos = ["%d/%m/%Y", "%d/%m/%y"]
+    if is_eeuu:
+        formatos.extend(["%m/%d/%Y", "%m/%d/%y"])
+
     for fmt in formatos:
         try:
             dt = datetime.strptime(fecha_str, fmt)

@@ -1,17 +1,34 @@
 import json
 
+def seleccionar_tipo_PDF():
+    while True:
+        print('\nTipo de archivo PDF de facturas:')
+        print('1. PDF tipo texto')
+        print('2. PDF tipo imagen')
+        print('3. Salir')
+
+        try:
+            opcion = int(input(f"Elige una opción (1-3): ").strip())
+            if opcion == 1:
+                is_PDF_texto = True
+                return is_PDF_texto
+            elif opcion == 2:
+                is_PDF_texto = False
+                return is_PDF_texto
+            elif opcion == 3:
+                print("\n👋 Saliendo del menú...\n")
+                return None
+            else:
+                print("\n❌ Opción no válida. Inténtalo de nuevo.")
+        except ValueError:
+            print("\n⚠ Entrada no válida. Introduce un número válido.")
+
 def cargar_opciones_json(ruta_json):
     """Carga las opciones desde un archivo JSON y verifica que tengan los campos necesarios.
     El formato debe ser el siguiente:
         {
-            "1": {
-                "nombre": "Pescadería Marengo",
-                "nif": "33384986-A"
-            },
-            "2": {
-                "nombre": "Pescadería Salvador",
-                "nif": "25041071-M"
-            }
+            "1": {"nombre": "Pescadería Marengo", "nif": "33384986-A"},
+            "2": {"nombre": "Pescadería Salvador", "nif": "25041071-M"}
         }
     """
     try:
@@ -24,23 +41,22 @@ def cargar_opciones_json(ruta_json):
             if isinstance(value, dict) and "nombre" in value and "nif" in value:
                 opciones_validas[int(key)] = value  # Convertimos la clave a entero
             else:
-                print(f"\n⚠ Advertencia: Opción {key} en el JSON no es válida y será ignorada.")
+                print(f'\n⚠ Advertencia: Opción "{key}" en el "{ruta_json}" no es válida y será ignorada.')
         return opciones_validas
     
     except FileNotFoundError:
-        print("\n❌ Error: Archivo JSON no encontrado.\n")
+        print(f'\n❌ Error: Archivo "{ruta_json}" no encontrado.\n')
         return
     except (json.JSONDecodeError, ValueError):
-        print("\n❌ Error: El archivo JSON tiene un formato inválido.\n")
+        print(f'\n❌ Error: El archivo "{ruta_json}" tiene un formato inválido.\n')
         return
 
-def mostrar_menu():
+def seleccionar_proveedor(ruta_json):
     """
     Muestra un menú de opciones leído desde un archivo JSON y devuelve 
     el nombre y NIF de la opción seleccionada. Si el usuario elige salir, 
     retorna (None, None).
     """
-    ruta_json = "proveedores.json"  # Nombre del archivo JSON
     opciones = cargar_opciones_json(ruta_json)
 
     if not opciones:

@@ -29,4 +29,4 @@ class TestArea(unittest.TestCase):
         self.assertAlmostEqual(ft.validar_nif("Y1234567X"), True)
         self.assertAlmostEqual(ft.validar_nif("Z1234567R"), True)
         self.assertAlmostEqual(ft.validar_nif("K1234567D"), True)
-        self.assertAlmostEqual(ft.validar_nif("K1234567d"), False)
+        self.assertEqual(ft.validar_nif("K1234567d"), False)
