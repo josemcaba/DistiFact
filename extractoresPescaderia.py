@@ -1,5 +1,5 @@
 import re
-import funciones_comunes as ft
+import ft_comunes as ft
 
 def numero_factura(seccion):
     """

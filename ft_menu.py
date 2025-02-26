@@ -76,8 +76,9 @@ def seleccionar_proveedor(ruta_json):
             if opcion in opciones:
                 nombre = opciones[opcion]["nombre"]
                 nif = opciones[opcion]["nif"]
+                extractores = opciones[opcion]["extractores"]
                 print(f"\n✅ Has elegido: {nombre} ({nif})\n")
-                return nombre, nif
+                return nombre, nif, extractores
             elif opcion == salida:  # Opción de salida
                 print("\n👋 Saliendo del menú...\n")
                 return None, None

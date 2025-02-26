@@ -7,7 +7,7 @@ El siguiente comando lanzaría todos los tests del directorio
 """
 
 import unittest
-from funciones_comunes import validar_fecha
+from ft_comunes import validar_fecha
 
 class TestArea(unittest.TestCase):
     

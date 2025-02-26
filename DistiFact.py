@@ -2,11 +2,11 @@ import pdfplumber
 import re
 import pandas as pd
 import os
-import funciones_comunes as ft
-from mostrar_menu import seleccionar_proveedor, seleccionar_tipo_PDF
-import extractorPescaderia as extraer
+from importlib import import_module    # Para importar un modulo almacenado en una variable
+import ft_comunes as ft
+import ft_menu 
 
-def procesar_seccion(seccion, nombre_proveedor, nif_proveedor):
+def procesar_seccion(seccion, nombre_proveedor, nif_proveedor, extractores):
     """
     Procesa una sección de texto para extraer los datos de una factura.
     Retorna un diccionario con los datos de la factura.
@@ -14,6 +14,7 @@ def procesar_seccion(seccion, nombre_proveedor, nif_proveedor):
     if "Fecha emisión" not in seccion:
         return None
 
+    extraer = import_module(extractores[:-3])
     datos_factura = {
         "Num. Factura": extraer.numero_factura(seccion),
         "Fecha Fact.": extraer.fecha(seccion),
@@ -40,7 +41,7 @@ def procesar_seccion(seccion, nombre_proveedor, nif_proveedor):
 
     return datos_factura
 
-def extraer_informacion_facturas(pdf_path, nombre_proveedor, nif_proveedor):
+def extraer_informacion_facturas(pdf_path, nombre_proveedor, nif_proveedor, extractores):
     """
     Extrae la información de las facturas de un archivo PDF.
     Retorna una lista de diccionarios con los datos de las facturas.
@@ -57,8 +58,8 @@ def extraer_informacion_facturas(pdf_path, nombre_proveedor, nif_proveedor):
                 texto_completo += texto + "\n"
 
     secciones = re.split(r"(?=Fecha emisión)", texto_completo)
-    facturas = [procesar_seccion(seccion, nombre_proveedor, nif_proveedor) for seccion in secciones \
-                                            if procesar_seccion(seccion, nombre_proveedor, nif_proveedor)]
+    facturas = [procesar_seccion(seccion, nombre_proveedor, nif_proveedor, extractores) for seccion in secciones \
+                                            if procesar_seccion(seccion, nombre_proveedor, nif_proveedor, extractores)]
     return facturas
 
 def clasificar_facturas(facturas):
@@ -152,14 +153,15 @@ def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
         print("No hay facturas con errores para exportar.")
 
 def main():
-    is_PDF_texto = seleccionar_tipo_PDF()
+    is_PDF_texto = ft_menu.seleccionar_tipo_PDF()
     if is_PDF_texto is None:
         return
     json_file='proveedores_PDFtext.json' if is_PDF_texto else 'proveedores_PDFimagen.json'
     
-    nombre_proveedor, nif_proveedor = seleccionar_proveedor(json_file)
+    nombre_proveedor, nif_proveedor, extractores = ft_menu.seleccionar_proveedor(json_file)
     if nombre_proveedor is None:
         return
+
     nombre_archivo = input("Nombre del archivo PDF sin '.pdf' (merged): ").strip()
     if not nombre_archivo:
         nombre_archivo = "merged"
@@ -168,7 +170,7 @@ def main():
     pdf_path = f"{nombre_proveedor}/{nombre_archivo}.pdf"
     excel_path = f"{nombre_proveedor}/{nombre_archivo}.xlsx"
 
-    facturas = extraer_informacion_facturas(pdf_path, nombre_proveedor, nif_proveedor)
+    facturas = extraer_informacion_facturas(pdf_path, nombre_proveedor, nif_proveedor, extractores)
     if facturas:
         facturas_correctas, facturas_con_errores = clasificar_facturas(facturas)
         exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path)

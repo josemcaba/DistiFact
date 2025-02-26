@@ -7,7 +7,7 @@ El siguiente comando lanzaría todos los tests del directorio
 """
 
 import unittest
-import funciones_comunes as ft
+import ft_comunes as ft
 
 class TestArea(unittest.TestCase):
     def test_float(self):
