@@ -1,0 +1,19 @@
+Programado en Python, necesito un módulo que me devuelva una variable tipo diccionario con los datos extraídos de un archivo json con la siguiente
+estructura:
+{
+    "1": {"nombre": "Pescadería Marengo", "nif": "33384986-A", "extractores": "extractoresPescaderia.py", "tipoPDF": "texto"},
+    "2": {"nombre": "Pescadería Salvador", "nif": "25041071-M", "extractores": "extractoresPescaderia.py", "tipoPDF": "texto"},
+    "3": {"nombre": "SERVINFOTEC", "nif": "33360360-X", "extractores": "extractoresServinfotec.py", "tipoPDF": "imagen"}
+}
+La función debe abir el archivo json y presentar por consola un menu para que el usuario elija la empresa. En cada opción del menu debe aparecer el 
+nombre y el nif de cada empresa entre parentesis.
+En el menu debe aparecer la opción para salir del programa sin necesidad de elegir una empresa.
+
+Una vez seleccionada correctamente la empresa, devolverá en una variable tipo diccionario todos los datos de dicha empresa que aparecen en el archivo json.
+
+Una vez seleccionada la empresa, necesito que pregunte al usuario el nombre de un archivo PDF con las facturas a procesar. El archivo debe estar en un
+directorio cuyo nombre es igual que el nombre de la empresa. El usuario tendrá la opción de añadir o no la extensión ".pdf".
+El path a ese archivo y el diccionario con los datos de la empresa seran devueltos por la función en una tupla de dos elementos. 
+El path no será completo, sino relativo al directorio donde se ejecuta el programa.
+Las funciones de este módulo no deben tener muchas lineas. Cada función tendrá un breve comentario de su funcionalidad, agumentos y retornos.
+

@@ -1,6 +1,6 @@
-import ft_extraer_paginas_texto as ft_texto
+import ft_extraer_paginas as ft_texto
 import ft_comunes as ft
-import ft_menu 
+from ft_menu_inicial_claude import seleccionar_empresa
 
 def clasificar_facturas(facturas):
     """
@@ -63,18 +63,12 @@ def clasificar_facturas(facturas):
     return facturas_correctas, facturas_con_errores
 
 def main():
-    json_file = ft_menu.seleccionar_tipo_PDF()
-    if json_file is None:
-        return
-    
-    nombre_proveedor, nif_proveedor, extractores = ft_menu.seleccionar_proveedor(json_file)
-    if nombre_proveedor is None:
-        return
-
-    nombre_archivo = input("Nombre del archivo PDF sin '.pdf' (merged): ").strip()
-    if not nombre_archivo:
-        nombre_archivo = "merged"
-    print()
+    empresa = seleccionar_empresa("empresas.json")
+    if empresa:
+        print("\nDatos completos de la empresa seleccionada:")
+        for clave, valor in empresa.items():
+            print(f"- {clave}: {valor}")
+    print(empresa["nombre"])
 
     pdf_path = f"{nombre_proveedor}/{nombre_archivo}.pdf"
     excel_path = f"{nombre_proveedor}/{nombre_archivo}.xlsx"
