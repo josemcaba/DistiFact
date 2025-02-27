@@ -1,6 +1,5 @@
 import pdfplumber
 import re
-import pandas as pd
 import os
 from importlib import import_module    # Para importar un modulo almacenado en una variable
 import ft_comunes as ft
@@ -51,15 +50,21 @@ def extraer_informacion_facturas(pdf_path, nombre_proveedor, nif_proveedor, extr
         return []
 
     texto_completo = ""
+    separador = "<>>>>> FACTURA <<<<<>\n"
     with pdfplumber.open(pdf_path) as pdf:
         for pagina in pdf.pages:
             texto = pagina.extract_text()
             if texto:
-                texto_completo += texto + "\n"
+                texto_completo += separador + texto + "\n"
 
-    secciones = re.split(r"(?=Fecha emisión)", texto_completo)
-    facturas = [procesar_seccion(seccion, nombre_proveedor, nif_proveedor, extractores) for seccion in secciones \
-                                            if procesar_seccion(seccion, nombre_proveedor, nif_proveedor, extractores)]
+    paginas = re.split(separador, texto_completo)
+                                        
+    facturas = []
+    for pagina in paginas:
+        factura = procesar_seccion(pagina, nombre_proveedor, nif_proveedor, extractores)
+        if factura:
+            facturas.append(factura)
+
     return facturas
 
 def clasificar_facturas(facturas):
@@ -122,41 +127,10 @@ def clasificar_facturas(facturas):
 
     return facturas_correctas, facturas_con_errores
 
-def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
-    """
-    Exporta las facturas correctas y con errores a archivos Excel separados.
-    """
-    columnas = [
-        "Num. Factura", "Fecha Fact.", "Fecha Oper.", "Concepto",
-        "Base I.V.A.", "% I.V.A.", "Cuota I.V.A.", 
-        "Base I.R.P.F.", "% I.R.P.F.", "Cuota I.R.P.F.",
-        "Base R. Equiv.", "% R. Equiv.", "Cuota R. Equiv.",
-        "NIF/DNI", "Nombre"
-    ]
-    
-    # Exportar facturas correctas
-    if facturas_correctas:
-        df_correctas = pd.DataFrame(facturas_correctas, columns=columnas)
-        df_correctas = df_correctas.sort_values(by=columnas[0])
-        df_correctas.to_excel(excel_path.replace(".xlsx", "_correctas.xlsx"), index=False)
-        print(f"Se han exportado {len(facturas_correctas)} facturas correctas.")
-    else:
-        print("No hay facturas correctas para exportar.")
-
-    # Exportar facturas con errores
-    if facturas_con_errores:
-        df_errores = pd.DataFrame(facturas_con_errores, columns=columnas + ["Errores"])
-        df_errores = df_errores.sort_values(by=columnas[0])
-        df_errores.to_excel(excel_path.replace(".xlsx", "_errores.xlsx"), index=False)
-        print(f"Se han exportado {len(facturas_con_errores)} facturas con errores.")
-    else:
-        print("No hay facturas con errores para exportar.")
-
 def main():
-    is_PDF_texto = ft_menu.seleccionar_tipo_PDF()
-    if is_PDF_texto is None:
+    json_file = ft_menu.seleccionar_tipo_PDF()
+    if json_file is None:
         return
-    json_file='proveedores_PDFtext.json' if is_PDF_texto else 'proveedores_PDFimagen.json'
     
     nombre_proveedor, nif_proveedor, extractores = ft_menu.seleccionar_proveedor(json_file)
     if nombre_proveedor is None:
@@ -173,7 +147,7 @@ def main():
     facturas = extraer_informacion_facturas(pdf_path, nombre_proveedor, nif_proveedor, extractores)
     if facturas:
         facturas_correctas, facturas_con_errores = clasificar_facturas(facturas)
-        exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path)
+        ft.exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path)
     print()
 
 if __name__ == "__main__":

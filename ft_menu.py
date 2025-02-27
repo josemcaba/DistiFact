@@ -10,11 +10,9 @@ def seleccionar_tipo_PDF():
         try:
             opcion = int(input(f"Elige una opción (1-3): ").strip())
             if opcion == 1:
-                is_PDF_texto = True
-                return is_PDF_texto
+                return ("empresas_PDFtexto.json")
             elif opcion == 2:
-                is_PDF_texto = False
-                return is_PDF_texto
+                return ("empresas_PDFimagen.json")
             elif opcion == 3:
                 print("\n👋 Saliendo del menú...\n")
                 return None
@@ -24,12 +22,8 @@ def seleccionar_tipo_PDF():
             print("\n⚠ Entrada no válida. Introduce un número válido.")
 
 def cargar_opciones_json(ruta_json):
-    """Carga las opciones desde un archivo JSON y verifica que tengan los campos necesarios.
-    El formato debe ser el siguiente:
-        {
-            "1": {"nombre": "Pescadería Marengo", "nif": "33384986-A"},
-            "2": {"nombre": "Pescadería Salvador", "nif": "25041071-M"}
-        }
+    """
+    Carga las opciones desde un archivo JSON y verifica que tengan los campos necesarios.
     """
     try:
         with open(ruta_json, "r", encoding="utf-8") as archivo:
@@ -38,7 +32,7 @@ def cargar_opciones_json(ruta_json):
         # Validar que cada opción tenga "nombre" y "nif"
         opciones_validas = {}
         for key, value in opciones.items():
-            if isinstance(value, dict) and "nombre" in value and "nif" in value:
+            if isinstance(value, dict) and "nombre" in value and "nif" in value and "extractores" in value:
                 opciones_validas[int(key)] = value  # Convertimos la clave a entero
             else:
                 print(f'\n⚠ Advertencia: Opción "{key}" en el "{ruta_json}" no es válida y será ignorada.')

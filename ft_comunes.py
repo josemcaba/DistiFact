@@ -1,5 +1,6 @@
 import re
 from datetime import datetime
+import pandas as pd
 
 def convertir_a_float(valor_str):
     """
@@ -102,3 +103,33 @@ def validar_cif(cif):
         return digito_control in "JABCDEFGHI"[int(digito_calculado)]
     else:
         return digito_control == digito_calculado or digito_control in "JABCDEFGHI"[int(digito_calculado)]
+
+def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
+    """
+    Exporta las facturas correctas y con errores a archivos Excel separados.
+    """
+    columnas = [
+        "Num. Factura", "Fecha Fact.", "Fecha Oper.", "Concepto",
+        "Base I.V.A.", "% I.V.A.", "Cuota I.V.A.", 
+        "Base I.R.P.F.", "% I.R.P.F.", "Cuota I.R.P.F.",
+        "Base R. Equiv.", "% R. Equiv.", "Cuota R. Equiv.",
+        "NIF/DNI", "Nombre"
+    ]
+
+    # Exportar facturas correctas
+    if facturas_correctas:
+        df_correctas = pd.DataFrame(facturas_correctas, columns=columnas)
+        df_correctas = df_correctas.sort_values(by=columnas[0])
+        df_correctas.to_excel(excel_path.replace(".xlsx", "_correctas.xlsx"), index=False)
+        print(f"Se han exportado {len(facturas_correctas)} facturas correctas.")
+    else:
+        print("No hay facturas correctas para exportar.")
+
+    # Exportar facturas con errores
+    if facturas_con_errores:
+        df_errores = pd.DataFrame(facturas_con_errores, columns=columnas + ["Errores"])
+        df_errores = df_errores.sort_values(by=columnas[0])
+        df_errores.to_excel(excel_path.replace(".xlsx", "_errores.xlsx"), index=False)
+        print(f"Se han exportado {len(facturas_con_errores)} facturas con errores.")
+    else:
+        print("No hay facturas con errores para exportar.")
