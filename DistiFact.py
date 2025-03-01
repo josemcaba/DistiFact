@@ -1,6 +1,6 @@
 import ft_extraer_paginas as ft_texto
 import ft_comunes as ft
-from ft_menu_inicial_claude import seleccionar_empresa
+from ft_cargarDatosEmpresa import cargarDatosEmpresa
 
 def clasificar_facturas(facturas):
     """
@@ -63,12 +63,18 @@ def clasificar_facturas(facturas):
     return facturas_correctas, facturas_con_errores
 
 def main():
-    empresa = seleccionar_empresa("empresas.json")
+    empresa, ruta_PDF = cargarDatosEmpresa("empresas.json")
+    if not(empresa and ruta_PDF):
+        print("\n👋 Saliendo del programa...\n")
+        return
+
     if empresa:
         print("\nDatos completos de la empresa seleccionada:")
         for clave, valor in empresa.items():
             print(f"- {clave}: {valor}")
     print(empresa["nombre"])
+
+    return
 
     pdf_path = f"{nombre_proveedor}/{nombre_archivo}.pdf"
     excel_path = f"{nombre_proveedor}/{nombre_archivo}.xlsx"
