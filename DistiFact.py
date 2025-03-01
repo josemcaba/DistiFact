@@ -1,3 +1,4 @@
+from importlib import import_module    # Para importar un modulo almacenado en una variable
 import ft_extraer_paginas as ft_texto
 import ft_comunes as ft
 from ft_cargarDatosEmpresa import cargarDatosEmpresa
@@ -68,22 +69,10 @@ def main():
         print("\n👋 Saliendo del programa...\n")
         return
 
-    if empresa:
-        print("\nDatos completos de la empresa seleccionada:")
-        for clave, valor in empresa.items():
-            print(f"- {clave}: {valor}")
+    extractores = empresa["extractores"]
+    extraer = import_module(extractores[:-3])
+    facturas = extraer.facturas_del_PDF(ruta_PDF, empresa)
 
-    # pdf_path = f"{nombre_proveedor}/{nombre_archivo}.pdf"
-    # excel_path = f"{nombre_proveedor}/{nombre_archivo}.xlsx"
-
-    paginas = ft_texto.extraer_paginas_texto(ruta_PDF)
-    
-    facturas = []
-    for pagina in paginas:
-        factura = ft_texto.registros_facturas(pagina, empresa["nombre"], empresa["nif"], empresa["extractores"])
-        if factura:
-            facturas.append(factura)
-    
     if facturas:
         facturas_correctas, facturas_con_errores = clasificar_facturas(facturas)
         excel_path=ruta_PDF.replace(".pdf", ".xlsx")
