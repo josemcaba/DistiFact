@@ -6,22 +6,13 @@ import os
 def extraer_paginas_texto(pdf_path):
     """
     Extrae la información de las facturas de un archivo PDF tipo texto.
-    Retorna una lista de paginas en formato convertido a texto.
+    Retorna una lista de paginas en formato convertido a texto
     """
-    if not os.path.exists(pdf_path):
-        print(f"El archivo {pdf_path} no existe.")
-        return []
-
-    texto_completo = ""
-    separador = "<>>>>> FACTURA <<<<<>\n"
+    paginas = ()
     with pdfplumber.open(pdf_path) as pdf:
         for pagina in pdf.pages:
             texto = pagina.extract_text()
-            if texto:
-                texto_completo += separador + texto + "\n"
-
-    paginas = re.split(separador, texto_completo)
-
+            paginas.append(texto)
     return paginas
 
 def registros_facturas(seccion, nombre_proveedor, nif_proveedor, extractores):
@@ -29,9 +20,6 @@ def registros_facturas(seccion, nombre_proveedor, nif_proveedor, extractores):
     Procesa una sección de texto para extraer los datos de una factura.
     Retorna un diccionario con los datos de la factura.
     """
-    if "Fecha emisión" not in seccion:
-        return None
-
     extraer = import_module(extractores[:-3])
     datos_factura = {
         "Num. Factura": extraer.numero_factura(seccion),
