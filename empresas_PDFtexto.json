@@ -1,4 +1,0 @@
-{
-    "1": {"nombre": "Pescadería Marengo", "nif": "33384986-A", "extractores": "extractoresPescaderia.py"},
-    "2": {"nombre": "Pescadería Salvador", "nif": "25041071-M", "extractores": "extractoresPescaderia.py"}
-}

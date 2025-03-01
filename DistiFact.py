@@ -72,23 +72,21 @@ def main():
         print("\nDatos completos de la empresa seleccionada:")
         for clave, valor in empresa.items():
             print(f"- {clave}: {valor}")
-    print(empresa["nombre"])
 
-    return
+    # pdf_path = f"{nombre_proveedor}/{nombre_archivo}.pdf"
+    # excel_path = f"{nombre_proveedor}/{nombre_archivo}.xlsx"
 
-    pdf_path = f"{nombre_proveedor}/{nombre_archivo}.pdf"
-    excel_path = f"{nombre_proveedor}/{nombre_archivo}.xlsx"
-
-    paginas = ft_texto.extraer_paginas_texto(pdf_path)
+    paginas = ft_texto.extraer_paginas_texto(ruta_PDF)
     
     facturas = []
     for pagina in paginas:
-        factura = ft_texto.registros_facturas(pagina, nombre_proveedor, nif_proveedor, extractores)
+        factura = ft_texto.registros_facturas(pagina, empresa["nombre"], empresa["nif"], empresa["extractores"])
         if factura:
             facturas.append(factura)
     
     if facturas:
         facturas_correctas, facturas_con_errores = clasificar_facturas(facturas)
+        excel_path=ruta_PDF.replace(".pdf", ".xlsx")
         ft.exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path)
     print()
 
