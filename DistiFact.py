@@ -1,7 +1,8 @@
 from importlib import import_module    # Para importar un modulo almacenado en una variable
-import ft_extraer_paginas as ft_texto
 import ft_comunes as ft
 from ft_cargarDatosEmpresa import cargarDatosEmpresa
+import verificadoresPescaderia as verificar
+
 
 def clasificar_facturas(facturas):
     """
@@ -14,46 +15,65 @@ def clasificar_facturas(facturas):
     for factura in facturas:
         errores = []
 
-        # Verificar Núm. Factura
-        numfact = factura.get("Num. Factura", 0)
-        if numfact == 0:
-            errores.append("Num. Factura no encontrado")
+        error = verificar.num_factura(factura)
+        errores.append(error) if error else None
 
-        # Verificar fecha incorrecta y formatear si es correcta
-        fecha_fact = factura.get("Fecha Fact.", 0)
-        if fecha_fact != 0:
-            fecha_valida = ft.validar_fecha(fecha_fact, is_eeuu=True)
-            if fecha_valida:
-                # Reemplazar el valor de la fecha por el formato dd/mm/aaaa
-                factura["Fecha Fact."] = fecha_valida
-                factura["Fecha Oper."] = fecha_valida
+        error = verificar.fecha(factura)
+        errores.append(error) if error else None
+
+        error = verificar.iva(factura)
+        errores.append(error) if error else None
+
+        # Verificar Cuota IVA
+        cuota = 0.0
+        if factura["Cuota I.V.A."] is None:
+            errores.append("Cuota I.V.A. no encontrada")
+        else:
+            cuota = ft.convertir_a_float(factura["Cuota I.V.A."])
+            if cuota is None:
+                errores.append("Cuota I.V.A. incorrecta")
             else:
-                errores.append("Fecha incorrecta")
+                factura["Cuota I.V.A."] = cuota
+        
+        # Verificar Total Factura
+        total = 0.0
+        if factura["Total Factura"] is None:
+            errores.append("Total Factura no encontrada")
+        else:
+            total = ft.convertir_a_float(factura["Total Factura"])
+            if total is None:
+                errores.append("Total Factura incorrecta")
+            else:
+                factura["Total Factura"] = total
 
         # Verificar % I.V.A.
-        if factura.get("% I.V.A.", 0) != 10:
+        base = float(factura["Cuota I.V.A."])
+        if base and cuota:
+            factura["% I.V.A."] = round((cuota / base) * 100.0, 0)
+        if factura["% I.V.A."] != 10:
             errores.append("% I.V.A. es distinto de 10")
       
         # Verificar NIF
-        nif = factura.get("NIF/DNI", 0)
-        if nif == 0:
-            errores.append("NIF no encontrado")
-        elif nif == "NIF Inválido":
-            errores.append("NIF inválido")
+        if factura["NIF/DNI"] is None:
+            errores.append("NIF/DNI no encontrado")
+        else:
+            nif = factura["NIF/DNI"].replace("-","")
+            if ft.validar_nif(nif):
+                factura["NIF/DNI"] = nif
+            else:
+                errores.append("NIF/DNI incorrecto")
 
         # Verificar Nombre del cliente
-        if factura.get("Nombre", 0) == 0:
+        if factura["Nombre"] is None:
             errores.append("Nombre del cliente no encontrado")
-        elif len(factura.get("Nombre", 0)) > 40:
+        elif len(factura["Nombre"]) > 40:
             errores.append("Nombre del cliente demasiado largo. Máximo 40 caracteres.")
 
         # Verificar diferencias en el total
-        base_valor = factura.get("Base I.V.A.", 0)
-        cuota_valor = factura.get("Cuota I.V.A.", 0)
-        total_factura = factura.get("Total Factura", 0)
-        importe_calculado = round(base_valor + cuota_valor, 2)
-        if abs(importe_calculado - total_factura) > 0.01:
-            errores.append(f"Diferencia en total factura ({importe_calculado} != {total_factura})")
+        if base and cuota and total:
+            total_calculado = base + cuota
+            if abs(total_calculado - total) > 0.01:
+                errores.append(f"Diferencia en total factura ({total_calculado} != {total})")
 
         if errores:
             factura["Errores"] = ", ".join(errores)

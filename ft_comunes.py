@@ -1,6 +1,7 @@
 import re
 from datetime import datetime
 import pandas as pd
+import pdfplumber
 
 def convertir_a_float(valor_str):
     """
@@ -10,7 +11,7 @@ def convertir_a_float(valor_str):
     try:
         return round(float(valor_str.replace(",", ".")), 2)
     except (ValueError, AttributeError):
-        return 0.0
+        return None
 
 def validar_fecha(fecha_str, is_eeuu=False):
     """
@@ -103,6 +104,14 @@ def validar_cif(cif):
         return digito_control in "JABCDEFGHI"[int(digito_calculado)]
     else:
         return digito_control == digito_calculado or digito_control in "JABCDEFGHI"[int(digito_calculado)]
+
+def extraer_paginas_PDF_tipo_texto(pdf_path):
+    paginas = []
+    with pdfplumber.open(pdf_path) as pdf:
+        for pagina in pdf.pages:
+            texto = pagina.extract_text()
+            paginas.append(texto)
+    return paginas
 
 def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
     """
