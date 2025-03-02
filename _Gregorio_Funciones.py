@@ -2,56 +2,59 @@ import re
 import ft_comunes as ft
 import ft_verificadores as verificar
 
+def extraerFacturas(path, empresa):
+    # Extrae facturas de PDF tipo texto
+    paginas = ft.extraerPaginasPDF_tipoTexto(path, separador="Enlaza Soluciones")
+
+    facturas = []
+    for pagina in paginas:
+        factura = extraerDatosFactura(pagina, empresa)
+        if factura:
+            facturas.append(factura)
+    return facturas
+
+#########################################################################
 #
 # EXTRACCION
 #
-def registros_factura(pagina, empresa):
-    datos_factura = {
-        "Num. Factura": numero_factura(pagina),
-        "Fecha Fact.": fecha(pagina),
-        "Fecha Oper.": fecha(pagina),
-        "Concepto": 700,
-        "Base I.V.A.": base_iva(pagina),
-        "% I.V.A.": tipo_iva(pagina),
-        "Cuota I.V.A.": cuota_iva(pagina),
-        "Base I.R.P.F.": base_iva(pagina),
-        "% I.R.P.F.": 0.0,
-        "Cuota I.R.P.F.": 0.0,
-        "Base R. Equiv.": base_iva(pagina),
-        "% R. Equiv.": 0.0,
-        "Cuota R. Equiv.": 0.0,
-        "NIF/DNI": nif_cliente(pagina, empresa),
-        "Nombre": nombre_cliente(pagina, empresa),
-        "Total Factura": total_factura(pagina)
-    }
-    return datos_factura
+def extraerDatosFactura(pagina, empresa):
+    factura = {}
 
-# datos_factura["Num. Factura"] = regex_search(r"Número de Factura.*\s*Fact-(\d+)")
-
-def numero_factura(pagina):
     regex = r"Número de Factura.*\s+(?:Fact-)?(\d+)"
-    match = re.search(regex, pagina)
-    return match.group(1) if match else None
+    factura["Numero Factura"] = ft.re_search(regex, pagina)
 
-def fecha(pagina):
     regex = r"Fecha de Facturación.*\s+(\d{2}/\d{2}/\d{4})"
-    match = re.search(regex, pagina)
-    return match.group(1) if match else None
-
-def base_iva(pagina):
+    factura["Fecha Factura"] = ft.re_search(regex, pagina)
+    factura["Fecha Operacion"] = factura["Fecha Factura"]
+    
+    factura["Concepto"] = 700
+    
     regex = r"(?:Descuento\s*[-\d,]+\s*Total\s*|Subtotal\s*)([\d,]+)"
-    match = re.search(regex, pagina)
-    return match.group(1) if match else None
-
-def tipo_iva(pagina):
+    factura["Base IVA"] = ft.re_search(regex, pagina)
+    
     regex = r"IVA\s+\((\d+)%\)"
-    match = re.search(regex, pagina)
-    return match.group(1) if match else None
+    factura["Tipo IVA"] = ft.re_search(regex, pagina)
 
-def cuota_iva(pagina):
     regex = r"IVA\s+\(\d+%\)\s+([\d.,]+)"
-    match = re.search(regex, pagina)
-    return match.group(1) if match else None
+    factura["Cuota IVA"] = ft.re_search(regex, pagina)
+
+    factura["Base IRPF"] = factura["Base IVA"]
+    factura["Tipo IRPF"] = 0
+    factura["Cuota IRPF"] = 0
+    factura["Base R. Equiv."] = factura["Base IVA"]
+    factura["Tipo R. Equiv."] = 0
+    factura["Cuota R. Equiv."] = 0
+
+    factura["NIF"] = nif_cliente(pagina, empresa)
+
+    regex = rf"(.*?)\s+{empresa['nombre']}"
+    factura["Nombre Cliente"] = ft.re_search(regex, pagina)
+
+    regex = r"Envío\s+(?:[\d,]+\s+)?Total\s+([\d.,]+)"
+    factura["Total Factura"] = ft.re_search(regex, pagina)
+
+    return(factura)     
+
 
 def nif_cliente(pagina, empresa):
     regex = r"\b([a-zA-Z0-9]\d{7}[a-zA-Z0-9])\b"
@@ -61,30 +64,10 @@ def nif_cliente(pagina, empresa):
     # Devuelve el primer NIF distinto o None
     return nif_cliente[0] if nif_cliente else None
 
-def nombre_cliente(pagina, empresa):
-    regex = rf"(.*?)\s+{empresa['nombre']}"
-    match = re.search(regex, pagina)
-    return match.group(1) if match else None
-
-def total_factura(pagina):
-    regex = r"Envío\s+(?:[\d,]+\s+)?Total\s+([\d.,]+)"
-    match = re.search(regex, pagina)
-    return match.group(1) if match else None
-
+#########################################################################
 #
 # VERIFICACION
 #
-
-def extraer_facturas_del_PDF(path, empresa):
-    paginas = ft.extraer_paginas_PDF_tipo_texto(path, "Enlaza Soluciones")
-
-    facturas = []
-    for pagina in paginas:
-        factura = registros_factura(pagina, empresa)
-        if factura:
-            facturas.append(factura)
-    return facturas
-
 def clasificar_facturas(facturas):
     """
     Clasifica las facturas en correctas y con errores.
@@ -95,6 +78,7 @@ def clasificar_facturas(facturas):
 
     for factura in facturas:
         errores = []
+        observaciones = []
 
         error = verificar.num_factura(factura)
         errores.append(error) if error else None
@@ -110,8 +94,9 @@ def clasificar_facturas(facturas):
 
         error = verificar.cuota_iva(factura)
         errores.append(error) if error else None
-        if factura["Cuota I.V.A."] == 0.0: 
-            factura["% I.V.A."] = 0.0
+        if factura["Cuota IVA"] == 0.0: 
+            factura["Tipo IVA"] = 0.0
+            observaciones.append("Factura sin IVA")
         
         error = verificar.total_factura(factura)
         errores.append(error) if error else None
@@ -132,6 +117,7 @@ def clasificar_facturas(facturas):
             factura["Errores"] = ", ".join(errores)
             facturas_con_errores.append(factura)
         else:
+            factura["Observaciones"] = ", ".join(observaciones)
             facturas_correctas.append(factura)
 
     return facturas_correctas, facturas_con_errores

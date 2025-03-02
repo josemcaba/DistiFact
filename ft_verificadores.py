@@ -5,57 +5,57 @@
 import ft_comunes as ft
 
 def num_factura(factura):
-	if factura["Num. Factura"] is None:
-		return ("Num. Factura no encontrado")
+	if factura["Numero Factura"] is None:
+		return ("Numero Factura no encontrado")
 	return False # No hay errores
 
 def fecha(factura, is_eeuu=False):
-    if factura["Fecha Fact."] is None:
-        return ("Fecha no encontrada")
+    if factura["Fecha Factura"] is None:
+        return ("Fecha Factura no encontrada")
 
-    fecha = factura["Fecha Fact."].replace(",","")
+    fecha = factura["Fecha Factura"].replace(",","")
     fecha = ft.validar_fecha(fecha, is_eeuu)
     if not fecha:
-        return ("Fecha incorrecta")
+        return ("Fecha Factura incorrecta")
 
-    factura["Fecha Fact."] = fecha
-    factura["Fecha Oper."] = fecha
+    factura["Fecha Factura"] = fecha
+    factura["Fecha Operacion"] = fecha
     return False # No hay errores
 
 def base_iva(factura):
-    if factura["Base I.V.A."] is None:
-        return ("Base I.V.A. no encontrada")
+    if factura["Base IVA"] is None:
+        return ("Base IVA no encontrada")
 
-    base = ft.convertir_a_float(factura["Base I.V.A."])
+    base = ft.convertir_a_float(factura["Base IVA"])
     if base is None:
-        return ("Base I.V.A. incorrecta")
+        return ("Base IVA incorrecta")
     
-    factura["Base I.V.A."] = base
-    factura["Base I.R.P.F."] = base
+    factura["Base IVA"] = base
+    factura["Base IRPF"] = base
     factura["Base R. Equiv."] = base
     return False # No hay errores
 
 def tipo_iva(factura):
-    if factura["% I.V.A."] is None:
-        return ("% I.V.A. no encontrada")
+    if factura["Tipo IVA"] is None:
+        return ("Tipo IVA no encontrada")
 
-    tipo = ft.convertir_a_float(factura["% I.V.A."])
+    tipo = ft.convertir_a_float(factura["Tipo IVA"])
     if tipo is None:
-        return ("% I.V.A. incorrecta")
+        return ("Tipo IVA incorrecta")
     
-    factura["% I.V.A."] = tipo
+    factura["Tipo IVA"] = tipo
     return False # No hay errores
 
 def cuota_iva(factura):
-    if factura["Cuota I.V.A."] is None:
-        return ("Cuota I.V.A. no encontrada")
+    if factura["Cuota IVA"] is None:
+        return ("Cuota IVA no encontrada")
 
-    cuota = ft.convertir_a_float(factura["Cuota I.V.A."])
+    cuota = ft.convertir_a_float(factura["Cuota IVA"])
     if cuota is None:
-        factura["Cuota I.V.A."] = None
-        return ("Cuota I.V.A. incorrecta")
+        factura["Cuota IVA"] = None
+        return ("Cuota IVA incorrecta")
     
-    factura["Cuota I.V.A."] = cuota
+    factura["Cuota IVA"] = cuota
     return False # No hay errores
 
 def total_factura(factura):
@@ -70,24 +70,24 @@ def total_factura(factura):
     return False # No hay errores
 
 def nif(factura):
-    if factura["NIF/DNI"] is None:
-        return ("NIF/DNI no encontrado")
+    if factura["NIF"] is None:
+        return ("NIF no encontrado")
 
-    if not ft.validar_nif(factura["NIF/DNI"]):
-        return ("NIF/DNI incorrecto")
+    if not ft.validar_nif(factura["NIF"]):
+        return ("NIF incorrecto")
     return False # No hay errores
 
 def nombre_cliente(factura):
-    if factura["Nombre"] is None:
-        return ("Nombre del cliente no encontrado")
-    if len(factura["Nombre"]) > 40:
-        return ("Nombre del cliente demasiado largo. Máximo 40 caracteres.")
+    if factura["Nombre Cliente"] is None:
+        return ("Nombre Cliente no encontrado")
+    if len(factura["Nombre Cliente"]) > 40:
+        return ("Nombre Cliente demasiado largo. Máximo 40 caracteres.")
     return False # No hay errores
 
 def calculo_cuota_iva(factura):
-    base = factura["Base I.V.A."]
-    tipo = factura["% I.V.A."]
-    cuota = factura["Cuota I.V.A."]
+    base = factura["Base IVA"]
+    tipo = factura["Tipo IVA"]
+    cuota = factura["Cuota IVA"]
     if not (isinstance(base, float) and \
             isinstance(tipo, float) and \
             isinstance(cuota, float)):
@@ -98,14 +98,13 @@ def calculo_cuota_iva(factura):
     return False # No hay errores
 
 def calculos_totales(factura):
-    base = factura["Base I.V.A."]
-    cuota = factura["Cuota I.V.A."]
+    base = factura["Base IVA"]
+    cuota = factura["Cuota IVA"]
     total = factura["Total Factura"]
     if not (isinstance(base, float) and \
             isinstance(cuota, float) and \
             isinstance(total, float)):
         return "Total factura no verificable"
-
 
     total_calculado = round(base + cuota, 2)
     if abs(total_calculado - total) >= 0.015:

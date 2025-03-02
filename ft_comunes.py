@@ -107,7 +107,7 @@ def validar_cif(cif):
     else:
         return digito_control == digito_calculado or digito_control in "JABCDEFGHI"[int(digito_calculado)]
 
-def extraer_paginas_PDF_tipo_texto(pdf_path, separador):
+def extraerPaginasPDF_tipoTexto(pdf_path, separador):
     texto_completo = ""
     with pdfplumber.open(pdf_path) as pdf:
         for pagina in pdf.pages:
@@ -125,16 +125,16 @@ def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
     Exporta las facturas correctas y con errores a archivos Excel separados.
     """
     columnas = [
-        "Num. Factura", "Fecha Fact.", "Fecha Oper.", "Concepto",
-        "Base I.V.A.", "% I.V.A.", "Cuota I.V.A.", 
-        "Base I.R.P.F.", "% I.R.P.F.", "Cuota I.R.P.F.",
-        "Base R. Equiv.", "% R. Equiv.", "Cuota R. Equiv.",
-        "NIF/DNI", "Nombre"
+        "Numero Factura", "Fecha Factura", "Fecha Operacion", "Concepto",
+        "Base IVA", "Cuota IVA", "Cuota IVA", 
+        "Base IRPF", "Cuota IRPF", "Cuota IRPF",
+        "Base R. Equiv.", "Tipo R. Equiv.", "Cuota R. Equiv.",
+        "NIF", "Nombre Cliente"
     ]
 
     # Exportar facturas correctas
     if facturas_correctas:
-        df_correctas = pd.DataFrame(facturas_correctas, columns=columnas)
+        df_correctas = pd.DataFrame(facturas_correctas, columns=columnas + ["Observaciones"])
         df_correctas = df_correctas.sort_values(by=columnas[0])
         df_correctas.to_excel(excel_path.replace(".xlsx", "_correctas.xlsx"), index=False)
         print(f"Se han exportado {len(facturas_correctas)} facturas correctas.")
@@ -149,3 +149,7 @@ def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
         print(f"Se han exportado {len(facturas_con_errores)} facturas con errores.")
     else:
         print("No hay facturas con errores para exportar.")
+
+def re_search(regex, pagina):
+    match = re.search(regex, pagina)
+    return match.group(1) if match else None

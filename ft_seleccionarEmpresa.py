@@ -54,7 +54,7 @@ def obtener_ruta_pdf(empresa):
         return None
     
     while True:
-        nombre_pdf = input(f"Nombre del archivo PDF en directorio '{directorio}'): ")
+        nombre_pdf = input(f"Nombre del archivo PDF en directorio '{directorio}': ")
         if nombre_pdf:
             if not nombre_pdf.endswith(".pdf"):
                 nombre_pdf += ".pdf"
@@ -69,7 +69,7 @@ def obtener_ruta_pdf(empresa):
             print(f"El archivo '{ruta_pdf}' no existe. Inténtelo de nuevo.\n")
     
 
-def cargarDatosEmpresa(ruta_json):
+def seleccionarEmpresa(ruta_json):
     empresas = cargar_empresas(ruta_json)
     if not empresas:
         return None, None
@@ -85,7 +85,7 @@ def cargarDatosEmpresa(ruta_json):
     return (empresa, ruta_pdf)
 
 if __name__ == "__main__":
-    datos_empresa, ruta_pdf = cargarDatosEmpresa("empresas.json")
+    datos_empresa, ruta_pdf = seleccionarEmpresa("empresas.json")
     if datos_empresa and ruta_pdf:
         print(f"\nDatos empresa: {datos_empresa}")
         print(f"Ruta al PDF: {ruta_pdf}\n")
