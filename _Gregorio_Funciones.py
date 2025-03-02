@@ -39,7 +39,7 @@ def fecha(pagina):
     return match.group(1) if match else None
 
 def base_iva(pagina):
-    regex = r"Subtotal\s+([\d.,]+)"
+    regex = r"(?:Descuento\s*[-\d,]+\s*Total\s*|Subtotal\s*)([\d,]+)"
     match = re.search(regex, pagina)
     return match.group(1) if match else None
 
@@ -67,7 +67,7 @@ def nombre_cliente(pagina, empresa):
     return match.group(1) if match else None
 
 def total_factura(pagina):
-    regex = r"Envío\s+Total\s+([\d.,]+)"
+    regex = r"Envío\s+(?:[\d,]+\s+)?Total\s+([\d.,]+)"
     match = re.search(regex, pagina)
     return match.group(1) if match else None
 
