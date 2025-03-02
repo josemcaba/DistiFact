@@ -3,13 +3,14 @@ import ft_comunes as ft
 import ft_verificadores as verificar
 
 def registros_factura(pagina, empresa):
+    print(pagina)
     datos_factura = {
         "Num. Factura": numero_factura(pagina),
         "Fecha Fact.": fecha(pagina),
         "Fecha Oper.": fecha(pagina),
         "Concepto": 700,
         "Base I.V.A.": base_iva(pagina),
-        "% I.V.A.": 0.0,
+        "% I.V.A.": tipo_iva(pagina),
         "Cuota I.V.A.": cuota_iva(pagina),
         "Base I.R.P.F.": base_iva(pagina),
         "% I.R.P.F.": 0.0,
@@ -24,23 +25,25 @@ def registros_factura(pagina, empresa):
     return datos_factura
 
 def numero_factura(pagina):
-    num_factura = re.search(r"Nº factura\s*(\d+)", pagina)
+    num_factura = re.search(r"Número de Factura.*?Titulo\s*\n\s*Fact-(\d+)", pagina, re.DOTALL)
     return num_factura.group(1) if num_factura else None
 
 def fecha(pagina):
-    fecha = re.search(r"Fecha emisión\s*(.*)", pagina)
+    fecha = re.search(r"Fecha de Facturación\s+Fecha de Vencimiento\s*\n\s*(\d{2}/\d{2}/\d{4})", pagina, re.DOTALL)
     if not fecha:
         return None
-    fecha = re.sub(r"[,]","/", fecha.group(1))
-    fecha = re.sub(r"[-]","", fecha)
     return fecha
 
 def base_iva(pagina):
-    base = re.search(r"Base\s*([\d,\.]+)", pagina)
+    base = re.search(r"Subtotal\s+([\d,\.]+)", pagina)
     return base.group(1) if base else None
 
+def tipo_iva(pagina):
+    tipo = re.search(r"IVA\s*\((\d+)%\)", pagina)
+    return tipo.group(1) if tipo else None
+
 def cuota_iva(pagina):
-    iva = re.search(r"IVA\s*([\d,\.]+)", pagina)
+    iva = re.search(r"IVA\s*\(\d+%\)\s+([\d,\.]+)", pagina)
     return iva.group(1) if iva else None
 
 def nif_cliente(pagina, empresa):
@@ -58,14 +61,10 @@ def nombre_cliente(pagina, empresa):
     if not nombre:
         return None
     nombre = nombre.group(1)
-    if nombre[:20] == "Ramírez Sánchez S.L.":
-        nombre = "Ramírez Sánchez S.L. 'Rest Refrectorium'"
-    elif nombre[:21] == "Luis Gaspar Rodríguez":
-        nombre = "Luis Gaspar Rodríguez 'Rest. El Rengue'"
     return nombre
 
 def total_factura(pagina):
-    total_match = re.search(r"Total\s*([\d,\.]+)\s*€?", pagina)
+    total_match = re.findall(r"Total\s+([\d,\.]+)", pagina)
     return total_match.group(1) if total_match else None
 
 
@@ -101,7 +100,7 @@ def calcular_tipo_iva(factura):
     return False # No hay errores
 
 def extraer_facturas_del_PDF(path, empresa):
-    paginas = ft.extraer_paginas_PDF_tipo_texto(path, "Fecha emisión")
+    paginas = ft.extraer_paginas_PDF_tipo_texto(path, "Enlaza Soluciones")
 
     facturas = []
     for pagina in paginas:

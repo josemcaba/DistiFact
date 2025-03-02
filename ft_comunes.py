@@ -105,13 +105,18 @@ def validar_cif(cif):
     else:
         return digito_control == digito_calculado or digito_control in "JABCDEFGHI"[int(digito_calculado)]
 
-def extraer_paginas_PDF_tipo_texto(pdf_path):
-    paginas = []
+def extraer_paginas_PDF_tipo_texto(pdf_path, separador):
+    texto_completo = ""
     with pdfplumber.open(pdf_path) as pdf:
         for pagina in pdf.pages:
             texto = pagina.extract_text()
-            paginas.append(texto)
-    return paginas
+            if texto:
+                texto_completo += texto + "\n"
+    
+    paginas = re.split(rf"(?={separador})", texto_completo)
+    del paginas[0]
+
+    return (paginas)
 
 def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
     """
