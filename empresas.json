@@ -1,5 +1,5 @@
 {
-    "1": {"nombre": "Pescadería Marengo", "nif": "33384986A", "extractores": "extractoresPescaderia.py", "tipoPDF": "texto"},
-    "2": {"nombre": "Pescadería Salvador", "nif": "25041071M", "extractores": "extractoresPescaderia.py", "tipoPDF": "texto"},
-    "3": {"nombre": "SERVINFOTEC", "nif": "33360360X", "extractores": "extractoresServinfotec.py", "tipoPDF": "imagen"}
+    "1": {"nombre": "Pescadería Marengo", "nif": "33384986A", "funciones": "_Pescaderias_Funciones.py"},
+    "2": {"nombre": "Pescadería Salvador", "nif": "25041071M", "funciones": "_Pescaderias_Funciones.py"},
+    "3": {"nombre": "SERVINFOTEC", "nif": "33360360X", "funciones": "_Servinfotec_Funciones.py"}
 }
