@@ -2,8 +2,10 @@ import re
 import ft_comunes as ft
 import ft_verificadores as verificar
 
+#
+# EXTRACCION
+#
 def registros_factura(pagina, empresa):
-    print(pagina)
     datos_factura = {
         "Num. Factura": numero_factura(pagina),
         "Fecha Fact.": fecha(pagina),
@@ -24,80 +26,54 @@ def registros_factura(pagina, empresa):
     }
     return datos_factura
 
+# datos_factura["Num. Factura"] = regex_search(r"Número de Factura.*\s*Fact-(\d+)")
+
 def numero_factura(pagina):
-    num_factura = re.search(r"Número de Factura.*?Titulo\s*\n\s*Fact-(\d+)", pagina, re.DOTALL)
-    return num_factura.group(1) if num_factura else None
+    regex = r"Número de Factura.*\s+(?:Fact-)?(\d+)"
+    match = re.search(regex, pagina)
+    return match.group(1) if match else None
 
 def fecha(pagina):
-    fecha = re.search(r"Fecha de Facturación\s+Fecha de Vencimiento\s*\n\s*(\d{2}/\d{2}/\d{4})", pagina, re.DOTALL)
-    if not fecha:
-        return None
-    return fecha
+    regex = r"Fecha de Facturación.*\s+(\d{2}/\d{2}/\d{4})"
+    match = re.search(regex, pagina)
+    return match.group(1) if match else None
 
 def base_iva(pagina):
-    base = re.search(r"Subtotal\s+([\d,\.]+)", pagina)
-    return base.group(1) if base else None
+    regex = r"Subtotal\s+([\d.,]+)"
+    match = re.search(regex, pagina)
+    return match.group(1) if match else None
 
 def tipo_iva(pagina):
-    tipo = re.search(r"IVA\s*\((\d+)%\)", pagina)
-    return tipo.group(1) if tipo else None
+    regex = r"IVA\s+\((\d+)%\)"
+    match = re.search(regex, pagina)
+    return match.group(1) if match else None
 
 def cuota_iva(pagina):
-    iva = re.search(r"IVA\s*\(\d+%\)\s+([\d,\.]+)", pagina)
-    return iva.group(1) if iva else None
+    regex = r"IVA\s+\(\d+%\)\s+([\d.,]+)"
+    match = re.search(regex, pagina)
+    return match.group(1) if match else None
 
 def nif_cliente(pagina, empresa):
-    nif_empresa = empresa["nif"][:8] + "-" + empresa["nif"][-1]
-    nif = re.search(rf"{nif_empresa}\s*(.+)", pagina)
-    if not nif:
-        return None
-    nif = re.sub(r"[^a-zA-Z0-9]","", nif.group(1)).upper()
-    if nif == "X3581661W":
-        nif = "X3586116W"
-    return nif
+    regex = r"\b([a-zA-Z0-9]\d{7}[a-zA-Z0-9])\b"
+    match = re.findall(regex, pagina)
+    # Filtrar para descartar el NIF de la empresa y seleccionar el correcto
+    nif_cliente = [nif for nif in match if nif != empresa["nif"]]
+    # Devuelve el primer NIF distinto o None
+    return nif_cliente[0] if nif_cliente else None
 
 def nombre_cliente(pagina, empresa):
-    nombre = re.search(rf"{empresa['nombre']}\s*(.+)", pagina)
-    if not nombre:
-        return None
-    nombre = nombre.group(1)
-    return nombre
+    regex = rf"(.*?)\s+{empresa['nombre']}"
+    match = re.search(regex, pagina)
+    return match.group(1) if match else None
 
 def total_factura(pagina):
-    total_match = re.findall(r"Total\s+([\d,\.]+)", pagina)
-    return total_match.group(1) if total_match else None
+    regex = r"Envío\s+Total\s+([\d.,]+)"
+    match = re.search(regex, pagina)
+    return match.group(1) if match else None
 
-
-def comprobar_totales(factura):
-    base = factura["Base I.V.A."]
-    cuota = factura["Cuota I.V.A."]
-    total = factura["Total Factura"]
-    if (not (base and cuota and total)):
-        return ("Total factura no verificable")
-
-    total_calculado = round(base + cuota, 2)
-    if abs(total_calculado - total) > 0.01:
-        # return (f"Diferencia en total factura ({total_calculado} != {total})")
-        factura["Base I.V.A."] = round(total/1.1, 2)
-        factura["Cuota I.V.A."] = round(total-factura["Base I.V.A."], 2)
-        factura["Base I.R.P.F."] = factura["Base I.V.A."]
-        factura["Base R. Equiv."] = factura["Base I.V.A."]
-    return False # No hay errores
-
-def calcular_tipo_iva(factura):
-    base = factura["Base I.V.A."]
-    cuota = factura["Cuota I.V.A."]
-    if not (base and cuota):
-        return ("Tipo de IVA no calculable")
-    factura["% I.V.A."] = round((cuota/base) * 100.0, 0)
-    if factura["% I.V.A."] != 10:
-        # return ("% I.V.A. es distinto de 10")
-        total = factura["Total Factura"]
-        factura["Base I.V.A."] = round(total/1.1, 2)
-        factura["Cuota I.V.A."] = round(total-factura["Base I.V.A."], 2)
-        factura["Base I.R.P.F."] = factura["Base I.V.A."]
-        factura["Base R. Equiv."] = factura["Base I.V.A."]
-    return False # No hay errores
+#
+# VERIFICACION
+#
 
 def extraer_facturas_del_PDF(path, empresa):
     paginas = ft.extraer_paginas_PDF_tipo_texto(path, "Enlaza Soluciones")
@@ -123,14 +99,19 @@ def clasificar_facturas(facturas):
         error = verificar.num_factura(factura)
         errores.append(error) if error else None
 
-        error = verificar.fecha(factura, is_eeuu=True)
+        error = verificar.fecha(factura)
         errores.append(error) if error else None
 
         error = verificar.base_iva(factura)
         errores.append(error) if error else None
 
+        error = verificar.tipo_iva(factura)
+        errores.append(error) if error else None
+
         error = verificar.cuota_iva(factura)
         errores.append(error) if error else None
+        if factura["Cuota I.V.A."] == 0.0: 
+            factura["% I.V.A."] = 0.0
         
         error = verificar.total_factura(factura)
         errores.append(error) if error else None
@@ -141,10 +122,10 @@ def clasificar_facturas(facturas):
         error = verificar.nombre_cliente(factura)
         errores.append(error) if error else None
 
-        error = comprobar_totales(factura)
+        error = verificar.calculo_cuota_iva(factura)
         errores.append(error) if error else None
 
-        error = calcular_tipo_iva(factura)
+        error = verificar.calculos_totales(factura)
         errores.append(error) if error else None
 
         if errores:

@@ -35,6 +35,17 @@ def base_iva(factura):
     factura["Base R. Equiv."] = base
     return False # No hay errores
 
+def tipo_iva(factura):
+    if factura["% I.V.A."] is None:
+        return ("% I.V.A. no encontrada")
+
+    tipo = ft.convertir_a_float(factura["% I.V.A."])
+    if tipo is None:
+        return ("% I.V.A. incorrecta")
+    
+    factura["% I.V.A."] = tipo
+    return False # No hay errores
+
 def cuota_iva(factura):
     if factura["Cuota I.V.A."] is None:
         return ("Cuota I.V.A. no encontrada")
@@ -53,7 +64,7 @@ def total_factura(factura):
 
     total = ft.convertir_a_float(factura["Total Factura"])
     if total is None:
-        return ("Total Factura incorrecta")
+        return ("Total Factura incorrecto")
     
     factura["Total Factura"] = total
     return False # No hay errores
@@ -71,4 +82,32 @@ def nombre_cliente(factura):
         return ("Nombre del cliente no encontrado")
     if len(factura["Nombre"]) > 40:
         return ("Nombre del cliente demasiado largo. Máximo 40 caracteres.")
+    return False # No hay errores
+
+def calculo_cuota_iva(factura):
+    base = factura["Base I.V.A."]
+    tipo = factura["% I.V.A."]
+    cuota = factura["Cuota I.V.A."]
+    if not (isinstance(base, float) and \
+            isinstance(tipo, float) and \
+            isinstance(cuota, float)):
+        return ("Tipo de IVA no calculable")
+    cuota_calculada = round(base * tipo / 100, 2)
+    if abs(cuota_calculada - cuota) >= 0.015:
+        return (f"Diferencia en cuota IVA ({cuota_calculada} != {cuota})")
+    return False # No hay errores
+
+def calculos_totales(factura):
+    base = factura["Base I.V.A."]
+    cuota = factura["Cuota I.V.A."]
+    total = factura["Total Factura"]
+    if not (isinstance(base, float) and \
+            isinstance(cuota, float) and \
+            isinstance(total, float)):
+        return "Total factura no verificable"
+
+
+    total_calculado = round(base + cuota, 2)
+    if abs(total_calculado - total) >= 0.015:
+        return (f"Diferencia en total factura ({total_calculado} != {total})")
     return False # No hay errores

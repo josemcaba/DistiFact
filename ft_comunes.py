@@ -3,13 +3,15 @@ from datetime import datetime
 import pandas as pd
 import pdfplumber
 
-def convertir_a_float(valor_str):
+def convertir_a_float(valor_str, decimal = ","):
     """
-    Convierte una cadena con formato numérico (usando comas o puntos como separador decimal)
+    Convierte una cadena con formato numérico usando el separador decimal)
     a un número flotante. Si falla, retorna 0.0.
     """
+    regex = rf"[^a-zA-Z0-9{decimal}]+"
     try:
-        return round(float(valor_str.replace(",", ".")), 2)
+        valor_str = re.sub(regex, "", valor_str).replace(",",".")
+        return round(float(valor_str), 2)
     except (ValueError, AttributeError):
         return None
 

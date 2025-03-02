@@ -10,6 +10,9 @@ def extraer_informacion_facturas(pdf_path):
 
     # Dividir el texto en secciones usando "Enlaza Soluciones" como separador
     secciones = re.split(r"(?=Enlaza Soluciones)", texto_completo)
+
+    for seccion in secciones:
+        print(seccion)
     
     facturas = []
     
