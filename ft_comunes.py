@@ -128,8 +128,8 @@ def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
     """
     columnas = [
         "Numero Factura", "Fecha Factura", "Fecha Operacion", "Concepto",
-        "Base IVA", "Cuota IVA", "Cuota IVA", 
-        "Base IRPF", "Cuota IRPF", "Cuota IRPF",
+        "Base IVA", "Tipo IVA", "Cuota IVA", 
+        "Base IRPF", "Tipo IRPF", "Cuota IRPF",
         "Base R. Equiv.", "Tipo R. Equiv.", "Cuota R. Equiv.",
         "NIF", "Nombre Cliente"
     ]
@@ -137,7 +137,7 @@ def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
     # Exportar facturas correctas
     if facturas_correctas:
         df_correctas = pd.DataFrame(facturas_correctas, columns=columnas + ["Observaciones"])
-        df_correctas = df_correctas.sort_values(by=columnas[0])
+        df_correctas = df_correctas.sort_values(by=columnas[1])
         df_correctas.to_excel(excel_path.replace(".xlsx", "_correctas.xlsx"), index=False)
         print(f"Se han exportado {len(facturas_correctas)} facturas correctas.")
     else:
@@ -146,7 +146,7 @@ def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
     # Exportar facturas con errores
     if facturas_con_errores:
         df_errores = pd.DataFrame(facturas_con_errores, columns=columnas + ["Errores"])
-        df_errores = df_errores.sort_values(by=columnas[0])
+        df_errores = df_errores.sort_values(by=columnas[1])
         df_errores.to_excel(excel_path.replace(".xlsx", "_errores.xlsx"), index=False)
         print(f"Se han exportado {len(facturas_con_errores)} facturas con errores.")
     else:

@@ -90,7 +90,7 @@ def calculo_cuota_iva(factura):
     if not (isinstance(base, float) and \
             isinstance(tipo, float) and \
             isinstance(cuota, float)):
-        return ("Tipo de IVA no calculable")
+        return ("Cuota de IVA no calculable")
     cuota_calculada = round(base * tipo / 100, 2)
     if abs(cuota_calculada - cuota) >= 0.015:
         return (f"Diferencia en cuota IVA ({cuota_calculada} != {cuota})")
@@ -103,9 +103,32 @@ def calculos_totales(factura):
     if not (isinstance(base, float) and \
             isinstance(cuota, float) and \
             isinstance(total, float)):
-        return "Total factura no verificable"
-
+        return "Total factura no calculable"
     total_calculado = round(base + cuota, 2)
     if abs(total_calculado - total) >= 0.015:
         return (f"Diferencia en total factura ({total_calculado} != {total})")
     return False # No hay errores
+
+def corrige_por_total(factura):
+    base = factura["Base IVA"]
+    tipo = factura["Tipo IVA"]
+    cuota = factura["Cuota IVA"]
+    total = factura["Total Factura"]
+    base_calculada = round(total / (1 + tipo / 100), 2)
+    cuota_calculada = round(total - base_calculada, 2)
+    factura["Base IVA"] = base_calculada
+    factura["Cuota IVA"] = cuota_calculada
+    factura["Base IRPF"] = base_calculada
+    factura["Base R. Equiv."] = base_calculada
+    return (f"Corregido: Base ({base}) y Cuota ({cuota})")
+
+def corrige_por_base(factura):
+    base = factura["Base IVA"]
+    tipo = factura["Tipo IVA"]
+    cuota = factura["Cuota IVA"]
+    total = factura["Total Factura"]
+    cuota_calculada = round(base * tipo / 100, 2)
+    total_calculado = round(base + cuota_calculada, 2)
+    factura["Cuota IVA"] = cuota_calculada
+    factura["Total Factura"] = total_calculado
+    return (f"Corregido: Cuota ({cuota}) y Total ({total})") 
