@@ -3,16 +3,18 @@ from datetime import datetime
 import pandas as pd
 import pdfplumber
 
-def convertir_a_float(valor_str, decimal = ","):
+def convertir_a_float(valor_str):
     """
     Convierte una cadena con formato numérico usando el separador decimal)
     a un número flotante. Si falla, retorna 0.0.
     """
-    regex = rf"[^a-zA-Z0-9{decimal}]+"
+    # Sustituye las comas por puntos
+    valor_str = re.sub(r",", ".", valor_str) 
+    # Elimina todos los puntos salvo el último
+    valor_str = re.sub(r"\.(?=.*\.)", "", valor_str)
     try:
-        valor_str = re.sub(regex, "", valor_str).replace(",",".")
         return round(float(valor_str), 2)
-    except (ValueError, AttributeError):
+    except:
         return None
 
 def validar_fecha(fecha_str, is_eeuu=False):

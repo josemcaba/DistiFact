@@ -13,8 +13,7 @@ def fecha(factura, is_eeuu=False):
     if factura["Fecha Factura"] is None:
         return ("Fecha Factura no encontrada")
 
-    fecha = factura["Fecha Factura"].replace(",","")
-    fecha = ft.validar_fecha(fecha, is_eeuu)
+    fecha = ft.validar_fecha(factura["Fecha Factura"], is_eeuu)
     if not fecha:
         return ("Fecha Factura incorrecta")
 
@@ -22,7 +21,7 @@ def fecha(factura, is_eeuu=False):
     factura["Fecha Operacion"] = fecha
     return False # No hay errores
 
-def base_iva(factura):
+def base_iva(factura, decimal=','):
     if factura["Base IVA"] is None:
         return ("Base IVA no encontrada")
 
@@ -35,7 +34,7 @@ def base_iva(factura):
     factura["Base R. Equiv."] = base
     return False # No hay errores
 
-def tipo_iva(factura):
+def tipo_iva(factura, decimal=','):
     if factura["Tipo IVA"] is None:
         return ("Tipo IVA no encontrada")
 
@@ -46,7 +45,7 @@ def tipo_iva(factura):
     factura["Tipo IVA"] = tipo
     return False # No hay errores
 
-def cuota_iva(factura):
+def cuota_iva(factura, decimal=','):
     if factura["Cuota IVA"] is None:
         return ("Cuota IVA no encontrada")
 
@@ -58,7 +57,7 @@ def cuota_iva(factura):
     factura["Cuota IVA"] = cuota
     return False # No hay errores
 
-def total_factura(factura):
+def total_factura(factura, decimal=','):
     if factura["Total Factura"] is None:
         return ("Total Factura no encontrada")
 
