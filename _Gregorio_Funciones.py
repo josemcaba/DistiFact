@@ -4,7 +4,7 @@ import ft_verificadores as verificar
 
 def extraerFacturas(path, empresa):
     # Extrae facturas de PDF tipo texto
-    paginas = ft.extraerPaginasPDF_tipoTexto(path, separador="Enlaza Soluciones")
+    paginas = ft.extraerPaginasPDF_tipoTexto(path, identificador="Enlaza Soluciones")
 
     facturas = []
     for pagina in paginas:

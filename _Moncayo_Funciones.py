@@ -3,9 +3,10 @@ import ft_comunes as ft
 import ft_verificadores as verificar
 
 def extraerFacturas(path, empresa):
-    # Extrae facturas de PDF tipo texto indicando el texto que marca el 
-    # inicio/separacion de cada factura
-    paginas = ft.extraerPaginasPDF_tipoTexto(path, separador="25042336")
+    # Extrae facturas de PDF tipo texto.
+    # El paámetro identificador sirve para validar la página como factura. Esto
+    # permite descartar páginas que no son facturas.
+    paginas = ft.extraerPaginasPDF_tipoTexto(path, identificador="FRA. NÚMERO")
 
     facturas = []
     for pagina in paginas:

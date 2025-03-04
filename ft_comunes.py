@@ -109,17 +109,18 @@ def validar_cif(cif):
     else:
         return digito_control == digito_calculado or digito_control in "JABCDEFGHI"[int(digito_calculado)]
 
-def extraerPaginasPDF_tipoTexto(pdf_path, separador):
-    texto_completo = ""
+def extraerPaginasPDF_tipoTexto(pdf_path, identificador):
+    print("Páginas descartadas:", end=" ")
+    paginas = []
     with pdfplumber.open(pdf_path) as pdf:
-        for pagina in pdf.pages:
+        for n_pag, pagina in enumerate(pdf.pages, start=1):
             texto = pagina.extract_text()
             if texto:
-                texto_completo += texto + "\n"
-    
-    paginas = re.split(rf"(?={separador})", texto_completo)
-    del paginas[0]
-
+                if identificador in texto:
+                    paginas.append(texto)
+                else:
+                    print(f"- {n_pag}", end=" ")
+    print("-")
     return (paginas)
 
 def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):

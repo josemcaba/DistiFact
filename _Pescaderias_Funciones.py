@@ -4,7 +4,7 @@ import ft_verificadores as verificar
 
 def extraerFacturas(path, empresa):
     # Extrae facturas de PDF tipo texto
-    paginas = ft.extraerPaginasPDF_tipoTexto(path, separador="Fecha emisión")
+    paginas = ft.extraerPaginasPDF_tipoTexto(path, identificador="Fecha emisión")
 
     facturas = []
     for pagina in paginas:
@@ -138,5 +138,3 @@ def acorta_nombre_cliente(factura):
     elif nombre[:21] == "Luis Gaspar Rodríguez":
         nombre = "Luis Gaspar Rodríguez 'Rest. El Rengue'"
     return nombre
-
-
