@@ -2,5 +2,6 @@
     "1": {"nombre": "Pescadería Marengo", "nif": "33384986A", "funciones": "_Pescaderias_Funciones.py", "tipoPDF": "texto"},
     "2": {"nombre": "Pescadería Salvador", "nif": "25041071M", "funciones": "_Pescaderias_Funciones.py", "tipoPDF": "texto"},
     "3": {"nombre": "Gregorio Aranda", "nif": "25693621E", "funciones": "_Gregorio_Funciones.py", "tipoPDF": "texto"},
-    "4": {"nombre": "Rosa Maria Moncayo", "nif": "25042336M", "funciones": "_Moncayo_Funciones.py", "tipoPDF": "texto"}
+    "4": {"nombre": "Rosa Maria Moncayo", "nif": "25042336M", "funciones": "_Moncayo_Funciones.py", "tipoPDF": "texto"},
+    "5": {"nombre": "FACCSA", "nif": "A17001231", "funciones": "_FACCSA_Funciones.py", "tipoPDF": "imagen"}
 }

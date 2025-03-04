@@ -1,6 +1,24 @@
 from importlib import import_module    # Para importar un modulo almacenado en una variable
 import pandas as pd
 import pdfplumber
+import pdf2image
+import pytesseract
+
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
+def extraerPaginasPDF_tipoImagen(pdf_path, identificador):
+    print("Páginas descartadas:", end=" ")
+    paginas = []
+    imagenes = pdf2image.convert_from_path(pdf_path)
+    for n_pag, imagen in enumerate(imagenes, start=1):
+        texto = pytesseract.image_to_string(imagen, lang='spa')
+        if texto:
+            if identificador in texto:
+                paginas.append(texto)
+            else:
+                print(f"- {n_pag}", end=" ")
+    print("-")
+    return (paginas)
 
 def extraerPaginasPDF_tipoTexto(pdf_path, identificador):
     print("Páginas descartadas:", end=" ")
@@ -21,6 +39,8 @@ def extraerFacturas(path, empresa):
     fe = import_module(empresa["funciones"][:-3])
     if empresa["tipoPDF"] == "texto":
         paginas = extraerPaginasPDF_tipoTexto(path, fe.identificador)
+    elif empresa["tipoPDF"] == "imagen":
+        paginas = extraerPaginasPDF_tipoImagen(path, fe.identificador)
     else:
         print(f'\n❌ Error: PDF tipo "{empresa["tipoPDF"]}" no es válido')
         return
