@@ -3,8 +3,9 @@ import ft_comunes as ft
 import ft_verificadores as verificar
 
 def extraerFacturas(path, empresa):
-    # Extrae facturas de PDF tipo texto
-    paginas = ft.extraerPaginasPDF_tipoTexto(path, separador="Enlaza Soluciones")
+    # Extrae facturas de PDF tipo texto indicando el texto que marca el 
+    # inicio/separacion de cada factura
+    paginas = ft.extraerPaginasPDF_tipoTexto(path, separador="25042336")
 
     facturas = []
     for pagina in paginas:
@@ -20,24 +21,24 @@ def extraerFacturas(path, empresa):
 def extraerDatosFactura(pagina, empresa):
     factura = {}
 
-    regex = r"Número de Factura.*\s+(?:Fact-)?(\d+)"
+    regex = r"FRA.\s*NÚMERO:\s+(.+)"
     factura["Numero Factura"] = ft.re_search(regex, pagina)
 
-    regex = r"Fecha de Facturación.*\s+(\d{2}/\d{2}/\d{4})"
+    regex = r"FECHA\s*FACTURA:\s+(.+)"
     factura["Fecha Factura"] = ft.re_search(regex, pagina)
     factura["Fecha Operacion"] = factura["Fecha Factura"]
     
     factura["Concepto"] = 700
-    
-    regex = r"(?:Descuento\s*[-\d,]+\s*Total\s*|Subtotal\s*)([\d,]+)"
+
+    regex = r"BASE\s*IMPONIBLE\s+(.+)"
     factura["Base IVA"] = ft.re_search(regex, pagina)
     
-    regex = r"IVA\s+\((\d+)%\)"
+    regex = r"IVA\s+(.+)\s+%"
     factura["Tipo IVA"] = ft.re_search(regex, pagina)
 
-    regex = r"IVA\s+\(\d+%\)\s+([\d.,]+)"
+    regex = rf"IVA\s+{factura['Tipo IVA']}\s*%\s+(.+)"
     factura["Cuota IVA"] = ft.re_search(regex, pagina)
-
+    
     factura["Base IRPF"] = factura["Base IVA"]
     factura["Tipo IRPF"] = 0
     factura["Cuota IRPF"] = 0
@@ -45,18 +46,20 @@ def extraerDatosFactura(pagina, empresa):
     factura["Tipo R. Equiv."] = 0
     factura["Cuota R. Equiv."] = 0
 
-    factura["NIF"] = nif_cliente(pagina, empresa)
+    regex = r"NIF\s+(.*)"
+    factura["NIF"] = ft.re_search(regex, pagina)
+    factura["NIF"] = factura["NIF"].replace(" ", "") if factura["NIF"] else None
 
-    regex = rf"(.*?)\s+{empresa['nombre']}"
+    regex = r"FECHA\s*FACTURA:\s*.+\s*(?:\nReferencia\s*[^\n]+)?\n([^\n]+)"
     factura["Nombre Cliente"] = ft.re_search(regex, pagina)
 
-    regex = r"Envío\s+(?:[\d,]+\s+)?Total\s+([\d.,]+)"
+    regex = r"TOTAL\s+(.+)"
     factura["Total Factura"] = ft.re_search(regex, pagina)
 
     return(factura)     
 
 # De todos los NIF que aparezcan en la página devuelve el primero que sea
-# distinto del NIF de la empresa
+# distinto del NIF de la empresa 
 def nif_cliente(pagina, empresa):
     regex = r"\b([a-zA-Z0-9]\d{7}[a-zA-Z0-9])\b"
     match = re.findall(regex, pagina)
