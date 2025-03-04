@@ -1,8 +1,4 @@
-#
-# Verificadores
-#
-
-import ft_comunes as ft
+import ft_basicas as fb
 
 def num_factura(factura):
 	if factura["Numero Factura"] is None:
@@ -13,7 +9,7 @@ def fecha(factura, is_eeuu=False):
     if factura["Fecha Factura"] is None:
         return ("Fecha Factura no encontrada")
 
-    fecha = ft.validar_fecha(factura["Fecha Factura"], is_eeuu)
+    fecha = fb.validar_fecha(factura["Fecha Factura"], is_eeuu)
     if not fecha:
         return ("Fecha Factura incorrecta")
 
@@ -25,7 +21,7 @@ def base_iva(factura, decimal=','):
     if factura["Base IVA"] is None:
         return ("Base IVA no encontrada")
 
-    base = ft.convertir_a_float(factura["Base IVA"])
+    base = fb.convertir_a_float(factura["Base IVA"])
     if base is None:
         return ("Base IVA incorrecta")
     
@@ -38,7 +34,7 @@ def tipo_iva(factura, decimal=','):
     if factura["Tipo IVA"] is None:
         return ("Tipo IVA no encontrada")
 
-    tipo = ft.convertir_a_float(factura["Tipo IVA"])
+    tipo = fb.convertir_a_float(factura["Tipo IVA"])
     if tipo is None:
         return ("Tipo IVA incorrecta")
     
@@ -49,7 +45,7 @@ def cuota_iva(factura, decimal=','):
     if factura["Cuota IVA"] is None:
         return ("Cuota IVA no encontrada")
 
-    cuota = ft.convertir_a_float(factura["Cuota IVA"])
+    cuota = fb.convertir_a_float(factura["Cuota IVA"])
     if cuota is None:
         factura["Cuota IVA"] = None
         return ("Cuota IVA incorrecta")
@@ -61,7 +57,7 @@ def total_factura(factura, decimal=','):
     if factura["Total Factura"] is None:
         return ("Total Factura no encontrada")
 
-    total = ft.convertir_a_float(factura["Total Factura"])
+    total = fb.convertir_a_float(factura["Total Factura"])
     if total is None:
         return ("Total Factura incorrecto")
     
@@ -72,7 +68,7 @@ def nif(factura):
     if factura["NIF"] is None:
         return ("NIF no encontrado")
 
-    if not ft.validar_nif(factura["NIF"]):
+    if not fb.validar_nif(factura["NIF"]):
         return ("NIF incorrecto")
     return False # No hay errores
 

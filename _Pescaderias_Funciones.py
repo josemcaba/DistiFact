@@ -1,41 +1,40 @@
 import re
-import ft_comunes as ft
+import ft_basicas as fb
 import ft_verificadores as verificar
 
-def extraerFacturas(path, empresa):
-    # Extrae facturas de PDF tipo texto
-    paginas = ft.extraerPaginasPDF_tipoTexto(path, identificador="Fecha emisión")
+# El parámetro identificador es un texto que debe aparecer en la página
+# del PDF para ser validada como factura.
+# Las páginas que no contengan este texto son descartadas.
 
-    facturas = []
-    for pagina in paginas:
-        factura = extraerDatosFactura(pagina, empresa)
-        if factura:
-            facturas.append(factura)
-    return facturas
+identificador = "Fecha emisión"
 
 #########################################################################
 #
 # EXTRACCION
 #
+# Se limita exclusivamente a extraer los datos tal como aparecen en las
+# facturas. Sin ningún tipo de ajuste o manipulación. Eso se hace en la
+# fase de verificación
+#
 def extraerDatosFactura(pagina, empresa):
     factura = {}
 
     regex = r"Nº factura\s*(\d+)"
-    factura["Numero Factura"] = ft.re_search(regex, pagina)
+    factura["Numero Factura"] = fb.re_search(regex, pagina)
 
     regex = r"Fecha emisión\s*(.*)"
-    factura["Fecha Factura"] = ft.re_search(regex, pagina)
+    factura["Fecha Factura"] = fb.re_search(regex, pagina)
     factura["Fecha Operacion"] = factura["Fecha Factura"]
     
     factura["Concepto"] = 700
  
     regex = r"Base\s*([\d,\.]+)"
-    factura["Base IVA"] = ft.re_search(regex, pagina)
+    factura["Base IVA"] = fb.re_search(regex, pagina)
 
     factura["Tipo IVA"] = 10.0
 
     regex = r"IVA\s*([\d,\.]+)"
-    factura["Cuota IVA"] = ft.re_search(regex, pagina)
+    factura["Cuota IVA"] = fb.re_search(regex, pagina)
 
     factura["Base IRPF"] = factura["Base IVA"]
     factura["Tipo IRPF"] = 0
@@ -46,13 +45,13 @@ def extraerDatosFactura(pagina, empresa):
 
     nif_empresa = empresa["nif"][:8] + "-" + empresa["nif"][-1]
     regex = rf"{nif_empresa}\s*(.+)"
-    factura["NIF"] = ft.re_search(regex, pagina)
+    factura["NIF"] = fb.re_search(regex, pagina)
 
     regex = rf"{empresa['nombre']}\s*(.+)"
-    factura["Nombre Cliente"] = ft.re_search(regex, pagina)
+    factura["Nombre Cliente"] = fb.re_search(regex, pagina)
 
     regex = r"Total\s*([\d,\.]+)\s*€?"
-    factura["Total Factura"] = ft.re_search(regex, pagina)
+    factura["Total Factura"] = fb.re_search(regex, pagina)
 
     return(factura) 
 
@@ -76,7 +75,7 @@ def clasificar_facturas(facturas):
         error = verificar.num_factura(factura)
         errores.append(error) if error else None
 
-        # >>>>>>>>>> AJUSTES PROVISIONALES <<<<<<<<<< #
+        # >>>>>>>>>> AJUSTES PERSONALIZADOS <<<<<<<<<< #
         factura["Fecha Factura"] = re.sub(r"[-,]","", factura["Fecha Factura"])
         error = verificar.fecha(factura, is_eeuu=True)
         errores.append(error) if error else None

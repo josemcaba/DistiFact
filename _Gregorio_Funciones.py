@@ -1,42 +1,41 @@
 import re
-import ft_comunes as ft
+import ft_basicas as fb
 import ft_verificadores as verificar
 
-def extraerFacturas(path, empresa):
-    # Extrae facturas de PDF tipo texto
-    paginas = ft.extraerPaginasPDF_tipoTexto(path, identificador="Enlaza Soluciones")
+# El parámetro identificador es un texto que debe aparecer en la página
+# del PDF para ser validada como factura.
+# Las páginas que no contengan este texto son descartadas.
 
-    facturas = []
-    for pagina in paginas:
-        factura = extraerDatosFactura(pagina, empresa)
-        if factura:
-            facturas.append(factura)
-    return facturas
+identificador = "Enlaza Soluciones"
 
 #########################################################################
 #
 # EXTRACCION
 #
+# Se limita exclusivamente a extraer los datos tal como aparecen en las
+# facturas. Sin ningún tipo de ajuste o manipulación. Eso se hace en la
+# fase de verificación
+#
 def extraerDatosFactura(pagina, empresa):
     factura = {}
 
     regex = r"Número de Factura.*\s+(?:Fact-)?(\d+)"
-    factura["Numero Factura"] = ft.re_search(regex, pagina)
+    factura["Numero Factura"] = fb.re_search(regex, pagina)
 
     regex = r"Fecha de Facturación.*\s+(\d{2}/\d{2}/\d{4})"
-    factura["Fecha Factura"] = ft.re_search(regex, pagina)
+    factura["Fecha Factura"] = fb.re_search(regex, pagina)
     factura["Fecha Operacion"] = factura["Fecha Factura"]
     
     factura["Concepto"] = 700
     
     regex = r"(?:Descuento\s*[-\d,]+\s*Total\s*|Subtotal\s*)([\d,]+)"
-    factura["Base IVA"] = ft.re_search(regex, pagina)
+    factura["Base IVA"] = fb.re_search(regex, pagina)
     
     regex = r"IVA\s+\((\d+)%\)"
-    factura["Tipo IVA"] = ft.re_search(regex, pagina)
+    factura["Tipo IVA"] = fb.re_search(regex, pagina)
 
     regex = r"IVA\s+\(\d+%\)\s+([\d.,]+)"
-    factura["Cuota IVA"] = ft.re_search(regex, pagina)
+    factura["Cuota IVA"] = fb.re_search(regex, pagina)
 
     factura["Base IRPF"] = factura["Base IVA"]
     factura["Tipo IRPF"] = 0
@@ -48,10 +47,10 @@ def extraerDatosFactura(pagina, empresa):
     factura["NIF"] = nif_cliente(pagina, empresa)
 
     regex = rf"(.*?)\s+{empresa['nombre']}"
-    factura["Nombre Cliente"] = ft.re_search(regex, pagina)
+    factura["Nombre Cliente"] = fb.re_search(regex, pagina)
 
     regex = r"Envío\s+(?:[\d,]+\s+)?Total\s+([\d.,]+)"
-    factura["Total Factura"] = ft.re_search(regex, pagina)
+    factura["Total Factura"] = fb.re_search(regex, pagina)
 
     return(factura)     
 

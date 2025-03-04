@@ -1,44 +1,41 @@
 import re
-import ft_comunes as ft
+import ft_basicas as fb
 import ft_verificadores as verificar
 
-def extraerFacturas(path, empresa):
-    # Extrae facturas de PDF tipo texto.
-    # El paámetro identificador sirve para validar la página como factura. Esto
-    # permite descartar páginas que no son facturas.
-    paginas = ft.extraerPaginasPDF_tipoTexto(path, identificador="FRA. NÚMERO")
+# El parámetro identificador es un texto que debe aparecer en la página
+# del PDF para ser validada como factura.
+# Las páginas que no contengan este texto son descartadas.
 
-    facturas = []
-    for pagina in paginas:
-        factura = extraerDatosFactura(pagina, empresa)
-        if factura:
-            facturas.append(factura)
-    return facturas
+identificador="FRA. NÚMERO"
 
 #########################################################################
 #
 # EXTRACCION
 #
+# Se limita exclusivamente a extraer los datos tal como aparecen en las
+# facturas. Sin ningún tipo de ajuste o manipulación. Eso se hace en la
+# fase de verificación
+#
 def extraerDatosFactura(pagina, empresa):
     factura = {}
 
     regex = r"FRA.\s*NÚMERO:\s+(.+)"
-    factura["Numero Factura"] = ft.re_search(regex, pagina)
+    factura["Numero Factura"] = fb.re_search(regex, pagina)
 
     regex = r"FECHA\s*FACTURA:\s+(.+)"
-    factura["Fecha Factura"] = ft.re_search(regex, pagina)
+    factura["Fecha Factura"] = fb.re_search(regex, pagina)
     factura["Fecha Operacion"] = factura["Fecha Factura"]
     
     factura["Concepto"] = 700
 
     regex = r"BASE\s*IMPONIBLE\s+(.+)"
-    factura["Base IVA"] = ft.re_search(regex, pagina)
+    factura["Base IVA"] = fb.re_search(regex, pagina)
     
-    regex = r"IVA\s+(.+)\s+%"
-    factura["Tipo IVA"] = ft.re_search(regex, pagina)
+    regex = r"IVA\s+(.+)\s*%"
+    factura["Tipo IVA"] = fb.re_search(regex, pagina)
 
     regex = rf"IVA\s+{factura['Tipo IVA']}\s*%\s+(.+)"
-    factura["Cuota IVA"] = ft.re_search(regex, pagina)
+    factura["Cuota IVA"] = fb.re_search(regex, pagina)
     
     factura["Base IRPF"] = factura["Base IVA"]
     factura["Tipo IRPF"] = 0
@@ -47,25 +44,26 @@ def extraerDatosFactura(pagina, empresa):
     factura["Tipo R. Equiv."] = 0
     factura["Cuota R. Equiv."] = 0
 
-    regex = r"NIF\s+(.*)"
-    factura["NIF"] = ft.re_search(regex, pagina)
-    factura["NIF"] = factura["NIF"].replace(" ", "") if factura["NIF"] else None
+    factura["NIF"] = nif_cliente(pagina, empresa)
 
-    regex = r"FECHA\s*FACTURA:\s*.+\s*(?:\nReferencia\s*[^\n]+)?\n([^\n]+)"
-    factura["Nombre Cliente"] = ft.re_search(regex, pagina)
+    regex = r"FECHA\s*FACTURA:\s*.+\s*(?:Referencia\s*[^\n]+)?\n([^\n]+)"
+    factura["Nombre Cliente"] = fb.re_search(regex, pagina)
 
     regex = r"TOTAL\s+(.+)"
-    factura["Total Factura"] = ft.re_search(regex, pagina)
+    factura["Total Factura"] = fb.re_search(regex, pagina)
 
     return(factura)     
 
-# De todos los NIF que aparezcan en la página devuelve el primero que sea
-# distinto del NIF de la empresa 
 def nif_cliente(pagina, empresa):
-    regex = r"\b([a-zA-Z0-9]\d{7}[a-zA-Z0-9])\b"
+    '''
+    De todos los NIF que aparezcan en la factura, devuelve el primero que sea
+    distinto del NIF de la empresa.
+    Los devuelve tal como están en la página de la factura
+    '''
+    regex = r"(?:NIF\s+|CIF\s+|CIF:\s+|TARJETA DE RESIDENCIA\s+)\b([a-zA-Z0-9](?:\s*)?\d{7}(?:\s*)?[a-zA-Z0-9])\b"
     match = re.findall(regex, pagina)
     # Filtrar para descartar el NIF de la empresa y seleccionar el correcto
-    nif_cliente = [nif for nif in match if nif != empresa["nif"]]
+    nif_cliente = [nif for nif in match if nif.replace(" ", "") != empresa["nif"]]
     # Devuelve el primer NIF distinto o None
     return nif_cliente[0] if nif_cliente else None
 
@@ -99,13 +97,12 @@ def clasificar_facturas(facturas):
 
         error = verificar.cuota_iva(factura)
         errores.append(error) if error else None
-        if factura["Cuota IVA"] == 0.0: 
-            factura["Tipo IVA"] = 0.0
-            observaciones.append("Factura sin IVA")
         
         error = verificar.total_factura(factura)
         errores.append(error) if error else None
 
+        # >>>>>>>>>> AJUSTES PERSONALIZADOS <<<<<<<<<< #
+        factura["NIF"] = factura["NIF"].replace(" ", "")
         error = verificar.nif(factura)
         errores.append(error) if error else None
 
