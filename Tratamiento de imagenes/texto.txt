@@ -1,0 +1,482 @@
+--- Página 1, Imagen 1, rectangulo_1 ---
+”T ALL” ICA
+"E AAA A A
+FACTURA 132270 D/
+FECHA 21.06.2021 Cl
+PROVEEDOR G(
+SU PEDIDO C/
+N*PEDIDO 983879
+VEHÍCULO  8024-FZT 29
+FE
+RES. SEMANAL VTO. 7DIAS _____ |28.
+
+
+--- Página 1, Imagen 1, rectangulo_2 ---
+BASE IMP. | % IVA CUOTA [|%RE.[ RE |T
+
+o 29,17 10,00 2,92 1,40 0,41 Y
+
+). B
+
+TV
+
+5 T
+haber recibido la siguiente mercancia perecedera y comprobado su estado. NO ADMITIMOS RECLAMACIONES. |
+
+FIRMA: HL
+
+
+--- Página 1, Imagen 1, rectangulo_3 ---
+TOTAL IVA 2,92
+TOTAL R.E. 0,41
+TOTAL FACTURA (EUR) 32,50
+
+
+--- Página 2, Imagen 1, rectangulo_1 ---
+> E 2 LA AN
+¡AULA
+FACTURA 135316 DA
+FECHA 24.06.2021 Cl
+PROVEEDOR GC
+SU PEDIDO C/
+N2PEDIDO 991419
+VEHÍCULO  E-8473-BZH 29
+FORMA DE PAGO FE
+RES. SEMANAL VTO. 7 DIAS 08.
+
+113303 CHULETERO CON CAI
+
+
+--- Página 2, Imagen 1, rectangulo_2 ---
+BASE IMP. | % IVA CUOTA | %RE. | RE IT
+
+lo 25,38 10,00 2,54 1,40 0,36 o
+> E
+T
+
+DS T
+haber recibido la siguiente mercancia perecedera y comprobado su estado. NO ADMITIMOS RECLAMACIONES. a
+FIRMA: 3
+A € eE EH ARO, aaa
+
+
+--- Página 2, Imagen 1, rectangulo_3 ---
+TOTAL R.E. 0,36
+TOTAL FACTURA (EUR) 28,28
+MeRAT FATAL 3 CAN
+
+
+--- Página 3, Imagen 1, rectangulo_1 ---
+“TALLIA
+FACTURA 136485 DA
+FECHA 25.06.2021 Cl
+PROVEEDOR G(
+SU PEDIDO C/
+N*PEDIDO 994301
+VEHÍCULO  4070KZR 29
+FORMA DE PAGO FE:
+RES. SEMANAL VTO. 7 DIAS 08.
+
+SU CÓD
+) 14710 _ CICOSTILLA
+
+
+--- Página 3, Imagen 1, rectangulo_2 ---
+% IVA |] CUOTA | %RE. | RE |
+le 12,74 10,00 1,27 1,40 0,18 o
+D. E
+
+,
+
+OS T
+A.
+As
+
+
+--- Página 3, Imagen 1, rectangulo_3 ---
+TOTAL R.E. 0,18
+TOTAL FACTURA (EUR) 14,19
+URAT TOTAL 1 MIE NN
+
+
+--- Página 4, Imagen 1, rectangulo_1 ---
+>» —— e ". “E — “Why y 0
+FACTURA 137145 DA
+FECHA 26.06.2021 CL
+PROVEEDOR GC
+SU PEDIDO CI
+N"PEDIDO 996000
+VEHÍCULO  5209-LGR 291
+FORMA DE PAGO FE
+RES. SEMANAL VTO. 7 DIAS 08.1
+
+: 13303 _ CON CAF
+
+
+--- Página 4, Imagen 1, rectangulo_2 ---
+BASE IMP. | % IVA CUOTA | %RE. | RE |T
+
+e 20,12 10,00 2,01 1,40 0.28 o
+D. p
+T
+
+OS T
+haber recibido la siguiente mercancía perecedera y comprobado su estado. NO ADMITIMOS RECLAMACIONES.
+FIRMA: 1
+
+e A. Na, Ea
+
+
+--- Página 4, Imagen 1, rectangulo_3 ---
+TOTAL R.E. 0,28
+TOTAL FACTURA (EUR) 22,41
+URAT TOTAL 1 AN
+
+
+--- Página 5, Imagen 1, rectangulo_1 ---
+> E 2 LA OA
+FACTURA 137949 D;
+FECHA 28.06.2021 C
+PROVEEDOR G
+SU PEDIDO C/
+N“PEDIDO 997391
+VEHÍCULO 8024-FZT 2€
+FORMA DE PAGO FE
+RES. SEMANAL VTO. 7 DIAS 08.
+
+coo | sucóo SU CÓD
+
+- 143303 CHULETERO CON CA
+
+
+--- Página 5, Imagen 1, rectangulo_2 ---
+RE [IM
+21,47 10,00 2,15 1,40 0,30 %
+BA
+
+TC
+| TC
+
+MUY IMPORTANTE: ninguna persona puede efectuar cobros sin la autorización correspondiente. Mediante factura de entrega reconozco ||:::::::
+
+
+--- Página 5, Imagen 1, rectangulo_3 ---
+Mee». SON E Ad AA AA a a ta at taa a a
+. e... A a nee, a + nn RR O A O ISR CIO O A A CR A A A A
+.. AAA AER AAA ASAS AAA AA AAA AAA AS AAA EA A A
+ra a rara re aa a tt a o A A AA erat all aa ta a ps a ra a a es
+> OO O IÓ E A AR RC O A O RS SA O O O A A A
+. a... IEA AR AAA AAA RAEE AAA AAA «200012, ,99/0,7,9,9,9,P,9,2,9,2,9,2 2,9, RA AA DARA AA a A e a ,
+A A OE MO IR RA AR O II AA AR CI IA IR II E IT
+. ASA IA ARRASÓ E AS O O RR YI OR O AAA AA AAA APA AAA Y UN IN
+A A ASAS A O AI AS E A E IO EARL AAA
+OD CI A IS O A SOS O E IO O OR O A A AA A pl
+n 414. ¿rértals: RA“... +Pravradsarinr.rs++ rose... q.:(/qe?rosvonbeps.=« pon . 44d ... AAA AAA AAA AAA A A "o LA ,
+A a es O CS O E E O A . cs . .
+. P.ar .. ts . . -. O +1 AR AAA AAA AR o
+.” aa ” e” uy .* , O CIO O RI * ”.  . e r
+- : . y e. m . PR + a A A IO . e.” A :
+. . . .... - Ln. Va * . . -s ml . AAA . IM xl .
+e 4 .* , e Y ” . : ... a. . : o A a a e 010,0 o A, . q
+e . " . A .. + .” 1 + » : , * OA IA MI O CIA, KE . . ne : nm:
+. . . + -. . pa . p a . SI AI . - ,
+. 7 . “s . AA . - na, ... . 4 a . Ll e... . e *. e. . E ..r E, *. .. - e. SA A . es Car rs A a + e a > a
+O O ER IO oo -...: AI A a. 0 ,* AAA AA o ,? a nn” A ae... ea a na tra >
+SN O NR A IIA A AN AA A IN MO IA A E A A
+II SO O SOS O A O O A OO OA A A A A A A A A SS ARAS
+e O AA A E A o AAA AA al PE ao o a lo sao a a ES ES us.
+nn... .- » ae a e IR O IA eee e ea a aaa A A A A CE E TE II IC Da aras A
+a tt AA a
+O O O O SO OS SO A A A A O O OC OA A A AA A A AO AAA
+ro bey. tan dáó hn bendntdnhdhk4 4 244 A MENEAME LEMA EXE AENA AENA AAA MAL AA ALA A A A AA »... as... o .... a...” AA A a
+DOI O SS A O RI O O CS E IC O O OO SA O RSS O ON A O O RARA
+REA AER AAA AS A A A
+SAA A AAA AA A A A A SS STR TERRA A A AAA AAA AAA AA AAA LARA ER DAA AAA
+e ee o o > a o qn... -. . P Cll dl TP DN A A A O e
+a. - ds . ..,. .
+a a .. ae e e año ada er
+a . RC A O
+
+
+--- Página 6, Imagen 1, rectangulo_1 ---
+"“TALLIA
+FACTURA 138991 DA
+FECHA 29.06.2021 Cl
+PROVEEDOR G(
+SU PEDIDO C/
+N*PEDIDO 500296
+VEHÍCULO E-8473-BZH 29
+
+FE
+RES. SEMANAL VTO.7DIAS ___ |08.
+
+
+--- Página 6, Imagen 1, rectangulo_2 ---
+BASE IMP. | %IVA CUOTA | %RE. | RE |T
+
+* 24,38 10,00 2,44 1,40 0,34 Y
+,. B
+T
+
+JS T
+haber recibido la siguiente mercancia perecedera y comprobado su estado. NO ADMITIMOS RECLAMACIONES. %
+FIRMA: T
+
+
+--- Página 6, Imagen 1, rectangulo_3 ---
+TOTAL IVA 2 44
+TOTAL R.E. 0,34
+TOTAL FACTURA (EUR) 27,16
+
+
+--- Página 7, Imagen 1, rectangulo_1 ---
+Ed ANI OA
+FACTURA  — 142145 DA
+FECHA 02.07.2021 Cl
+PROVEEDOR G(
+SU PEDIDO C/
+N*PEDIDO 508091
+
+VEHÍCULO 4070KZR 29
+FE!
+14.
+
+| cón | sucón |
+
+
+--- Página 7, Imagen 1, rectangulo_2 ---
+BASE IMP. | % IVA CUOTA |%R.E | RE [TOC
+23,32 10,00 2,33 1,40 0,33 %
+
+BA
+
+TO
+
+TO
+
+MUY IMPORTANTE: ninguna persona puede efectuar cobros sin la autorización correspondiente. Mediante factura de entrega reconozco |.
+haber recibido la siguiente mercancia perecedera y comprobado su estado. NO ADMITIMOS RECLAMACIONES. A
+
+
+--- Página 7, Imagen 1, rectangulo_3 ---
+TOTAL IVA 2,33
+TOTAL R.E. 0,33
+TOTAL FACTURA (EUR) 25,98
+
+
+--- Página 8, Imagen 1, rectangulo_1 ---
+"E AN AN 7 CA
+
+E Wi Me Y a
+FACTURA 142920 Di
+FECHA 03.07.2021 C
+PROVEEDOR Gl
+SU PEDIDO C/
+N2PEDIDO 509596
+VEHÍCULO  5994-KGN 26
+FORMA DE PAGO FE
+RES. SEMANAL VTO. 7 DIAS 14
+
+] coo | sucio | SU CÓD
+
+
+--- Página 8, Imagen 1, rectangulo_2 ---
+BASE IMP. | % IVA CUOTA |%RE. |] RE TT
+| 22,13 10,00 2,21 1,40 0,31 %
+| =7
+
+TM
+
+| T
+MUY IMPORTANTE: ninguna persona puede efectuar cobros sin la autorización correspondiente. Mediante factura de entrega reconozco || .:
+haber recibido la siguiente mercancia perecedera y comprobado su estado. NO ADMITIMOS RECLAMACIONES. o
+
+
+--- Página 8, Imagen 1, rectangulo_3 ---
+TOTAL IVA 2,21
+TOTAL R.E. 0,31
+TOTAL FACTURA (EUR) 24,65
+
+
+--- Página 9, Imagen 1, rectangulo_1 ---
+” A UlS > Cl
+FACTURA  — 144686 DA
+FECHA 06.07.2021 CL
+PROVEEDOR GO
+SU PEDIDO CIC
+N*PEDIDO 514030
+VEHÍCULO  4070KZR 29(
+FORMA DE PAGO FEC
+RES. SEMANAL VTO. 7 DIAS 14.0
+
+cón. SU CÓD |
+
+3143303 CHULETERO CON CAR
+
+
+--- Página 9, Imagen 1, rectangulo_2 ---
+BASE IMP. | % IVA CUOTA |%RE. | RE |T
+le 23,85 10,00 2,39 1,40 0,33 o
+») E
+7
+
+OS
+TY
+MUY IMPORTANTE: ninguna persona puede efectuar cobros sin la autorización correspondiente. Mediante factura de entrega reconozco -
+| a ea Vacas
+
+
+--- Página 9, Imagen 1, rectangulo_3 ---
+TOTAL R.E. 0,33
+— ITOTAL FACTURA(EUR) 26,57
+URA TOTAL 1 IIA E TN
+
+
+--- Página 10, Imagen 1, rectangulo_1 ---
+> mM — WM _ YU _ “Wa |
+FACTURA 146075 D;
+FECHA 07.07.2021 C
+PROVEEDOR Gi
+SU PEDIDO C/
+N“PEDIDO 516519
+VEHÍCULO 5994-KGN 20
+FORMA DE PAGO FE
+RES. SEMANAL VTO. 7 DIAS 21.
+SU CÓD
+13303 CHULETERO CON CAI
+
+
+--- Página 10, Imagen 1, rectangulo_2 ---
+BASE IMP. | % IVA CUOTA |%RE. J RE TTO
+9/,91 10,00 8,79 1,40 1,23 %
+BA
+TO
+TO
+MUY IMPORTANTE: ninguna persona puede efectuar cobros sin la autorización correspondiente, Mediante factura de entrega reconozco
+haber recibido la siguiente mercancia perecedera y comprobado su estado. NO ADMITIMOS RECLAMACIONES.
+me
+
+
+--- Página 10, Imagen 1, rectangulo_3 ---
+A US a O, f =)
+
+TOTAL R.E. 1.23
+
+TOTAL FACTURA (EUR) 97,93
+ma ay ge au Y TITAN
+
+
+--- Página 11, Imagen 1, rectangulo_1 ---
+>» A MEE Uh —
+Jj AULLIA
+FACTURA — 146932 D/
+FECHA 08.07.2021 C
+PROVEEDOR G
+SU PEDIDO C/
+N*PEDIDO 518926
+VEHÍCULO  MA5532CW 26
+FE
+21.
+León | sucon |
+
+
+--- Página 11, Imagen 1, rectangulo_2 ---
+BASE IMP._| %IVA | CUOTA | %RE. | RE |T
+o 43,82 10,00 4,38 1,40 0,61 Y,
+). B
+V
+
+'S ,
+Ti
+haber recibido la siguiente mercancia perecedera y comprobado su estado. NO ADMITIMOS RECLAMACIONES. T
+
+FIRMA:
+
+
+--- Página 11, Imagen 1, rectangulo_3 ---
+TOTAL IVA 4,38
+TOTAL R.E. 0,61
+TOTAL FACTURA (EUR) 48,81
+
+
+--- Página 12, Imagen 1, rectangulo_1 ---
+SA A | y | XA |
+E Alylyody CA
+FACTURA 148070 D,
+FECHA 09.07.2021 C
+PROVEEDOR Gl
+SU PEDIDO C/
+N“PEDIDO 521430
+VEHÍCULO 5994-KGN 20
+FORMA DE PAGO FE
+RES. SEMANAL VTO. 7 DIAS 21.
+V SU CÓD
+| 13303 CHULETERO CON CAI
+
+
+--- Página 12, Imagen 1, rectangulo_2 ---
+RE TTO
+39,06 10,00 3,91 1,40 0,55 |
+
+BA
+
+TO
+
+TO
+
+MUY IMPORTANTE: ninguna persona puede efectuar cobros sin la autorización correspondiente, Mediante factura de entrega reconozco ||:::::::::
+
+
+--- Página 12, Imagen 1, rectangulo_3 ---
+A . .. ... ..s . o a A. - . . . .-. s * . * . “ ' - .... . - ..s . . e.“ - a. bo. 1.4... e . - ende... . 940.42... 4... 0.2
+TA A E E .bd-=Prdoar-- 1... ...b.0.0...--*.. >. >. ... sr e o A A IN A ....
+e 1? e PP . . A A A As . A... .. 21. A EA E a. + .... . .. . . . ' +. .. 0. . . ..... ... . . ... . . pops. -.4 - .
+SA SS A SA E A AAA AAA AAA AAA A E A AS E E E A ES Mo += +. $ + dB + 4 + «44 BE Ba +» - * dd pd ss rasa ss. . ... . +<as
+... A . a. A ” r . .”. . Ass. . . .. ... ss. ' ..< .o. >. -. o... e - A E ' . cr esnsrossr.+ ++. .. A A . ..
+AAA ASA AAA AAA A AAA AAA AAA AAA AMAN MEM AMAIA E
+. . . . . . ....o.. E O E A A ... «ara A cn. o A ” E E II As
+AAA AAA AAA AAA ASA AAA AA AAA AAA AAA AAA AAA AAA MAMARIA AAA AMAN MAMMA Y O A
++ A E A , AA... . ... E EA ES E E ES . roo... .: 2.4 ... . .os .. .. E CN + s e... ... . 4. de E A O
+.....u.. AA ASA AAA AAA AAA AAA AAA AAA AAA AAA AAA AAA AAA A A A A A A MA .L£e2..X£3.. 1%.
+e 0 09 e . O A A - * q. sm... IE ES JETA EE A E TA A A ... E .a .r A A et. ...... .
+AAA AAA AAA AAA AAA AAA EMMA AAA AMM AMARA MAN Y O A
+e A A b, 2 0 ” A D9.0 A... Dos... . E A A E A A A A o. - == +. .4 - + 44 “ ho. - dh - +. . +... . 4d hos CN E d rr... ..roo-d- +. ... ross.
+AAA AAA AAA RARA AAA AAA AAA AAA AAA AAA AAA AAA AMAN A s 2... .... .... +4 ra ..o.- .t .-
+E E O IE A A honl-e- +. na era E A RN O O qn... o : cs e
+o a + IA o r Er r - .. .... . . AAA AAA AAA . rosa
+. A . - .. .. . A A . .r unas ... .. +. $...) 44 , ....
+. .... ». - ' .. E A A .. .RPIJ4.P (LCL44 po >- - 4 r
+' . * . +. .o. . ' .. . .- 4 .- - A EA AS . ná .. rr. os. . .
+. . : -..o. ss. . a . . r h .LCOoQRU SO .n.....-..60.::000:.060.1%6100%0.U0557%..08084 . a .“.. -¿n .
+. . ? , ... . “ .e...... sr. (1... .. . ..», 41. pon a .- 4. 1. s . .. 4 .-
+e . e a a > ..” : . nl . . Bn 4 adas rs dos dos roo a. .e.os o. or + ro. .. . “
+. - tra > , . 4 ' - - . A A A A ... a. .- .
+. . 4 .. . . . . .. pa .L.IC[ÑÓ.. 4... 4 e. hos e . roo
+Cs .. “ -. + , . SB . A O A . -
+a n >. .* . .: . ' .. .: . e . . ' .. A O E . .
+A A A A A AA A A . . .... p.rod..uúÚu.€...Í  .>r-¡. . . + nr. A A ..o. .: .... .so. s , E E . E - .» PE
+EUA AAA Ie ess rs ss ss ar rss ss ss ss A E Y E SS A A . > . " .
+. 1 TS SA AA A A A A AA AA e eo. .08507 (2 ... .-. resnmsis .n.. ss.” ” ... . 4. 2... . 11. ..10..4«u19os ers. +4 , . ' MS ECC
+AAA AAA AA ADA AAA AAA AAA AAA AAA AAA AAA AAA AAA IAS AMARME AE MAMMA EAN ráóso ben. na...
+e ..o ss... ... , . E ras nn... +.+.) rre aa. cru a. nia A ha. á Las eso a a AS => eS a “ara A e
+AAA AAA ARA RARA AAA AAA AA AAA AAA AA AAA AAA EA AAA AAA AAA AMM AMAN AA MAMA ANA MENA AAA AMAN AAN EN
+A A A A A E O O A A A O A A rn rra ra O O O AAA A nar e. ts. E aa
+PHASE A AAA AAA AAA AA AAA AAA AAA AAA AAA AAA ANA ARA A O
+E A A A A A A AA ARA AA AA A A SA AA A A A A E A ..... o. “qna. ... puso: E O E
+AAA AAA AAA AAA AAA AA AAA ARA AAA AAA AAA AAA AAA AAA AAA AAA AMA AAA
+IE E A O O A A A TA AE A A A a A A SS DI A A TA al A CN E DA A PS NN DR ... a ..a.. 4...
+TARA AAA AAA AAA AAA AAA AAA AAA AMA AAA MMM TAM MA ANY AN A
+A A E IS E A A A A A E A O O A A O E O A A A ld nea o aa?
+PAREADAS AAA AAA AAA AAA AAA AAA AAA AAA AAA AMS E A A A E O
+A , . A A ... ... e... ..0.00M(..-. PC E 4 o... ... a ... . . ... .. a... ....1;(...- 4 IS E E E E O E
+AAA AAA AAA AAA AAA AAA EA AAA A A
+. ._- a - nor. O 1 .r CO CC an. de.» ns. . . 7 .. . . nt. Pla? . e. e - oe "E ns . E, . o”. -
+. . , , :
+... ... ... .. .. o. sn . . bt... e... +... . SRBADBAARAA -
+LEAL AAA AAA ss rs sr sr sm sos rs sa AA
+E . --... . , na .... .-. PU se.
+.COq. -sU . :....X...KXÉ e... . , * +... .«<.u.00806::-....:x.x..++:+ +
+..'“.. dd. . A ”- ' A E A O ES
+es haananáhbhaadanas A a a " _. Ah a on. == e
+
+
