@@ -3,10 +3,15 @@ import pandas as pd
 import pdfplumber
 import pdf2image
 import pytesseract
+import ft_comunes_img as fci
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-def extraerPaginasPDF_tipoImagen(pdf_path, identificador):
+def extraerPaginasPDF_tipoImagen(pdf_path, identificador, nif):
+    rectangulos = fci.cagar_rectangulos(nif)
+    if not rectangulos:
+        return
+
     print("Páginas descartadas:", end=" ")
     paginas = []
     imagenes = pdf2image.convert_from_path(pdf_path)
@@ -21,7 +26,7 @@ def extraerPaginasPDF_tipoImagen(pdf_path, identificador):
     return (paginas)
 
 def extraerPaginasPDF_tipoTexto(pdf_path, identificador):
-    print("Páginas descartadas:", end=" ")
+    print("\nPáginas descartadas:", end=" ")
     paginas = []
     with pdfplumber.open(pdf_path) as pdf:
         for n_pag, pagina in enumerate(pdf.pages, start=1):
@@ -40,9 +45,11 @@ def extraerFacturas(path, empresa):
     if empresa["tipoPDF"] == "texto":
         paginas = extraerPaginasPDF_tipoTexto(path, fe.identificador)
     elif empresa["tipoPDF"] == "imagen":
-        paginas = extraerPaginasPDF_tipoImagen(path, fe.identificador)
+        paginas = extraerPaginasPDF_tipoImagen(path, fe.identificador, empresa["nif"])
     else:
         print(f'\n❌ Error: PDF tipo "{empresa["tipoPDF"]}" no es válido')
+        return
+    if not paginas:
         return
     facturas = []
     for pagina in paginas:
