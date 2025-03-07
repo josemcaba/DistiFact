@@ -2,21 +2,23 @@ from importlib import import_module    # Para importar un modulo almacenado en u
 import pandas as pd
 import pdfplumber
 import pdf2image
-import pytesseract
-import ft_comunes_img as fci
 
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+import ft_comunes_img as fci
+import fitz  # PyMuPDF
+import cv2
+import numpy as np
+
 
 def extraerPaginasPDF_tipoImagen(pdf_path, identificador, nif):
-    rectangulos = fci.cagar_rectangulos(nif)
+    rectangulos = fci.cagar_rectangulos_json(nif)
     if not rectangulos:
         return
-
-    print("Páginas descartadas:", end=" ")
+    print("\nPáginas descartadas:", end=" ")
     paginas = []
-    imagenes = pdf2image.convert_from_path(pdf_path)
-    for n_pag, imagen in enumerate(imagenes, start=1):
-        texto = pytesseract.image_to_string(imagen, lang='spa')
+    pdf_doc = fitz.open(pdf_path)
+    total_paginas = len(pdf_doc)
+    for n_pag in range(total_paginas):
+        texto = fci.extract_texto_form_page(pdf_doc, n_pag, rectangulos)
         if texto:
             if identificador in texto:
                 paginas.append(texto)
