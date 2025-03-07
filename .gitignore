@@ -3,3 +3,7 @@
 *.exe
 __pycache__
 .vscode
+bin/
+lib/
+lib64
+pyvenv.cfg
