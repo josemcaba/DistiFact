@@ -8,13 +8,13 @@ import fitz  # PyMuPDF
 import cv2
 import numpy as np
 
-
 def extraerPaginasPDF_tipoImagen(pdf_path, identificador, nif):
     rectangulos = fci.cagar_rectangulos_json(nif)
     if not rectangulos:
         return
     print("\nPáginas descartadas:", end=" ")
     paginas = []
+
     pdf_doc = fitz.open(pdf_path)
     total_paginas = len(pdf_doc)
     for n_pag in range(total_paginas):
@@ -23,10 +23,10 @@ def extraerPaginasPDF_tipoImagen(pdf_path, identificador, nif):
             if identificador in texto:
                 paginas.append(texto)
             else:
-                print(f"- {n_pag}", end=" ")
+                print(f"- {n_pag + 1}", end=" ")
     print("-")
     return (paginas)
-
+    
 def extraerPaginasPDF_tipoTexto(pdf_path, identificador):
     print("\nPáginas descartadas:", end=" ")
     paginas = []

@@ -18,11 +18,11 @@ identificador="FACTURA"
 #
 def extraerDatosFactura(pagina, empresa):
     factura = {}
-
-    regex = r"FACTURA\s+(\S*)"
+    print(pagina)
+    regex = r"FACTURA\s+(.+)"
     factura["Numero Factura"] = fb.re_search(regex, pagina)
 
-    regex = r"FECHA\s+(\S*)"
+    regex = r"FECHA\s+(.+)"
     factura["Fecha Factura"] = fb.re_search(regex, pagina)
     factura["Fecha Operacion"] = factura["Fecha Factura"]
     

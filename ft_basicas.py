@@ -112,4 +112,4 @@ def re_search(regex, pagina):
     Extrae texto segun un patron regex
     """
     match = re.search(regex, pagina)
-    return match.group(1) if match else None
+    return match.group(1) if match and match.lastindex else None

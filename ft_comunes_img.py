@@ -74,9 +74,11 @@ def adjust_window_size(windowName, image):
     
     cv2.resizeWindow(windowName, new_width, new_height)
 
-def mostrar_imagen(window_name, image, msec=0):
+def mostrar_imagen(image, msec=0):
     ''' Mostrar la imagen en una ventana '''
-    cv2.imshow(window_name, image)
+    cv2.namedWindow("Rectangulo", cv2.WINDOW_NORMAL)
+    adjust_window_size("Rectangulo", image)
+    cv2.imshow("Rectangulo", image)
     cv2.waitKey(msec)
     cv2.destroyAllWindows()
 
@@ -100,6 +102,7 @@ def extract_texto_form_page(pdf_doc, pagina, rectangulos):
         tesseeract_params = coords["tesseract"]
         # Aplicar OCR a la imagen recortada
         text_img = extract_text_from_image(cropped_image, tesseeract_params)
+
         texto_pag += f"{text_img}\n"
     
     return (texto_pag)
