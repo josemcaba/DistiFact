@@ -1,44 +1,42 @@
 from importlib import import_module    # Para importar un modulo almacenado en una variable
 import pandas as pd
 import pdfplumber
-import pdf2image
-
 import ft_comunes_img as fci
 import fitz  # PyMuPDF
-import cv2
-import numpy as np
+import sys
 
 def extraerPaginasPDF_tipoImagen(pdf_path, identificador, nif):
     rectangulos = fci.cagar_rectangulos_json(nif)
     if not rectangulos:
         return
-    print("\nPáginas descartadas:", end=" ")
+    print("\nPáginas descartadas: - ", end=" ")
     paginas = []
-
     pdf_doc = fitz.open(pdf_path)
     total_paginas = len(pdf_doc)
     for n_pag in range(total_paginas):
         texto = fci.extract_texto_form_page(pdf_doc, n_pag, rectangulos)
+        spinner(n_pag)
         if texto:
             if identificador in texto:
                 paginas.append(texto)
             else:
-                print(f"- {n_pag + 1}", end=" ")
-    print("-")
+                print(f"\b{n_pag} - ", end=" ")
+    print("\b ")
     return (paginas)
     
 def extraerPaginasPDF_tipoTexto(pdf_path, identificador):
-    print("\nPáginas descartadas:", end=" ")
+    print("\nPáginas descartadas: - ", end=" ")
     paginas = []
     with pdfplumber.open(pdf_path) as pdf:
         for n_pag, pagina in enumerate(pdf.pages, start=1):
             texto = pagina.extract_text()
+            spinner(n_pag)
             if texto:
                 if identificador in texto:
                     paginas.append(texto)
                 else:
-                    print(f"- {n_pag}", end=" ")
-    print("-")
+                    print(f"\b{n_pag} - ", end=" ")
+    print("\b ")
     return (paginas)
 
 def extraerFacturas(path, empresa):
@@ -93,3 +91,10 @@ def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
     else:
         print("No hay facturas con errores para exportar.")
     print()
+
+def spinner(indice):
+    simbolos = ["-", "/", "|", "\\"]  # Secuencia del spinner
+    
+    indice = indice % 4
+    sys.stdout.write("\b" + simbolos[indice])  # Mueve el cursor atrás y sobrescribe solo el spinner
+    sys.stdout.flush()  # Asegura que se imprima inmediatamente
