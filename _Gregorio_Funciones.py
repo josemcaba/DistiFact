@@ -47,7 +47,7 @@ def extraerDatosFactura(pagina, empresa):
     factura["NIF"] = nif_cliente(pagina, empresa)
 
     regex = rf"(.*?)\s+{empresa['nombre']}"
-    factura["Nombre Cliente"] = fb.re_search(regex, pagina)
+    factura["Nombre"] = fb.re_search(regex, pagina)
 
     regex = r"Envío\s+(?:[\d,]+\s+)?Total\s+([\d.,]+)"
     factura["Total Factura"] = fb.re_search(regex, pagina)
@@ -104,7 +104,7 @@ def clasificar_facturas(facturas):
         error = verificar.nif(factura)
         errores.append(error) if error else None
 
-        error = verificar.nombre_cliente(factura)
+        error = verificar.nombre(factura)
         errores.append(error) if error else None
 
         error = verificar.calculo_cuota_iva(factura)

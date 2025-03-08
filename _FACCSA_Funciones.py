@@ -18,11 +18,11 @@ identificador="FACTURA"
 #
 def extraerDatosFactura(pagina, empresa):
     factura = {}
-    print(pagina)
+
     regex = r"FACTURA\s+(.+)"
     factura["Numero Factura"] = fb.re_search(regex, pagina)
 
-    regex = r"FECHA\s+(.+)"
+    regex = r"FECHA\s+([\d.]+)"
     factura["Fecha Factura"] = fb.re_search(regex, pagina)
     factura["Fecha Operacion"] = factura["Fecha Factura"]
     
@@ -45,10 +45,9 @@ def extraerDatosFactura(pagina, empresa):
     factura["Tipo R. Equiv."] = 0
     factura["Cuota R. Equiv."] = 0
 
-    factura["NIF"] = nif_cliente(pagina, empresa)
+    factura["NIF"] = "A17001231"
 
-    regex = r"FECHA\s*FACTURA:\s*.+\s*(?:Referencia\s*[^\n]+)?\n([^\n]+)"
-    factura["Nombre Cliente"] = fb.re_search(regex, pagina)
+    factura["Nombre"] = "FACCSA"
 
     regex = r"TOTAL\s+(.+)"
     factura["Total Factura"] = fb.re_search(regex, pagina)
@@ -77,7 +76,7 @@ def clasificar_facturas(facturas):
     Clasifica las facturas en correctas y con errores.
     Retorna dos listas: facturas_correctas y facturas_con_errores.
     """
-    return None, None
+
     facturas_correctas = []
     facturas_con_errores = []
 
@@ -88,6 +87,8 @@ def clasificar_facturas(facturas):
         error = verificar.num_factura(factura)
         errores.append(error) if error else None
 
+        # >>>>>>>>>> AJUSTES PERSONALIZADOS <<<<<<<<<< #
+        factura["Fecha Factura"] = factura["Fecha Factura"].replace(".","/")
         error = verificar.fecha(factura)
         errores.append(error) if error else None
 
@@ -103,12 +104,10 @@ def clasificar_facturas(facturas):
         error = verificar.total_factura(factura)
         errores.append(error) if error else None
 
-        # >>>>>>>>>> AJUSTES PERSONALIZADOS <<<<<<<<<< #
-        factura["NIF"] = factura["NIF"].replace(" ", "")
         error = verificar.nif(factura)
         errores.append(error) if error else None
 
-        error = verificar.nombre_cliente(factura)
+        error = verificar.nombre(factura)
         errores.append(error) if error else None
 
         error = verificar.calculo_cuota_iva(factura)

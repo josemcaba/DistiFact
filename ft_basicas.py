@@ -6,11 +6,11 @@ def convertir_a_float(valor_str):
     Convierte una cadena con formato numérico usando el separador decimal)
     a un número flotante. Si falla, retorna 0.0.
     """
-    # Sustituye las comas por puntos
-    valor_str = re.sub(r",", ".", valor_str) 
-    # Elimina todos los puntos salvo el último
-    valor_str = re.sub(r"\.(?=.*\.)", "", valor_str)
     try:
+        # Sustituye las comas por puntos
+        valor_str = str(valor_str).replace(",", ".") 
+        # Elimina todos los puntos salvo el último
+        valor_str = re.sub(r"\.(?=.*\.)", "", valor_str)
         return round(float(valor_str), 2)
     except:
         return None

@@ -48,7 +48,7 @@ def extraerDatosFactura(pagina, empresa):
     factura["NIF"] = fb.re_search(regex, pagina)
 
     regex = rf"{empresa['nombre']}\s*(.+)"
-    factura["Nombre Cliente"] = fb.re_search(regex, pagina)
+    factura["Nombre"] = fb.re_search(regex, pagina)
 
     regex = r"Total\s*([\d,\.]+)\s*€?"
     factura["Total Factura"] = fb.re_search(regex, pagina)
@@ -99,10 +99,10 @@ def clasificar_facturas(facturas):
         errores.append(error) if error else None
  
         # >>>>>>>>>> AJUSTES PROVISIONALES <<<<<<<<<< #
-        if factura["Nombre Cliente"] and len(factura["Nombre Cliente"]) > 40:
-            factura["Nombre Cliente"] = acorta_nombre_cliente(factura)
-            observaciones.append("Acortado el nombre del cliente a un máximo de 40 caracteres")
-        error = verificar.nombre_cliente(factura)
+        if factura["Nombre"] and len(factura["Nombre"]) > 40:
+            factura["Nombre"] = acorta_nombre_cliente(factura)
+            observaciones.append("Acortado el nombre del nombre a un máximo de 40 caracteres")
+        error = verificar.nombre(factura)
         errores.append(error) if error else None
 
         error = verificar.calculo_cuota_iva(factura)
@@ -131,7 +131,7 @@ def clasificar_facturas(facturas):
     return facturas_correctas, facturas_con_errores
 
 def acorta_nombre_cliente(factura):
-    nombre = factura["Nombre Cliente"]
+    nombre = factura["Nombre"]
     if nombre[:20] == "Ramírez Sánchez S.L.":
         nombre = "Ramírez Sánchez S.L. 'Rest Refrectorium'"
     elif nombre[:21] == "Luis Gaspar Rodríguez":

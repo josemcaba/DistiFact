@@ -72,11 +72,11 @@ def nif(factura):
         return ("NIF incorrecto")
     return False # No hay errores
 
-def nombre_cliente(factura):
-    if factura["Nombre Cliente"] is None:
-        return ("Nombre Cliente no encontrado")
-    if len(factura["Nombre Cliente"]) > 40:
-        return ("Nombre Cliente demasiado largo. Máximo 40 caracteres.")
+def nombre(factura):
+    if factura["Nombre"] is None:
+        return ("Nombre no encontrado")
+    if len(factura["Nombre"]) > 40:
+        return ("Nombre demasiado largo. Máximo 40 caracteres.")
     return False # No hay errores
 
 def calculo_cuota_iva(factura):

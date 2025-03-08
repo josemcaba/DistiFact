@@ -72,7 +72,7 @@ def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
         "Base IVA", "Tipo IVA", "Cuota IVA", 
         "Base IRPF", "Tipo IRPF", "Cuota IRPF",
         "Base R. Equiv.", "Tipo R. Equiv.", "Cuota R. Equiv.",
-        "NIF", "Nombre Cliente"
+        "NIF", "Nombre"
     ]
 
     # Exportar facturas correctas
