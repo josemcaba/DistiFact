@@ -75,8 +75,9 @@ if not(empresa and ruta_PDF):
 	exit()
 
 dict_json = cargar_json("rectangulos.json")
-if not dict_json:
-	exit()
+if not (dict_json and dict_json[empresa["nif"]]):
+    print("\nEsa empresa NO tiene sus rectángulos definidos")
+    exit()
 
 if empresa["nif"] in dict_json:
     print("\nEsa empresa ya tiene sus rectángulos definidos")
