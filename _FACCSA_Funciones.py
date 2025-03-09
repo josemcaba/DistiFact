@@ -88,7 +88,8 @@ def clasificar_facturas(facturas):
         errores.append(error) if error else None
 
         # >>>>>>>>>> AJUSTES PERSONALIZADOS <<<<<<<<<< #
-        factura["Fecha Factura"] = factura["Fecha Factura"].replace(".","/")
+        if factura["Fecha Factura"]:
+            factura["Fecha Factura"] = factura["Fecha Factura"].replace(".","/")
         error = verificar.fecha(factura)
         errores.append(error) if error else None
 

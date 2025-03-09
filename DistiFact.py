@@ -15,10 +15,12 @@ def main():
 
     fe = import_module(empresa["funciones"][:-3])
     facturas_correctas, facturas_con_errores = fe.clasificar_facturas(facturas)
+    if not (facturas_correctas or facturas_con_errores):
+        print("\n👋 Saliendo del programa...\n")
+        return
 
-    if (facturas_correctas or facturas_con_errores):
-        excel_path=ruta_PDF.replace(".pdf", ".xlsx")
-        fc.exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path)
+    excel_path=ruta_PDF.replace(".pdf", ".xlsx")
+    fc.exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path)
 
 if __name__ == "__main__":
     main()

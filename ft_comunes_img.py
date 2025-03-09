@@ -82,7 +82,7 @@ def mostrar_imagen(image, msec=0):
     cv2.waitKey(msec)
     cv2.destroyAllWindows()
 
-def extract_texto_form_page(pdf_doc, pagina, rectangulos):
+def extract_text_form_page(pdf_doc, pagina, rectangulos):
     texto_pag = ""
     img = pdf_doc.get_page_images(pagina)[0]
     xref = img[0]

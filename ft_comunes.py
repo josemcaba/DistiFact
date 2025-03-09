@@ -14,7 +14,7 @@ def extraerPaginasPDF_tipoImagen(pdf_path, identificador, nif):
     pdf_doc = fitz.open(pdf_path)
     total_paginas = len(pdf_doc)
     for n_pag in range(total_paginas):
-        texto = fci.extract_texto_form_page(pdf_doc, n_pag, rectangulos)
+        texto = fci.extract_text_form_page(pdf_doc, n_pag, rectangulos)
         spinner(n_pag)
         if texto:
             if identificador in texto:

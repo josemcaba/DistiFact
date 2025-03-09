@@ -1,25 +1,25 @@
 {
     "A17001231": {
         "rectangulo_1": {
-            "tesseract": "r'--psm 6 -l spa'",
-            "x1": 93,
-            "y1": 497,
-            "x2": 1110,
-            "y2": 1196
+            "x1": 110,
+            "y1": 508,
+            "x2": 948,
+            "y2": 797,
+            "tesseract": "r'--psm 6'"
         },
         "rectangulo_2": {
-            "tesseract": "r'--psm 6 -c tessedit_char_whitelist=0123456789,'",
-            "x1": 757,
-            "y1": 3432,
-            "x2": 2301,
-            "y2": 4096
+            "x1": 861,
+            "y1": 3490,
+            "x2": 2162,
+            "y2": 3744,
+            "tesseract": "r'--psm 6'"
         },
         "rectangulo_3": {
-            "tesseract": "r'--psm 6 -l spa'",
-            "x1": 2139,
-            "y1": 3461,
-            "x2": 3180,
-            "y2": 4096
+            "x1": 2162,
+            "y1": 3478,
+            "x2": 3145,
+            "y2": 3894,
+            "tesseract": "r'--psm 6'"
         }
     }
 }

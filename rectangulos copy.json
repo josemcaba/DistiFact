@@ -1,0 +1,25 @@
+{
+    "A17001231-": {
+        "rectangulo_1": {
+            "tesseract": "r'--psm 6'",
+            "x1": 93,
+            "y1": 497,
+            "x2": 1110,
+            "y2": 1196
+        },
+        "rectangulo_2": {
+            "tesseract": "r'--psm 6 -c tessedit_char_whitelist=0123456789,'",
+            "x1": 757,
+            "y1": 3432,
+            "x2": 2301,
+            "y2": 4096
+        },
+        "rectangulo_3": {
+            "tesseract": "r'--psm 6'",
+            "x1": 2139,
+            "y1": 3461,
+            "x2": 3180,
+            "y2": 4096
+        }
+    }
+}
