@@ -8,7 +8,7 @@ def main():
         print("\n👋 Saliendo del programa...\n")
         return
 
-    facturas = fc.extraerFacturas(ruta_PDF, empresa)
+    facturas = fc.procesarFacturas(ruta_PDF, empresa)
     if not facturas:
         print("\n👋 Saliendo del programa...\n")
         return

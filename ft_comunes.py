@@ -5,8 +5,8 @@ import ft_comunes_img as fci
 import fitz  # PyMuPDF
 import sys
 
-def extraerPaginasPDF_tipoImagen(pdf_path, identificador, nif):
-    rectangulos = fci.cagar_rectangulos_json(nif)
+def procesarPaginasPDF_tipoImagen(pdf_path, identificador, nif):
+    rectangulos = fci.cagar_rectangulos_json(nif)   # Cargamos solo la informacion de la empresa
     if not rectangulos:
         return
     print("\nPáginas descartadas: - ", end=" ")
@@ -14,8 +14,10 @@ def extraerPaginasPDF_tipoImagen(pdf_path, identificador, nif):
     pdf_doc = fitz.open(pdf_path)
     total_paginas = len(pdf_doc)
     for n_pag in range(total_paginas):
-        texto = fci.extract_text_form_page(pdf_doc, n_pag, rectangulos)
         spinner(n_pag)
+        imagen_pag = fci.extraer_imagen_de_la_pagina(pdf_doc, n_pag)
+        imagenes = fci.extraer_imagenes_de_los_rectangulos(imagen_pag, rectangulos)
+        texto = fci.extraer_texto_de_las_imagenes(imagenes)
         if texto:
             if identificador in texto:
                 paginas.append(texto)
@@ -24,7 +26,7 @@ def extraerPaginasPDF_tipoImagen(pdf_path, identificador, nif):
     print("\b ")
     return (paginas)
     
-def extraerPaginasPDF_tipoTexto(pdf_path, identificador):
+def procesarPaginasPDF_tipoTexto(pdf_path, identificador):
     print("\nPáginas descartadas: - ", end=" ")
     paginas = []
     with pdfplumber.open(pdf_path) as pdf:
@@ -39,13 +41,13 @@ def extraerPaginasPDF_tipoTexto(pdf_path, identificador):
     print("\b ")
     return (paginas)
 
-def extraerFacturas(path, empresa):
+def procesarFacturas(path, empresa):
     # Carga el modulo de funciones correspondientes a la empresa seleccionada
     fe = import_module(empresa["funciones"][:-3])
     if empresa["tipoPDF"] == "texto":
-        paginas = extraerPaginasPDF_tipoTexto(path, fe.identificador)
+        paginas = procesarPaginasPDF_tipoTexto(path, fe.identificador)
     elif empresa["tipoPDF"] == "imagen":
-        paginas = extraerPaginasPDF_tipoImagen(path, fe.identificador, empresa["nif"])
+        paginas = procesarPaginasPDF_tipoImagen(path, fe.identificador, empresa["nif"])
     else:
         print(f'\n❌ Error: PDF tipo "{empresa["tipoPDF"]}" no es válido')
         return
