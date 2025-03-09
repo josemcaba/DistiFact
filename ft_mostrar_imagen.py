@@ -24,7 +24,7 @@ def get_screen_resolution():
 
     return width, height
 
-def adjust_image_size(image, scale_factor=0.85):
+def adjust_window_size(image, scale_factor=0.85):
     """
     Ajusta el tamaño de la imagen para que se ajuste a la pantalla.
     Devuelve la imagen redimensionada y sus nuevas dimensiones.
@@ -51,33 +51,22 @@ def adjust_image_size(image, scale_factor=0.85):
     new_width = int(img_width * scale)
     new_height = int(img_height * scale)
     
-    # Redimensionar la imagen
-    resized_image = cv2.resize(image, (new_width, new_height))
-    
-    return resized_image, new_width, new_height
+    return new_width, new_height
 
-def mostrar_imagen(image, msec=0, window_name="Imagen"):
+def mostrar_imagen(image, window_name="Imagen", callBack=None):
     """
     Muestra la imagen en una ventana redimensionada.
     """
-    # Ajustar el tamaño de la imagen
-    resized_image, new_width, new_height = adjust_image_size(image)
-    
-    # Crear la ventana
-    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
-    
-    # Mostrar la imagen redimensionada
-    cv2.imshow(window_name, resized_image)
-    
-    # Ajustar el tamaño de la ventana (opcional, ya que la imagen ya está redimensionada)
-    cv2.resizeWindow(window_name, new_width, new_height)
-    
-    # Esperar el tiempo especificado (o hasta que se presione una tecla)
-    cv2.waitKey(msec)
-    
-    # Cerrar la ventana
-    cv2.destroyAllWindows()
+    new_width, new_height = adjust_window_size(image)
 
+    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+    cv2.resizeWindow(window_name, new_width, new_height)
+    cv2.imshow(window_name, image)
+    if callBack:
+        cv2.setMouseCallback(window_name, callBack)
+    cv2.waitKey()
+    cv2.destroyAllWindows()
+    
 # Ejemplo de uso
 if __name__ == "__main__":
     # Cargar una imagen de ejemplo

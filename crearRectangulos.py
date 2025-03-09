@@ -1,8 +1,7 @@
-import fitz  # PyMuPDF
-import numpy as np
 import json
 import cv2
 from ft_seleccionarEmpresa import seleccionarEmpresa
+from ft_mostrar_imagen import mostrar_imagen
 import ft_imagenes as fci
 from sys import exit
 
@@ -12,7 +11,7 @@ drawing = False
 rectangle_counter = 1
 rectangles = {}
 
-def cargar_json (ruta_json):
+def cargar_json_completo(ruta_json):
 	try:
 		with open(ruta_json, "r", encoding='utf-8') as file_json:
 			dict_json = json.load(file_json)
@@ -59,9 +58,8 @@ if not(empresa and ruta_PDF):
 	print("\n👋 Saliendo del programa...\n")
 	exit()
 
-dict_json = cargar_json("rectangulos.json")
-if not (dict_json and dict_json[empresa["nif"]]):
-    print("\nEsa empresa NO tiene sus rectángulos definidos")
+dict_json = cargar_json_completo("rectangulos.json")
+if not dict_json:
     exit()
 
 if empresa["nif"] in dict_json:
@@ -71,18 +69,13 @@ dict_json[empresa["nif"]] = {}
 rectangles = dict_json[empresa["nif"]]
 
 # Extraer la imagen del PDF
-_, img = fci.extract_first_image_from_pdf(ruta_PDF)
+img, _ = fci.extract_first_image_from_pdf(ruta_PDF)
 if img is None:
 	print("No se encontró ninguna imagen en el PDF.")
 	exit()
 
 # Mostrar la imagen en una ventana
-cv2.namedWindow(windowName, cv2.WINDOW_NORMAL)
-fci.adjust_window_size(windowName, img)
-cv2.setMouseCallback(windowName, draw_rectangle)
-cv2.imshow(windowName, img)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+mostrar_imagen(img, windowName, draw_rectangle)
 
 with open("rectangulos.json", "w", encoding='utf-8') as f:
     json.dump(dict_json, f, indent=4)
