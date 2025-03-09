@@ -1,4 +1,4 @@
-import ft_comunes_img as fci
+import ft_imagenes as fci
 import cv2
 import numpy as np
 import fitz  # PyMuPDF

@@ -1,28 +1,30 @@
 from importlib import import_module    # Para importar un modulo almacenado en una variable
 import pandas as pd
 import pdfplumber
-import ft_comunes_img as fci
+import ft_imagenes as fci
 import fitz  # PyMuPDF
 import sys
 
 def procesarPaginasPDF_tipoImagen(pdf_path, identificador, nif):
-    rectangulos = fci.cagar_rectangulos_json(nif)   # Cargamos solo la informacion de la empresa
+    rectangulos = fci.cargar_rectangulos_json(nif, ruta_json="rectangulos.json")   # Cargamos solo la informacion de la empresa
     if not rectangulos:
         return
     print("\nPáginas descartadas: - ", end=" ")
+    # Comprobamos con la primera pagina la rotacion necesaria
+    _, angulo = fci.extract_first_image_from_pdf(pdf_path)  
     paginas = []
-    pdf_doc = fitz.open(pdf_path)
-    total_paginas = len(pdf_doc)
-    for n_pag in range(total_paginas):
-        spinner(n_pag)
-        imagen_pag = fci.extraer_imagen_de_la_pagina(pdf_doc, n_pag)
-        imagenes = fci.extraer_imagenes_de_los_rectangulos(imagen_pag, rectangulos)
-        texto = fci.extraer_texto_de_las_imagenes(imagenes)
-        if texto:
-            if identificador in texto:
-                paginas.append(texto)
-            else:
-                print(f"\b{n_pag} - ", end=" ")
+    with fitz.open(pdf_path) as pdf_doc:
+        total_paginas = len(pdf_doc)
+        for n_pag in range(total_paginas):
+            spinner(n_pag)
+            imagen_pag = fci.extraer_imagen_de_la_pagina(pdf_doc, n_pag, angulo)
+            imagenes = fci.extraer_imagenes_de_los_rectangulos(imagen_pag, rectangulos)
+            texto = fci.extraer_texto_de_las_imagenes(imagenes)
+            if texto:
+                if identificador in texto:
+                    paginas.append(texto)
+                else:
+                    print(f"\b{n_pag} - ", end=" ")
     print("\b ")
     return (paginas)
     

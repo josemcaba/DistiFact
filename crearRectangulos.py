@@ -3,7 +3,7 @@ import numpy as np
 import json
 import cv2
 from ft_seleccionarEmpresa import seleccionarEmpresa
-import ft_comunes_img as fci
+import ft_imagenes as fci
 from sys import exit
 
 # Variables globales
@@ -23,21 +23,6 @@ def cargar_json (ruta_json):
 	except (json.JSONDecodeError):
 		print(f'\n❌ Error: El archivo "{ruta_json}" tiene un formato inválido.')
 		return
-
-def extract_first_image_from_pdf(ruta_pdf):
-    file_pdf = fitz.open(ruta_pdf)
-    if not file_pdf:
-        return None
-    img = file_pdf.get_page_images(0)[0]
-    xref = img[0]
-    base_image = file_pdf.extract_image(xref)
-    image_bytes = base_image["image"]
-    image = cv2.imdecode(np.frombuffer(image_bytes, np.uint8), cv2.IMREAD_COLOR)
-    
-	# Verificar la orientación de la imagen y rotarla si es necesario
-    if image.shape[0] < image.shape[1]:  # Si la altura es menor que el ancho, rotar 90 grados
-        image = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    return image
 
 def draw_rectangle(event, x, y, flags, param):
     global ix, iy, fx, fy, drawing, rectangles, rectangle_counter
@@ -86,7 +71,7 @@ dict_json[empresa["nif"]] = {}
 rectangles = dict_json[empresa["nif"]]
 
 # Extraer la imagen del PDF
-img = extract_first_image_from_pdf(ruta_PDF)
+_, img = fci.extract_first_image_from_pdf(ruta_PDF)
 if img is None:
 	print("No se encontró ninguna imagen en el PDF.")
 	exit()
