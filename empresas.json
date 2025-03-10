@@ -4,5 +4,6 @@
     "3": {"nombre": "Gregorio Aranda", "nif": "25693621E", "funciones": "_Gregorio_Funciones.py", "tipoPDF": "texto"},
     "4": {"nombre": "Rosa Maria Moncayo", "nif": "25042336M", "funciones": "_Moncayo_Funciones.py", "tipoPDF": "texto"},
     "5": {"nombre": "FACCSA", "nif": "A17001231", "funciones": "_FACCSA_Funciones.py", "tipoPDF": "imagen"},
-    "6": {"nombre": "ADISADI", "nif": "B93643245", "funciones": "_ADISADI_Funciones.py", "tipoPDF": "imagen"}
+    "6": {"nombre": "ADISADI", "nif": "B93643245", "funciones": "_ADISADI_Funciones.py", "tipoPDF": "imagen"},
+    "7": {"nombre": "Ignacio Ibanez", "nif": "33360360X", "funciones": "_Ignacio_Funciones.py", "tipoPDF": "imagen"}
 }

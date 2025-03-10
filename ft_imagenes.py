@@ -72,9 +72,9 @@ def extraer_texto_de_las_imagenes(imagenes, verRectangulos=False):
 
 def extraer_texto_de_imagen(imagen, tesseract_config, verRectangulos=False):
     # Preprocesar la imagen
-    # imagen = preprocesar_imagen(imagen)
-    # if imagen is None:
-    #     return ""
+    imagen = preprocesar_imagen(imagen)
+    if imagen is None:
+        return ""
 
     # Ajustar la resolución
     # processed_image = adjust_resolution(processed_image)
@@ -84,11 +84,14 @@ def extraer_texto_de_imagen(imagen, tesseract_config, verRectangulos=False):
     # tesseract_config = "--psm 6 --oem 3 -c tessedit_char_blacklist=\"@#$&*{A}[]:;\""
     text = pytesseract.image_to_string(pil_image, config=tesseract_config)
     if verRectangulos:
-        print("\n************\n", text)
+        print(text)
         mostrar_imagen(imagen) 
     return text
 
 def preprocesar_imagen(imagen):
+
+    return imagen
+    
     if len(imagen.shape) == 2:  # La imagen ya está en escala de grises (1 canal)
         gray = imagen
     elif len(imagen.shape) == 3:  # La imagen tiene 3 canales (BGR)
@@ -98,6 +101,8 @@ def preprocesar_imagen(imagen):
 
     # Aplicar umbralización (binarización)
     _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+    return binary
 
     # Calcular el área de píxeles blancos para ver si hay suficiente texto en la imagen
     min_text_area=100

@@ -20,8 +20,8 @@ def main():
         for n_pag in range(total_paginas):
             imagen_pag = fti.extraer_imagen_de_la_pagina(pdf_doc, n_pag, angulo)
             imagenes = fti.extraer_imagenes_de_los_rectangulos(imagen_pag, rectangulos)
+            print(f"\n>>>>> Página {n_pag+1}")
             for imagen in imagenes:
-                print(f"\rPágina {n_pag+1} ", end="")
                 texto = fti.extraer_texto_de_imagen(imagen[0], imagen[1], verRectangulos=True)
     return
 

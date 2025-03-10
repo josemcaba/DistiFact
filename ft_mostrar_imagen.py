@@ -24,7 +24,7 @@ def get_screen_resolution():
 
     return width, height
 
-def adjust_window_size(image, scale_factor=0.85):
+def adjust_window_size(image, scale_factor=0.90):
     """
     Ajusta el tamaño de la imagen para que se ajuste a la pantalla.
     Devuelve la imagen redimensionada y sus nuevas dimensiones.

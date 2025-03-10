@@ -32,5 +32,36 @@
             "tesseract": "--psm 6 --oem 3 -c tessedit_char_blacklist=\"=@#$&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "angulo": 0
+    },
+    "33360360X": {
+        "rectangulo_1": {
+            "x1": 1231,
+            "y1": 351,
+            "x2": 2233,
+            "y2": 771,
+            "tesseract": "--psm 6 --oem 3 -c tessedit_char_blacklist=\"=@#$&*{}[]:;\" -c preserve_interword_spaces=1"
+        },
+        "rectangulo_2": {
+            "x1": 22,
+            "y1": 385,
+            "x2": 668,
+            "y2": 788,
+            "tesseract": "--psm 6 --oem 3 -c tessedit_char_blacklist=\"=@#$&*{}[]:;\" -c preserve_interword_spaces=1"
+        },
+        "rectangulo_3": {
+            "x1": 663,
+            "y1": 385,
+            "x2": 1223,
+            "y2": 801,
+            "tesseract": "--psm 6 --oem 3 -c tessedit_char_blacklist=\"=@#$&*{}[]:;\" -c preserve_interword_spaces=1"
+        },
+        "rectangulo_4": {
+            "x1": 564,
+            "y1": 2819,
+            "x2": 2419,
+            "y2": 3144,
+            "tesseract": "--psm 6 --oem 3 -c tessedit_char_blacklist=\"=@#$&*{}[]:;\" -c preserve_interword_spaces=1"
+        },
+        "angulo": 270
     }
 }
