@@ -113,3 +113,15 @@ def re_search(regex, pagina):
     """
     match = re.search(regex, pagina)
     return match.group(1) if match and match.lastindex else None
+
+def re_search_multiple(regex, pagina):
+    """
+    Extrae texto segun un patron regex
+    """
+    groups = []
+    match = re.search(regex, pagina)
+    if match and match.lastindex:
+        for i in range(match.lastindex):
+            groups.append(match.group(i+1))
+        return groups
+    return None

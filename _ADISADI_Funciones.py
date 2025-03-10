@@ -1,5 +1,5 @@
 import re
-import ft_basicas as fb
+import ft_basicas as ftb
 import ft_verificadores as verificar
 
 # El parámetro identificador es un texto que debe aparecer en la página
@@ -20,35 +20,33 @@ def extraerDatosFactura(pagina, empresa):
     factura = {}
 
     regex = r"FACTURA\s*(.+)"
-    factura["Numero Factura"] = fb.re_search(regex, pagina)
+    factura["Numero Factura"] = ftb.re_search(regex, pagina)
 
-    regex = r"FECHA\s*([\d.]+)"
-    factura["Fecha Factura"] = fb.re_search(regex, pagina)
+    regex = r"FECHA.*\s+([\d/]+)"
+    factura["Fecha Factura"] = ftb.re_search(regex, pagina)
     factura["Fecha Operacion"] = factura["Fecha Factura"]
     
     factura["Concepto"] = 600
 
-    regex = r"BASE\s*IMPONIB.\s*(.+)"
-    factura["Base IVA"] = fb.re_search(regex, pagina)
-    factura["Tipo IVA"] = 10
-    regex = r"TOTAL\s*IVA\s*(.+)"
-    factura["Cuota IVA"] = fb.re_search(regex, pagina)
+    regex = r"([\d\.,]+)\s+(\d+)\s+([\d\.,]+)\s+([\d\.,]+)"
+    grupos = ftb.re_search_multiple(regex, pagina)
+    grupos_ok = grupos and (len(grupos) == 4)
+    factura["Base IVA"] = grupos[0] if grupos_ok else None
+    factura["Tipo IVA"] = grupos[1] if grupos_ok else None
+    factura["Cuota IVA"] = grupos[2] if grupos_ok else None
+    factura["Total Factura"] = grupos[3] if grupos_ok else None
     
     factura["Base IRPF"] = factura["Base IVA"]
-    factura["Tipo IRPF"] = 0
-    factura["Cuota IRPF"] = 0
+    factura["Tipo IRPF"] = 0.0
+    factura["Cuota IRPF"] = 0.0
 
     factura["Base R. Equiv."] = factura["Base IVA"]
-    factura["Tipo R. Equiv."] = 1.4
-    regex = r"TOTAL\s*R.E.\s*(.+)"
-    factura["Cuota R. Equiv."] = fb.re_search(regex, pagina)
+    factura["Tipo R. Equiv."] = 0.0
+    factura["Cuota R. Equiv."] = 0.0
 
-    factura["NIF"] = "A17001231"
+    factura["NIF"] = "B93643245"
 
-    factura["Nombre"] = "FRIG. AND. CONSERVAS CARNES SA"
-
-    regex = r"TOTAL\s*FACTURA.*?([\d]+\s*,\s*\d+)"
-    factura["Total Factura"] = fb.re_search(regex, pagina)
+    factura["Nombre"] = "ADISADI 1999 S.L."
 
     return(factura)     
 
@@ -85,22 +83,14 @@ def clasificar_facturas(facturas):
         error = verificar.num_factura(factura)
         errores.append(error) if error else None
 
-        # >>>>>>>>>> AJUSTES PERSONALIZADOS <<<<<<<<<< #
-        if factura["Fecha Factura"]:
-            factura["Fecha Factura"] = factura["Fecha Factura"].replace(".","/")
         error = verificar.fecha(factura)
         errores.append(error) if error else None
 
         conceptos = ["Base IVA", "Tipo IVA", "Cuota IVA",
-                    "Base IRPF", "Tipo IRPF", "Cuota IRPF",
-                    "Base R. Equiv.", "Tipo R. Equiv.", 
-                    "Cuota R. Equiv.", "Total Factura"]
+                    "Base IRPF", "Base R. Equiv.", "Total Factura"]
         for concepto in conceptos:
             error = verificar.importe(factura, concepto)
-            if concepto == "Total Factura":
-                observaciones.append(error) if error else None
-            else:
-                errores.append(error) if error else None
+            errores.append(error) if error else None
                 
         error = verificar.nif(factura)
         errores.append(error) if error else None
@@ -108,10 +98,7 @@ def clasificar_facturas(facturas):
         error = verificar.nombre(factura)
         errores.append(error) if error else None
 
-        error = verificar.calculo_cuota_iva(factura)
-        errores.append(error) if error else None
-
-        error = verificar.calculo_cuota(factura, "R. Equiv.")
+        error = verificar.calculo_cuota(factura, "IVA")
         errores.append(error) if error else None
 
         error = verificar.calculos_totales(factura)
