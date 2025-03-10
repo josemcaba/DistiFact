@@ -19,37 +19,35 @@ identificador="FACTURA"
 def extraerDatosFactura(pagina, empresa):
     factura = {}
 
-    regex = r"FACTURA\s+(.+)"
+    regex = r"FACTURA\s*(.+)"
     factura["Numero Factura"] = fb.re_search(regex, pagina)
 
-    regex = r"FECHA\s+([\d.]+)"
+    regex = r"FECHA\s*([\d.]+)"
     factura["Fecha Factura"] = fb.re_search(regex, pagina)
     factura["Fecha Operacion"] = factura["Fecha Factura"]
     
     factura["Concepto"] = 600
 
-    regex = r"BASE\s*IMPONIB.\s+(.+)"
+    regex = r"BASE\s*IMPONIB.\s*(.+)"
     factura["Base IVA"] = fb.re_search(regex, pagina)
-    
-    # regex = r"IVA\s+(.+)\s*%"
-    # factura["Tipo IVA"] = fb.re_search(regex, pagina)
     factura["Tipo IVA"] = 10
-
-    regex = r"TOTAL\s*IVA\s+(.+)"
+    regex = r"TOTAL\s*IVA\s*(.+)"
     factura["Cuota IVA"] = fb.re_search(regex, pagina)
     
     factura["Base IRPF"] = factura["Base IVA"]
     factura["Tipo IRPF"] = 0
     factura["Cuota IRPF"] = 0
+
     factura["Base R. Equiv."] = factura["Base IVA"]
-    factura["Tipo R. Equiv."] = 0
-    factura["Cuota R. Equiv."] = 0
+    factura["Tipo R. Equiv."] = 1.4
+    regex = r"TOTAL\s*R.E.\s*(.+)"
+    factura["Cuota R. Equiv."] = fb.re_search(regex, pagina)
 
     factura["NIF"] = "A17001231"
 
     factura["Nombre"] = "FACCSA"
 
-    regex = r"TOTAL\s+(.+)"
+    regex = r"TOTAL\s*FACTURA.*?([\d]+\s*,\s*\d+)"
     factura["Total Factura"] = fb.re_search(regex, pagina)
 
     return(factura)     
@@ -93,18 +91,17 @@ def clasificar_facturas(facturas):
         error = verificar.fecha(factura)
         errores.append(error) if error else None
 
-        error = verificar.base_iva(factura)
-        errores.append(error) if error else None
-
-        error = verificar.tipo_iva(factura)
-        errores.append(error) if error else None
-
-        error = verificar.cuota_iva(factura)
-        errores.append(error) if error else None
-        
-        error = verificar.total_factura(factura)
-        errores.append(error) if error else None
-
+        conceptos = ["Base IVA", "Tipo IVA", "Cuota IVA",
+                    "Base IRPF", "Tipo IRPF", "Cuota IRPF",
+                    "Base R. Equiv.", "Tipo R. Equiv.", 
+                    "Cuota R. Equiv.", "Total Factura"]
+        for concepto in conceptos:
+            error = verificar.importe(factura, concepto)
+            if concepto == "Total Factura":
+                observaciones.append(error) if error else None
+            else:
+                errores.append(error) if error else None
+                
         error = verificar.nif(factura)
         errores.append(error) if error else None
 
@@ -114,8 +111,11 @@ def clasificar_facturas(facturas):
         error = verificar.calculo_cuota_iva(factura)
         errores.append(error) if error else None
 
-        error = verificar.calculos_totales(factura)
+        error = verificar.calculo_cuota(factura, "R. Equiv.")
         errores.append(error) if error else None
+
+        error = verificar.calculos_totales(factura)
+        observaciones.append(error) if error else None
 
         if errores:
             factura["Errores"] = ", ".join(errores)

@@ -9,9 +9,8 @@ def procesarPaginasPDF_tipoImagen(pdf_path, identificador, nif):
     rectangulos = fci.cargar_rectangulos_json(nif, ruta_json="rectangulos.json")   # Cargamos solo la informacion de la empresa
     if not rectangulos:
         return
-    print("\nPáginas descartadas: - ", end=" ")
-    # Comprobamos con la primera pagina la rotacion necesaria
-    _, angulo = fci.extract_first_image_from_pdf(pdf_path)  
+    angulo = rectangulos["angulo"]
+    print("\nPáginas descartadas: - ", end=" ")  
     paginas = []
     with fitz.open(pdf_path) as pdf_doc:
         total_paginas = len(pdf_doc)
@@ -19,7 +18,7 @@ def procesarPaginasPDF_tipoImagen(pdf_path, identificador, nif):
             spinner(n_pag)
             imagen_pag = fci.extraer_imagen_de_la_pagina(pdf_doc, n_pag, angulo)
             imagenes = fci.extraer_imagenes_de_los_rectangulos(imagen_pag, rectangulos)
-            texto = fci.extraer_texto_de_las_imagenes(imagenes)
+            texto = fci.extraer_texto_de_las_imagenes(imagenes, verRectangulos=False)
             if texto:
                 if identificador in texto:
                     paginas.append(texto)

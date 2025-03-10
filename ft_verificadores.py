@@ -17,6 +17,17 @@ def fecha(factura, is_eeuu=False):
     factura["Fecha Operacion"] = fecha
     return False # No hay errores
 
+def importe(factura, concepto, decimal=','):
+    if factura[concepto] is None:
+        return (f"{concepto} no encontrado")
+
+    tipo = fb.convertir_a_float(factura[concepto])
+    if tipo is None:
+        return (f"{concepto} incorrecto")
+    
+    factura[concepto] = tipo
+    return False # No hay errores
+
 def base_iva(factura, decimal=','):
     if factura["Base IVA"] is None:
         return ("Base IVA no encontrada")
@@ -91,6 +102,23 @@ def calculo_cuota_iva(factura):
     if abs(cuota_calculada - cuota) >= 0.015:
         return (f"Diferencia en cuota IVA ({cuota_calculada} != {cuota})")
     return False # No hay errores
+
+def calculo_cuota(factura, concepto):
+    base = "Base " + concepto
+    tipo = "Tipo " + concepto
+    cuota = "Cuota " + concepto
+    base = factura[base]
+    tipo = factura[tipo]
+    cuota = factura[cuota]
+    if not (isinstance(base, float) and \
+            isinstance(tipo, float) and \
+            isinstance(cuota, float)):
+        return (f"Cuota {concepto} no calculable")
+    cuota_calculada = round(base * tipo / 100, 2)
+    if abs(cuota_calculada - cuota) >= 0.015:
+        return (f"Diferencia en {concepto} ({cuota_calculada} != {cuota})")
+    return False # No hay errores
+
 
 def calculos_totales(factura):
     base = factura["Base IVA"]
