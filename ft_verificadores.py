@@ -119,16 +119,19 @@ def calculo_cuota(factura, concepto):
         return (f"Diferencia en {concepto} ({cuota_calculada} != {cuota})")
     return False # No hay errores
 
-
 def calculos_totales(factura):
     base = factura["Base IVA"]
-    cuota = factura["Cuota IVA"]
+    cuota_iva = factura["Cuota IVA"]
+    cuota_irpf = factura["Cuota IRPF"]
+    cuota_re = factura["Cuota R. Equiv."]
     total = factura["Total Factura"]
     if not (isinstance(base, float) and \
-            isinstance(cuota, float) and \
+            isinstance(cuota_iva, float) and \
+           isinstance(cuota_irpf, float) and \
+           isinstance(cuota_re, float) and \
             isinstance(total, float)):
         return "Total factura no calculable"
-    total_calculado = round(base + cuota, 2)
+    total_calculado = round(base + cuota_iva + cuota_irpf + cuota_re, 2)
     if abs(total_calculado - total) >= 0.015:
         return (f"Diferencia en total factura ({total_calculado} != {total})")
     return False # No hay errores

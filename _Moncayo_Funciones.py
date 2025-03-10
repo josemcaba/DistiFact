@@ -38,11 +38,11 @@ def extraerDatosFactura(pagina, empresa):
     factura["Cuota IVA"] = fb.re_search(regex, pagina)
     
     factura["Base IRPF"] = factura["Base IVA"]
-    factura["Tipo IRPF"] = 0
-    factura["Cuota IRPF"] = 0
+    factura["Tipo IRPF"] = 0.0
+    factura["Cuota IRPF"] = 0.0
     factura["Base R. Equiv."] = factura["Base IVA"]
-    factura["Tipo R. Equiv."] = 0
-    factura["Cuota R. Equiv."] = 0
+    factura["Tipo R. Equiv."] = 0.0
+    factura["Cuota R. Equiv."] = 0.0
 
     factura["NIF"] = nif_cliente(pagina, empresa)
 
