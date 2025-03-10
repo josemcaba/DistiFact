@@ -1,3 +1,4 @@
+import conceptos_factura as KEY
 import re
 import ft_basicas as fb
 import ft_verificadores as verificar
@@ -20,38 +21,38 @@ def extraerDatosFactura(pagina, empresa):
     factura = {}
 
     regex = r"Nº factura\s*(\d+)"
-    factura["Numero Factura"] = fb.re_search(regex, pagina)
+    factura[KEY.NUM_FACT] = fb.re_search(regex, pagina)
 
     regex = r"Fecha emisión\s*(.*)"
-    factura["Fecha Factura"] = fb.re_search(regex, pagina)
-    factura["Fecha Operacion"] = factura["Fecha Factura"]
+    factura[KEY.FECHA_FACT] = fb.re_search(regex, pagina)
+    factura[KEY.FECHA_OPER] = factura[KEY.FECHA_FACT]
     
-    factura["Concepto"] = 700
+    factura[KEY.CONCEPTO] = 700
  
     regex = r"Base\s*([\d,\.]+)"
-    factura["Base IVA"] = fb.re_search(regex, pagina)
+    factura[KEY.BASE_IVA] = fb.re_search(regex, pagina)
 
-    factura["Tipo IVA"] = 10.0
+    factura[KEY.TIPO_IVA] = 10.0
 
     regex = r"IVA\s*([\d,\.]+)"
-    factura["Cuota IVA"] = fb.re_search(regex, pagina)
+    factura[KEY.CUOTA_IVA] = fb.re_search(regex, pagina)
 
-    factura["Base IRPF"] = factura["Base IVA"]
-    factura["Tipo IRPF"] = 0.0
-    factura["Cuota IRPF"] = 0.0
-    factura["Base R. Equiv."] = factura["Base IVA"]
-    factura["Tipo R. Equiv."] = 0.0
-    factura["Cuota R. Equiv."] = 0.0
+    factura[KEY.BASE_IRPF] = factura[KEY.BASE_IVA]
+    factura[KEY.TIPO_IRPF] = 0.0
+    factura[KEY.CUOTA_IRPF] = 0.0
+    factura[KEY.BASE_RE] = factura[KEY.BASE_IVA]
+    factura[KEY.TIPO_RE] = 0.0
+    factura[KEY.CUOTA_RE] = 0.0
 
     nif_empresa = empresa["nif"][:8] + "-" + empresa["nif"][-1]
     regex = rf"{nif_empresa}\s*(.+)"
-    factura["NIF"] = fb.re_search(regex, pagina)
+    factura[KEY.NIF] = fb.re_search(regex, pagina)
 
     regex = rf"{empresa['nombre']}\s*(.+)"
-    factura["Nombre"] = fb.re_search(regex, pagina)
+    factura[KEY.EMPRESA] = fb.re_search(regex, pagina)
 
     regex = r"Total\s*([\d,\.]+)\s*€?"
-    factura["Total Factura"] = fb.re_search(regex, pagina)
+    factura[KEY.TOTAL_FACT] = fb.re_search(regex, pagina)
 
     return(factura) 
 
@@ -76,7 +77,7 @@ def clasificar_facturas(facturas):
         errores.append(error) if error else None
 
         # >>>>>>>>>> AJUSTES PERSONALIZADOS <<<<<<<<<< #
-        factura["Fecha Factura"] = re.sub(r"[-,]","", factura["Fecha Factura"])
+        factura[KEY.FECHA_FACT] = re.sub(r"[-,]","", factura[KEY.FECHA_FACT])
         error = verificar.fecha(factura, is_eeuu=True)
         errores.append(error) if error else None
 
@@ -90,24 +91,24 @@ def clasificar_facturas(facturas):
         errores.append(error) if error else None
 
         # >>>>>>>>>> AJUSTES PROVISIONALES <<<<<<<<<< #
-        nif = re.sub(r"[^a-zA-Z0-9]","",factura["NIF"]).upper() if factura["NIF"] else None
+        nif = re.sub(r"[^a-zA-Z0-9]","",factura[KEY.NIF]).upper() if factura[KEY.NIF] else None
         if nif == "X3581661W":
             nif = "X3586116W"
             observaciones.append("Corregido NIF erroneo que aparece en factura: X3581661W")
-        factura["NIF"] = nif
+        factura[KEY.NIF] = nif
         error = verificar.nif(factura)
         errores.append(error) if error else None
  
         # >>>>>>>>>> AJUSTES PROVISIONALES <<<<<<<<<< #
-        if factura["Nombre"] and len(factura["Nombre"]) > 40:
-            factura["Nombre"] = acorta_nombre_cliente(factura)
+        if factura[KEY.EMPRESA] and len(factura[KEY.EMPRESA]) > 40:
+            factura[KEY.EMPRESA] = acorta_nombre_cliente(factura)
             observaciones.append("Acortado el nombre del nombre a un máximo de 40 caracteres")
         error = verificar.nombre(factura)
         errores.append(error) if error else None
 
-        error = verificar.calculo_cuota_iva(factura)
+        error = verificar.calculo_cuota(factura, KEY.CUOTA_IVA)
         # >>>>>>>>>> AJUSTES PROVISIONALES <<<<<<<<<< #
-        if error == "Cuota de IVA no calculable":
+        if error == f"Cuota {KEY.BASE_IVA} no calculable":
             errores.append(error) if error else None
         elif error:
             observacion = verificar.corrige_por_total(factura)
@@ -131,7 +132,7 @@ def clasificar_facturas(facturas):
     return facturas_correctas, facturas_con_errores
 
 def acorta_nombre_cliente(factura):
-    nombre = factura["Nombre"]
+    nombre = factura[KEY.EMPRESA]
     if nombre[:20] == "Ramírez Sánchez S.L.":
         nombre = "Ramírez Sánchez S.L. 'Rest Refrectorium'"
     elif nombre[:21] == "Luis Gaspar Rodríguez":

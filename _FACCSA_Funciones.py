@@ -1,3 +1,4 @@
+import conceptos_factura as KEY
 import re
 import ft_basicas as fb
 import ft_verificadores as verificar
@@ -20,35 +21,35 @@ def extraerDatosFactura(pagina, empresa):
     factura = {}
 
     regex = r"FACTURA\s*(.+)"
-    factura["Numero Factura"] = fb.re_search(regex, pagina)
+    factura[KEY.NUM_FACT] = fb.re_search(regex, pagina)
 
     regex = r"FECHA\s*([\d.]+)"
-    factura["Fecha Factura"] = fb.re_search(regex, pagina)
-    factura["Fecha Operacion"] = factura["Fecha Factura"]
+    factura[KEY.FECHA_FACT] = fb.re_search(regex, pagina)
+    factura[KEY.FECHA_OPER] = factura[KEY.FECHA_FACT]
     
-    factura["Concepto"] = 600
+    factura[KEY.CONCEPTO] = 600
 
     regex = r"BASE\s*IMPONIB.\s*(.+)"
-    factura["Base IVA"] = fb.re_search(regex, pagina)
-    factura["Tipo IVA"] = 10
+    factura[KEY.BASE_IVA] = fb.re_search(regex, pagina)
+    factura[KEY.TIPO_IVA] = 10
     regex = r"TOTAL\s*IVA\s*(.+)"
-    factura["Cuota IVA"] = fb.re_search(regex, pagina)
+    factura[KEY.CUOTA_IVA] = fb.re_search(regex, pagina)
     
-    factura["Base IRPF"] = factura["Base IVA"]
-    factura["Tipo IRPF"] = 0
-    factura["Cuota IRPF"] = 0
+    factura[KEY.BASE_IRPF] = factura[KEY.BASE_IVA]
+    factura[KEY.TIPO_IRPF] = 0
+    factura[KEY.CUOTA_IRPF] = 0
 
-    factura["Base R. Equiv."] = factura["Base IVA"]
-    factura["Tipo R. Equiv."] = 1.4
+    factura[KEY.BASE_RE] = factura[KEY.BASE_IVA]
+    factura[KEY.TIPO_RE] = 1.4
     regex = r"TOTAL\s*R.E.\s*(.+)"
-    factura["Cuota R. Equiv."] = fb.re_search(regex, pagina)
+    factura[KEY.CUOTA_RE] = fb.re_search(regex, pagina)
 
-    factura["NIF"] = "A17001231"
+    factura[KEY.NIF] = "A17001231"
 
-    factura["Nombre"] = "FRIG. AND. CONSERVAS CARNES SA"
+    factura[KEY.EMPRESA] = "FRIG. AND. CONSERVAS CARNES SA"
 
     regex = r"TOTAL\s*FACTURA.*?([\d]+\s*,\s*\d+)"
-    factura["Total Factura"] = fb.re_search(regex, pagina)
+    factura[KEY.TOTAL_FACT] = fb.re_search(regex, pagina)
 
     return(factura)     
 
@@ -86,18 +87,18 @@ def clasificar_facturas(facturas):
         errores.append(error) if error else None
 
         # >>>>>>>>>> AJUSTES PERSONALIZADOS <<<<<<<<<< #
-        if factura["Fecha Factura"]:
-            factura["Fecha Factura"] = factura["Fecha Factura"].replace(".","/")
+        if factura[KEY.FECHA_FACT]:
+            factura[KEY.FECHA_FACT] = factura[KEY.FECHA_FACT].replace(".","/")
         error = verificar.fecha(factura)
         errores.append(error) if error else None
 
-        conceptos = ["Base IVA", "Tipo IVA", "Cuota IVA",
-                    "Base IRPF", "Tipo IRPF", "Cuota IRPF",
-                    "Base R. Equiv.", "Tipo R. Equiv.", 
-                    "Cuota R. Equiv.", "Total Factura"]
+        conceptos = [KEY.BASE_IVA, KEY.TIPO_IVA, KEY.CUOTA_IVA,
+                    KEY.BASE_IRPF, KEY.TIPO_IRPF, KEY.CUOTA_IRPF,
+                    KEY.BASE_RE, KEY.TIPO_RE, 
+                    KEY.CUOTA_RE, KEY.TOTAL_FACT]
         for concepto in conceptos:
             error = verificar.importe(factura, concepto)
-            if concepto == "Total Factura":
+            if concepto == KEY.TOTAL_FACT:
                 observaciones.append(error) if error else None
             else:
                 errores.append(error) if error else None
@@ -108,10 +109,10 @@ def clasificar_facturas(facturas):
         error = verificar.nombre(factura)
         errores.append(error) if error else None
 
-        error = verificar.calculo_cuota_iva(factura)
+        error = verificar.calculo_cuota(factura, KEY.CUOTA_IVA)
         errores.append(error) if error else None
 
-        error = verificar.calculo_cuota(factura, "R. Equiv.")
+        error = verificar.calculo_cuota(factura, KEY.CUOTA_RE)
         errores.append(error) if error else None
 
         error = verificar.calculos_totales(factura)

@@ -1,20 +1,21 @@
+import conceptos_factura as KEY
 import ft_basicas as fb
 
 def num_factura(factura):
-	if factura["Numero Factura"] is None:
-		return ("Numero Factura no encontrado")
+	if factura[KEY.NUM_FACT] is None:
+		return (f"{KEY.NUM_FACT} no encontrado")
 	return False # No hay errores
 
 def fecha(factura, is_eeuu=False):
-    if factura["Fecha Factura"] is None:
-        return ("Fecha Factura no encontrada")
+    if factura[KEY.FECHA_FACT] is None:
+        return (f"{KEY.FECHA_FACT} no encontrada")
 
-    fecha = fb.validar_fecha(factura["Fecha Factura"], is_eeuu)
+    fecha = fb.validar_fecha(factura[KEY.FECHA_FACT], is_eeuu)
     if not fecha:
-        return ("Fecha Factura incorrecta")
+        return (f"{KEY.FECHA_FACT} incorrecta")
 
-    factura["Fecha Factura"] = fecha
-    factura["Fecha Operacion"] = fecha
+    factura[KEY.FECHA_FACT] = fecha
+    factura[KEY.FECHA_OPER] = fecha
     return False # No hay errores
 
 def importe(factura, concepto, decimal=','):
@@ -29,84 +30,95 @@ def importe(factura, concepto, decimal=','):
     return False # No hay errores
 
 def base_iva(factura, decimal=','):
-    if factura["Base IVA"] is None:
-        return ("Base IVA no encontrada")
+    if factura[KEY.BASE_IVA] is None:
+        return (f"{KEY.BASE_IVA} no encontrada")
 
-    base = fb.convertir_a_float(factura["Base IVA"])
+    base = fb.convertir_a_float(factura[KEY.BASE_IVA])
     if base is None:
-        return ("Base IVA incorrecta")
+        return (f"{KEY.BASE_IVA} incorrecta")
     
-    factura["Base IVA"] = base
-    factura["Base IRPF"] = base
-    factura["Base R. Equiv."] = base
+    factura[KEY.BASE_IVA] = base
+    factura[KEY.BASE_IRPF] = base
+    factura[KEY.BASE_RE] = base
     return False # No hay errores
 
 def tipo_iva(factura, decimal=','):
-    if factura["Tipo IVA"] is None:
-        return ("Tipo IVA no encontrada")
+    if factura[KEY.TIPO_IVA] is None:
+        return (f"{KEY.TIPO_IVA} no encontrada")
 
-    tipo = fb.convertir_a_float(factura["Tipo IVA"])
+    tipo = fb.convertir_a_float(factura[KEY.TIPO_IVA])
     if tipo is None:
-        return ("Tipo IVA incorrecta")
+        return (f"{KEY.TIPO_IVA} incorrecta")
     
-    factura["Tipo IVA"] = tipo
+    factura[KEY.TIPO_IVA] = tipo
     return False # No hay errores
 
 def cuota_iva(factura, decimal=','):
-    if factura["Cuota IVA"] is None:
-        return ("Cuota IVA no encontrada")
+    if factura[KEY.CUOTA_IVA] is None:
+        return (f"{KEY.CUOTA_IVA} no encontrada")
 
-    cuota = fb.convertir_a_float(factura["Cuota IVA"])
+    cuota = fb.convertir_a_float(factura[KEY.CUOTA_IVA])
     if cuota is None:
-        factura["Cuota IVA"] = None
-        return ("Cuota IVA incorrecta")
+        factura[KEY.CUOTA_IVA] = None
+        return (f"{KEY.CUOTA_IVA} incorrecta")
     
-    factura["Cuota IVA"] = cuota
+    factura[KEY.CUOTA_IVA] = cuota
     return False # No hay errores
 
 def total_factura(factura, decimal=','):
-    if factura["Total Factura"] is None:
-        return ("Total Factura no encontrada")
+    if factura[KEY.TOTAL_FACT] is None:
+        return (f"{KEY.TOTAL_FACT} no encontrada")
 
-    total = fb.convertir_a_float(factura["Total Factura"])
+    total = fb.convertir_a_float(factura[KEY.TOTAL_FACT])
     if total is None:
-        return ("Total Factura incorrecto")
+        return (f"{KEY.TOTAL_FACT} incorrecto")
     
-    factura["Total Factura"] = total
+    factura[KEY.TOTAL_FACT] = total
     return False # No hay errores
 
 def nif(factura):
-    if factura["NIF"] is None:
-        return ("NIF no encontrado")
+    if factura[KEY.NIF] is None:
+        return (f"{KEY.NIF} no encontrado")
 
-    if not fb.validar_nif(factura["NIF"]):
-        return ("NIF incorrecto")
+    if not fb.validar_nif(factura[KEY.NIF]):
+        return (f"{KEY.NIF} incorrecto")
     return False # No hay errores
 
 def nombre(factura):
-    if factura["Nombre"] is None:
-        return ("Nombre no encontrado")
-    if len(factura["Nombre"]) > 40:
-        return ("Nombre demasiado largo. Máximo 40 caracteres.")
+    if factura[KEY.EMPRESA] is None:
+        return (f"{KEY.EMPRESA} no encontrado")
+    if len(factura[KEY.EMPRESA]) > 40:
+        return (f"{KEY.EMPRESA} demasiado largo. Máximo 40 caracteres.")
     return False # No hay errores
 
-def calculo_cuota_iva(factura):
-    base = factura["Base IVA"]
-    tipo = factura["Tipo IVA"]
-    cuota = factura["Cuota IVA"]
-    if not (isinstance(base, float) and \
-            isinstance(tipo, float) and \
-            isinstance(cuota, float)):
-        return ("Cuota de IVA no calculable")
-    cuota_calculada = round(base * tipo / 100, 2)
-    if abs(cuota_calculada - cuota) >= 0.015:
-        return (f"Diferencia en cuota IVA ({cuota_calculada} != {cuota})")
-    return False # No hay errores
+# def calculo_cuota_iva(factura):
+#     base = factura[KEY.BASE_IVA]
+#     tipo = factura[KEY.TIPO_IVA]
+#     cuota = factura[KEY.CUOTA_IVA]
+#     if not (isinstance(base, float) and \
+#             isinstance(tipo, float) and \
+#             isinstance(cuota, float)):
+#         return ("Cuota de IVA no calculable")
+#     cuota_calculada = round(base * tipo / 100, 2)
+#     if abs(cuota_calculada - cuota) >= 0.015:
+#         return (f"Diferencia en cuota IVA ({cuota_calculada} != {cuota})")
+#     return False # No hay errores
 
 def calculo_cuota(factura, concepto):
-    base = "Base " + concepto
-    tipo = "Tipo " + concepto
-    cuota = "Cuota " + concepto
+    if concepto == KEY.CUOTA_IVA:
+        base = KEY.BASE_IVA
+        tipo = KEY.TIPO_IVA
+        cuota = KEY.CUOTA_IVA
+    elif concepto == KEY.CUOTA_IRPF:
+        base = KEY.BASE_IRPF
+        tipo = KEY.TIPO_IRPF
+        cuota = KEY.CUOTA_IRPF
+    elif concepto == KEY.CUOTA_RE:
+        base = KEY.BASE_RE
+        tipo = KEY.TIPO_RE
+        cuota = KEY.CUOTA_RE
+    else:
+        return (f'No se puede calcular la "{concepto}"')
     base = factura[base]
     tipo = factura[tipo]
     cuota = factura[cuota]
@@ -120,11 +132,11 @@ def calculo_cuota(factura, concepto):
     return False # No hay errores
 
 def calculos_totales(factura):
-    base = factura["Base IVA"]
-    cuota_iva = factura["Cuota IVA"]
-    cuota_irpf = factura["Cuota IRPF"]
-    cuota_re = factura["Cuota R. Equiv."]
-    total = factura["Total Factura"]
+    base = factura[KEY.BASE_IVA]
+    cuota_iva = factura[KEY.CUOTA_IVA]
+    cuota_irpf = factura[KEY.CUOTA_IRPF]
+    cuota_re = factura[KEY.CUOTA_RE]
+    total = factura[KEY.TOTAL_FACT]
     if not (isinstance(base, float) and \
             isinstance(cuota_iva, float) and \
            isinstance(cuota_irpf, float) and \
@@ -137,25 +149,27 @@ def calculos_totales(factura):
     return False # No hay errores
 
 def corrige_por_total(factura):
-    base = factura["Base IVA"]
-    tipo = factura["Tipo IVA"]
-    cuota = factura["Cuota IVA"]
-    total = factura["Total Factura"]
+    base = factura[KEY.BASE_IVA]
+    tipo = factura[KEY.TIPO_IVA]
+    cuota = factura[KEY.CUOTA_IVA]
+    total = factura[KEY.TOTAL_FACT]
+    if not (isinstance(total, float) and isinstance(tipo, float)):
+        return "Correccion por Total no calculable"
     base_calculada = round(total / (1 + tipo / 100), 2)
     cuota_calculada = round(total - base_calculada, 2)
-    factura["Base IVA"] = base_calculada
-    factura["Cuota IVA"] = cuota_calculada
-    factura["Base IRPF"] = base_calculada
-    factura["Base R. Equiv."] = base_calculada
+    factura[KEY.BASE_IVA] = base_calculada
+    factura[KEY.CUOTA_IVA] = cuota_calculada
+    factura[KEY.BASE_IRPF] = base_calculada
+    factura[KEY.BASE_RE] = base_calculada
     return (f"Corregido: Base ({base}) y Cuota ({cuota})")
 
 def corrige_por_base(factura):
-    base = factura["Base IVA"]
-    tipo = factura["Tipo IVA"]
-    cuota = factura["Cuota IVA"]
-    total = factura["Total Factura"]
+    base = factura[KEY.BASE_IVA]
+    tipo = factura[KEY.TIPO_IVA]
+    cuota = factura[KEY.CUOTA_IVA]
+    total = factura[KEY.TOTAL_FACT]
     cuota_calculada = round(base * tipo / 100, 2)
     total_calculado = round(base + cuota_calculada, 2)
-    factura["Cuota IVA"] = cuota_calculada
-    factura["Total Factura"] = total_calculado
+    factura[KEY.CUOTA_IVA] = cuota_calculada
+    factura[KEY.TOTAL_FACT] = total_calculado
     return (f"Corregido: Cuota ({cuota}) y Total ({total})") 

@@ -1,3 +1,4 @@
+import conceptos_factura as KEY
 import re
 import ft_basicas as fb
 import ft_verificadores as verificar
@@ -20,38 +21,38 @@ def extraerDatosFactura(pagina, empresa):
     factura = {}
 
     regex = r"Número de Factura.*\s+(?:Fact-)?(\d+)"
-    factura["Numero Factura"] = fb.re_search(regex, pagina)
+    factura[KEY.NUM_FACT] = fb.re_search(regex, pagina)
 
     regex = r"Fecha de Facturación.*\s+([\d/]+)"
-    factura["Fecha Factura"] = fb.re_search(regex, pagina)
-    factura["Fecha Operacion"] = factura["Fecha Factura"]
+    factura[KEY.FECHA_FACT] = fb.re_search(regex, pagina)
+    factura[KEY.FECHA_OPER] = factura[KEY.FECHA_FACT]
     
-    factura["Concepto"] = 700
+    factura[KEY.CONCEPTO] = 700
     
     # regex = r"(?:Descuento\s*[-\d,]+\s*Total\s*|Subtotal\s*)([\d,]+)"
     regex = r"otal\s*([\d,.]+)\s+IVA"
-    factura["Base IVA"] = fb.re_search(regex, pagina)
+    factura[KEY.BASE_IVA] = fb.re_search(regex, pagina)
     
     regex = r"IVA\s+\((\d+)%\)"
-    factura["Tipo IVA"] = fb.re_search(regex, pagina)
+    factura[KEY.TIPO_IVA] = fb.re_search(regex, pagina)
 
     regex = r"IVA\s+\(\d+%\)\s+([\d.,]+)"
-    factura["Cuota IVA"] = fb.re_search(regex, pagina)
+    factura[KEY.CUOTA_IVA] = fb.re_search(regex, pagina)
 
-    factura["Base IRPF"] = factura["Base IVA"]
-    factura["Tipo IRPF"] = 0.0
-    factura["Cuota IRPF"] = 0.0
-    factura["Base R. Equiv."] = factura["Base IVA"]
-    factura["Tipo R. Equiv."] = 0.0
-    factura["Cuota R. Equiv."] = 0.0
+    factura[KEY.BASE_IRPF] = factura[KEY.BASE_IVA]
+    factura[KEY.TIPO_IRPF] = 0.0
+    factura[KEY.CUOTA_IRPF] = 0.0
+    factura[KEY.BASE_RE] = factura[KEY.BASE_IVA]
+    factura[KEY.TIPO_RE] = 0.0
+    factura[KEY.CUOTA_RE] = 0.0
 
-    factura["NIF"] = nif_cliente(pagina, empresa)
+    factura[KEY.NIF] = nif_cliente(pagina, empresa)
 
     regex = rf"(.*?)\s+Gregorio Aranda"
-    factura["Nombre"] = fb.re_search(regex, pagina)
+    factura[KEY.EMPRESA] = fb.re_search(regex, pagina)
 
     regex = r"Envío\s+(?:[\d,]+\s+)?Total\s+([\d.,]+)"
-    factura["Total Factura"] = fb.re_search(regex, pagina)
+    factura[KEY.TOTAL_FACT] = fb.re_search(regex, pagina)
 
     return(factura)     
 
@@ -95,8 +96,8 @@ def clasificar_facturas(facturas):
 
         error = verificar.cuota_iva(factura)
         errores.append(error) if error else None
-        if factura["Cuota IVA"] == 0.0: 
-            factura["Tipo IVA"] = 0.0
+        if factura[KEY.CUOTA_IVA] == 0.0: 
+            factura[KEY.TIPO_IVA] = 0.0
             observaciones.append("Factura sin IVA")
         
         error = verificar.total_factura(factura)
@@ -108,7 +109,7 @@ def clasificar_facturas(facturas):
         error = verificar.nombre(factura)
         errores.append(error) if error else None
 
-        error = verificar.calculo_cuota_iva(factura)
+        error = verificar.calculo_cuota(factura, KEY.CUOTA_IVA)
         errores.append(error) if error else None
 
         error = verificar.calculos_totales(factura)

@@ -1,3 +1,4 @@
+import conceptos_factura as KEY
 import re
 import ft_basicas as ftb
 import ft_verificadores as verificar
@@ -20,33 +21,33 @@ def extraerDatosFactura(pagina, empresa):
     factura = {}
 
     regex = r"FACTURA\s*(.+)"
-    factura["Numero Factura"] = ftb.re_search(regex, pagina)
+    factura[KEY.NUM_FACT] = ftb.re_search(regex, pagina)
 
     regex = r"FECHA.*\s+([\d/]+)"
-    factura["Fecha Factura"] = ftb.re_search(regex, pagina)
-    factura["Fecha Operacion"] = factura["Fecha Factura"]
+    factura[KEY.FECHA_FACT] = ftb.re_search(regex, pagina)
+    factura[KEY.FECHA_OPER] = factura[KEY.FECHA_FACT]
     
-    factura["Concepto"] = 600
+    factura[KEY.CONCEPTO] = 600
 
     regex = r"([\d\.,]+)\s+(\d+)\s+([\d\.,]+)\s+([\d\.,]+)"
     grupos = ftb.re_search_multiple(regex, pagina)
     grupos_ok = grupos and (len(grupos) == 4)
-    factura["Base IVA"] = grupos[0] if grupos_ok else None
-    factura["Tipo IVA"] = grupos[1] if grupos_ok else None
-    factura["Cuota IVA"] = grupos[2] if grupos_ok else None
-    factura["Total Factura"] = grupos[3] if grupos_ok else None
+    factura[KEY.BASE_IVA] = grupos[0] if grupos_ok else None
+    factura[KEY.TIPO_IVA] = grupos[1] if grupos_ok else None
+    factura[KEY.CUOTA_IVA] = grupos[2] if grupos_ok else None
+    factura[KEY.TOTAL_FACT] = grupos[3] if grupos_ok else None
     
-    factura["Base IRPF"] = factura["Base IVA"]
-    factura["Tipo IRPF"] = 0.0
-    factura["Cuota IRPF"] = 0.0
+    factura[KEY.BASE_IRPF] = factura[KEY.BASE_IVA]
+    factura[KEY.TIPO_IRPF] = 0.0
+    factura[KEY.CUOTA_IRPF] = 0.0
 
-    factura["Base R. Equiv."] = factura["Base IVA"]
-    factura["Tipo R. Equiv."] = 0.0
-    factura["Cuota R. Equiv."] = 0.0
+    factura[KEY.BASE_RE] = factura[KEY.BASE_IVA]
+    factura[KEY.TIPO_RE] = 0.0
+    factura[KEY.CUOTA_RE] = 0.0
 
-    factura["NIF"] = "B93643245"
+    factura[KEY.NIF] = "B93643245"
 
-    factura["Nombre"] = "ADISADI 1999 S.L."
+    factura[KEY.EMPRESA] = "ADISADI 1999 S.L."
 
     return(factura)     
 
@@ -86,8 +87,8 @@ def clasificar_facturas(facturas):
         error = verificar.fecha(factura)
         errores.append(error) if error else None
 
-        conceptos = ["Base IVA", "Tipo IVA", "Cuota IVA",
-                    "Base IRPF", "Base R. Equiv.", "Total Factura"]
+        conceptos = [KEY.BASE_IVA, KEY.TIPO_IVA, KEY.CUOTA_IVA,
+                    KEY.BASE_IRPF, KEY.BASE_RE, KEY.TOTAL_FACT]
         for concepto in conceptos:
             error = verificar.importe(factura, concepto)
             errores.append(error) if error else None
@@ -98,7 +99,7 @@ def clasificar_facturas(facturas):
         error = verificar.nombre(factura)
         errores.append(error) if error else None
 
-        error = verificar.calculo_cuota(factura, "IVA")
+        error = verificar.calculo_cuota(factura, KEY.CUOTA_IVA)
         errores.append(error) if error else None
 
         error = verificar.calculos_totales(factura)

@@ -1,3 +1,4 @@
+import conceptos_factura as KEY
 from importlib import import_module    # Para importar un modulo almacenado en una variable
 import pandas as pd
 import pdfplumber
@@ -69,11 +70,11 @@ def exportar_a_excel(facturas_correctas, facturas_con_errores, excel_path):
     Exporta las facturas correctas y con errores a archivos Excel separados.
     """
     columnas = [
-        "Numero Factura", "Fecha Factura", "Fecha Operacion", "Concepto",
-        "Base IVA", "Tipo IVA", "Cuota IVA", 
-        "Base IRPF", "Tipo IRPF", "Cuota IRPF",
-        "Base R. Equiv.", "Tipo R. Equiv.", "Cuota R. Equiv.",
-        "NIF", "Nombre"
+        KEY.NUM_FACT, KEY.FECHA_FACT, KEY.FECHA_OPER, KEY.CONCEPTO,
+        KEY.BASE_IVA, KEY.TIPO_IVA, KEY.CUOTA_IVA, 
+        KEY.BASE_IRPF, KEY.TIPO_IRPF, KEY.CUOTA_IRPF,
+        KEY.BASE_RE, KEY.TIPO_RE, KEY.CUOTA_RE,
+        KEY.NIF, KEY.EMPRESA
     ]
 
     # Exportar facturas correctas
