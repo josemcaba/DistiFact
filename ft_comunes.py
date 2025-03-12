@@ -44,8 +44,12 @@ def procesarPaginasPDF_tipoTexto(pdf_path, identificador):
     return (paginas)
 
 def procesarFacturas(path, empresa):
-    # Carga el modulo de funciones correspondientes a la empresa seleccionada
-    fe = import_module(empresa["funciones"][:-3])
+    try:
+        # Carga el modulo de funciones correspondientes a la empresa seleccionada
+        fe = import_module(empresa["funciones"][:-3])
+    except:
+        print(f'\n❌ Error: No existe el modulo "{empresa["funciones"]}"')
+        return
     if empresa["tipoPDF"] == "texto":
         paginas = procesarPaginasPDF_tipoTexto(path, fe.identificador)
     elif empresa["tipoPDF"] == "imagen":

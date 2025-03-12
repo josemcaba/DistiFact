@@ -90,7 +90,7 @@ def draw_rectangle(event, x, y, flags, param):
         # Guardar las coordenadas del rectángulo en el diccionario con una clave única
         key = f"rectangulo_{rectangle_counter}"
         rectangles[key] = {"x1": ix, "y1": iy, "x2": fx, "y2": fy}
-        rectangles[key]["tesseract"] = "--psm 6 --oem 3 -c tessedit_char_blacklist=\"=@#$&*{}[]:;\" -c preserve_interword_spaces=1"
+        rectangles[key]["tesseract"] = "--psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$&*{}[]:;\" -c preserve_interword_spaces=1"
         rectangle_counter += 1  # Incrementar el contador
 
 empresa, ruta_PDF = seleccionarEmpresa("empresas.json")

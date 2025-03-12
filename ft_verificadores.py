@@ -3,7 +3,7 @@ import ft_basicas as fb
 
 def num_factura(factura):
 	if factura[KEY.NUM_FACT] is None:
-		return (f"{KEY.NUM_FACT} no encontrado")
+		return (f"Núm. {KEY.NUM_FACT} no encontrada")
 	return False # No hay errores
 
 def fecha(factura, is_eeuu=False):
