@@ -91,19 +91,6 @@ def nombre(factura):
         return (f"{KEY.EMPRESA} demasiado largo. Máximo 40 caracteres.")
     return False # No hay errores
 
-# def calculo_cuota_iva(factura):
-#     base = factura[KEY.BASE_IVA]
-#     tipo = factura[KEY.TIPO_IVA]
-#     cuota = factura[KEY.CUOTA_IVA]
-#     if not (isinstance(base, float) and \
-#             isinstance(tipo, float) and \
-#             isinstance(cuota, float)):
-#         return ("Cuota de IVA no calculable")
-#     cuota_calculada = round(base * tipo / 100, 2)
-#     if abs(cuota_calculada - cuota) >= 0.015:
-#         return (f"Diferencia en cuota IVA ({cuota_calculada} != {cuota})")
-#     return False # No hay errores
-
 def calculo_cuota(factura, concepto):
     if concepto == KEY.CUOTA_IVA:
         base = KEY.BASE_IVA
@@ -128,7 +115,7 @@ def calculo_cuota(factura, concepto):
         return (f"Cuota {concepto} no calculable")
     cuota_calculada = round(base * tipo / 100, 2)
     if abs(cuota_calculada - cuota) >= 0.015:
-        return (f"Diferencia en {concepto} ({cuota_calculada} != {cuota})")
+        return (f"{concepto}={cuota} != Calculado={cuota_calculada}")
     return False # No hay errores
 
 def calculos_totales(factura):
@@ -145,7 +132,7 @@ def calculos_totales(factura):
         return "Total factura no calculable"
     total_calculado = round(base + cuota_iva + cuota_irpf + cuota_re, 2)
     if abs(total_calculado - total) >= 0.015:
-        return (f"Diferencia en total factura ({total_calculado} != {total})")
+        return (f"{KEY.TOTAL_FAC}={total} != Calculado={total_calculado}")
     return False # No hay errores
 
 def corrige_por_total(factura):

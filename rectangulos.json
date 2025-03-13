@@ -80,5 +80,22 @@
             "tesseract": "--psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "angulo": 0
+    },
+    "76753510A": {
+        "rectangulo_1": {
+            "x1": 13,
+            "y1": 13,
+            "x2": 2467,
+            "y2": 1697,
+            "tesseract": "--psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$&*{}[]:;\" -c preserve_interword_spaces=1"
+        },
+        "rectangulo_2": {
+            "x1": 1383,
+            "y1": 2728,
+            "x2": 2467,
+            "y2": 3243,
+            "tesseract": "--psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$&*{}[]:;\" -c preserve_interword_spaces=1"
+        },
+        "angulo": 0
     }
 }
