@@ -1,5 +1,8 @@
 import json
 import os
+import mensajes_POO as mensajes
+
+msg = mensajes.Mensaje()
 
 def cargar_empresas(ruta_json):
     try:
@@ -13,13 +16,13 @@ def cargar_empresas(ruta_json):
         return empresas
     
     except FileNotFoundError:
-        print(f'\n❌ Error: Archivo "{ruta_json}" no encontrado.')
+        msg.error(f'Archivo "{ruta_json}" no encontrado.')
         return
     except (json.JSONDecodeError):
-        print(f'\n❌ Error: El archivo "{ruta_json}" tiene un formato inválido.')
+        msg.error(f'El archivo "{ruta_json}" tiene un formato inválido.')
         return
     except (ValueError):
-        print(f'\n❌ Error: El archivo "{ruta_json}" tiene claves no numéricas.')
+        msg.error(f'El archivo "{ruta_json}" tiene claves no numéricas.')
         return
 
 def mostrar_menu(empresas):
@@ -42,10 +45,10 @@ def seleccionar_empresa(empresas):
             elif opcion == 0:  # Opción de salida
                 return None
             else:
-                print("\n❌ Opción no válida. Inténtalo de nuevo.")
-
+                msg.error("Opción no válida. Inténtalo de nuevo.")
+                
         except ValueError:
-            print("\n⚠ Entrada no válida. Introduce un número.")
+            msg.error("Entrada no válida. Introduce un número.")
 
 def obtener_ruta_pdf(empresa):
     directorio = empresa['nombre']
