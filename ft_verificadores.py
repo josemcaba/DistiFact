@@ -132,7 +132,7 @@ def calculos_totales(factura):
         return "Total factura no calculable"
     total_calculado = round(base + cuota_iva + cuota_irpf + cuota_re, 2)
     if abs(total_calculado - total) >= 0.015:
-        return (f"{KEY.TOTAL_FAC}={total} != Calculado={total_calculado}")
+        return (f"{KEY.TOTAL_FACT}={total} != Calculado={total_calculado}")
     return False # No hay errores
 
 def corrige_por_total(factura):
