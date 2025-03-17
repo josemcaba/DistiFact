@@ -111,7 +111,6 @@ def clasificar_facturas(facturas):
         error = verificar.nombre(factura)
         if error and "demasiado largo" in error:
             factura[KEY.EMPRESA] = factura[KEY.EMPRESA][:40]
-            print(factura[KEY.EMPRESA])
             observaciones.append(error)
         else:
             errores.append(error) if error else None

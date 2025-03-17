@@ -1,10 +1,10 @@
 import json
 import os
-import mensajes_POO as mensajes
+from ft_menu import Menu
+from ft_mensajes import msg
 
-msg = mensajes.Mensaje()
 
-def cargar_empresas(ruta_json):
+def cargarEmpresas(ruta_json):
     try:
         with open(ruta_json, 'r', encoding='utf-8') as archivo:
             datos_json = json.load(archivo)
@@ -25,35 +25,10 @@ def cargar_empresas(ruta_json):
         msg.error(f'El archivo "{ruta_json}" tiene claves no numéricas.')
         return
 
-def mostrar_menu(empresas):
-    print("\n===== LISTADO DE EMPRESAS =====")
-    for id_empresa, datos in sorted(empresas.items()):
-        print(f"{id_empresa:>4}. {datos['nombre']} ({datos['nif']})")
-    print(f"{0:>4}. Salir")
-
-def seleccionar_empresa(empresas):
-    while True:
-        mostrar_menu(empresas)
-        try:
-            opcion = int(input("\nSeleccione una empresa: "))
-
-            if opcion in empresas:
-                nombre = empresas[opcion]["nombre"]
-                nif = empresas[opcion]["nif"]
-                print(f"\n✅ Has elegido {nombre} ({nif})\n")
-                return empresas[opcion]
-            elif opcion == 0:  # Opción de salida
-                return None
-            else:
-                msg.error("Opción no válida. Inténtalo de nuevo.")
-                
-        except ValueError:
-            msg.error("Entrada no válida. Introduce un número.")
-
 def obtener_ruta_pdf(empresa):
     directorio = empresa['nombre']
     if not os.path.exists(directorio):
-        print(f"El directorio '{directorio}' no existe.")
+        msg.error(f"El directorio '{directorio}' no existe.")
         return None
     
     while True:
@@ -62,22 +37,19 @@ def obtener_ruta_pdf(empresa):
             if not nombre_pdf.endswith(".pdf"):
                 nombre_pdf += ".pdf"
         else:
-            print("No se ha introducido ningun nombre de archivo.")
+            msg.error("No se ha introducido ningun nombre de archivo.")
             return None
         
         ruta_pdf = os.path.join(directorio, nombre_pdf)
         if os.path.isfile(ruta_pdf):
             return ruta_pdf
         else:
-            print(f"El archivo '{ruta_pdf}' no existe. Inténtelo de nuevo.\n")
+            msg.error(f"El archivo '{ruta_pdf}' no existe. Inténtelo de nuevo.\n")
     
 
-def seleccionarEmpresa(ruta_json):
-    empresas = cargar_empresas(ruta_json)
-    if not empresas:
-        return None, None
-    
-    empresa = seleccionar_empresa(empresas)
+def seleccionarEmpresa(empresas):
+    menu = Menu(empresas)
+    empresa = menu.seleccionar()
     if not empresa:
         return None, None
     
@@ -90,5 +62,5 @@ def seleccionarEmpresa(ruta_json):
 if __name__ == "__main__":
     datos_empresa, ruta_pdf = seleccionarEmpresa("empresas.json")
     if datos_empresa and ruta_pdf:
-        print(f"\nDatos empresa: {datos_empresa}")
-        print(f"Ruta al PDF: {ruta_pdf}\n")
+        msg.info(f"\nDatos empresa: {datos_empresa}")
+        msg.info(f"Ruta al PDF: {ruta_pdf}\n")

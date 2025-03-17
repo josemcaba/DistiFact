@@ -1,14 +1,16 @@
 from importlib import import_module    # Para importar un modulo almacenado en una variable
 import ft_comunes as fc
-from ft_seleccionarEmpresa import seleccionarEmpresa
-import mensajes_POO as mensajes
+from ft_seleccionarEmpresa import cargarEmpresas, seleccionarEmpresa
+from ft_mensajes import msg
+import tkinter as tk
+from tkinter import ttk
 
 def main():
-    msg = mensajes.Mensaje()
-    msg.info("Bienvenido a DistiFact")
-    msg.info("Este programa te ayudará a procesar facturas de diferentes empresas")
-   
-    empresa, ruta_PDF = seleccionarEmpresa("empresas.json")
+    empresas = cargarEmpresas("empresas.json")
+    if not empresas:
+        return
+
+    empresa, ruta_PDF = seleccionarEmpresa(empresas)
     if not(empresa and ruta_PDF):
         msg.salida()
         return
