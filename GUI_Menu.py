@@ -1,5 +1,28 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
+from ft_mensajes import msg
+import json
+
+def cargarEmpresas(ruta_json):
+    try:
+        with open(ruta_json, 'r') as archivo:
+            datos_json = json.load(archivo)
+
+        # Convertimos la key a entero
+        empresas = {}
+        for key, values in datos_json.items():
+            empresas[int(key)] = values  
+        return empresas
+    
+    except FileNotFoundError:
+        msg.error(f'Archivo "{ruta_json}" no encontrado.')
+        return
+    except (json.JSONDecodeError):
+        msg.error(f'El archivo "{ruta_json}" tiene un formato inválido.')
+        return
+    except (ValueError):
+        msg.error(f'El archivo "{ruta_json}" tiene claves no numéricas.')
+        return
 
 class MenuGUI:
     def __init__(self, empresas):
@@ -45,10 +68,21 @@ class MenuGUI:
 
 # Ejemplo de uso
 if __name__ == "__main__":
+    # empresas1 = cargarEmpresas("empresas.json")
+    # print(empresas1)
+    
     empresas = {
-        1: {"nombre": "Empresa A", "nif": "A12345678"},
-        2: {"nombre": "Empresa B", "nif": "B87654321"},
-        3: {"nombre": "Empresa C", "nif": "C12348765"}
+        1: {"nombre": "Pescadería Marengo", "nif": "33384986A", "funciones": "_Pescaderias_Funciones.py", "tipoPDF": "texto"},
+        2: {"nombre": "Pescadería Salvador", "nif": "25041071M", "funciones": "_Pescaderias_Funciones.py", "tipoPDF": "texto"},
+        3: {"nombre": "Gregorio Aranda", "nif": "25693621E", "funciones": "_Gregorio_Funciones.py", "tipoPDF": "texto"},
+        4: {"nombre": "Rosa Maria Moncayo", "nif": "25042336M", "funciones": "_Moncayo_Funciones.py", "tipoPDF": "texto"},
+        5: {"nombre": "FACCSA", "nif": "A17001231", "funciones": "_FACCSA_Funciones.py", "tipoPDF": "imagen"},
+        6: {"nombre": "ADISADI", "nif": "B93643245", "funciones": "_ADISADI_Funciones.py", "tipoPDF": "imagen"},
+        7: {"nombre": "Ignacio Ibanez", "nif": "33360360X", "funciones": "_Ignacio_Funciones.py", "tipoPDF": "imagen"},
+        8: {"nombre": "Gomez Moreno Mijas", "nif": "B92421601", "funciones": "_GOMEZMORENO_Funciones.py", "tipoPDF": "imagen"},
+        9: {"nombre": "Antonio Osorio", "nif": "76753510A", "funciones": "_AntonioOsorio_Funciones.py", "tipoPDF": "imagen"}
     }
+    print(empresas)
+
     
     app = MenuGUI(empresas)

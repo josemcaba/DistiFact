@@ -4,21 +4,29 @@ from tkinter import messagebox
 
 class Mensaje:
     def __init__(self):
-        """Crea una ventana raíz oculta solo para gestionar los cuadros de mensaje."""
-        self.root = tk.Tk()
-        self.root.withdraw()  # Oculta la ventana principal
+        pass
 
     def error(self, mensaje):
+        self.root = tk.Tk()
+        self.root.withdraw()
         messagebox.showerror("Error", mensaje)
+        self.root.destroy()
 
     def info(self, mensaje):
-         messagebox.showinfo("Información", mensaje)
+        self.root = tk.Tk()
+        self.root.withdraw()
+        messagebox.showinfo("Información", mensaje)
+        self.root.destroy()
 
     def salida(self):
+        self.root = tk.Tk()
+        self.root.withdraw()
         messagebox.showinfo("Salir", "Saliendo del programa...")
+        self.root.destroy()
 
     def __del__(self):
         self.root.destroy()
+
 
 msg = Mensaje()
 
