@@ -43,7 +43,7 @@ class Menu: #GUI:
         self.combo_empresas = ttk.Combobox(self.root, textvariable=self.empresa_var, state="readonly")
         self.combo_empresas.pack(pady=5)
         
-        lista_empresas = ["0. Salir"] + [f"{id}. {datos['nombre']}" for id, datos in sorted(self.empresas.items())]
+        lista_empresas = [f"{id}. {datos['nombre']}" for id, datos in sorted(self.empresas.items())]
         self.combo_empresas['values'] = lista_empresas
         
         self.boton_seleccionar = ttk.Button(self.root, text="Seleccionar", command=self.seleccionar)

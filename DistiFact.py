@@ -6,7 +6,7 @@ import tkinter as tk
 from tkinter import ttk
 
 def main():
-    empresas = cargarEmpresas("empresass.json")
+    empresas = cargarEmpresas("empresas.json")
     if not empresas:
         return
 
