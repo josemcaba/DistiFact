@@ -6,6 +6,7 @@ from ft_seleccionarEmpresa import seleccionarEmpresa
 from ft_mostrar_imagen import mostrar_imagen
 from PIL import Image  # Para convertir imágenes a formato compatible con pytesseract
 from sys import exit
+from ft_mensajes_POO import msg
 import pytesseract
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
@@ -22,10 +23,10 @@ def cargar_json_completo(ruta_json):
 			dict_json = json.load(file_json)
 			return dict_json
 	except FileNotFoundError:
-		print(f'\n❌ Error: Archivo "{ruta_json}" no encontrado.')
+		msg.error(f'Archivo "{ruta_json}" no encontrado.')
 		return
 	except (json.JSONDecodeError):
-		print(f'\n❌ Error: El archivo "{ruta_json}" tiene un formato inválido.')
+		msg.error(f'El archivo "{ruta_json}" tiene un formato inválido.')
 		return
 
 def detectar_orientacion(imagen):
@@ -47,7 +48,7 @@ def detectar_orientacion(imagen):
                 return angulo
         
     except Exception as e:
-        print(f"⚠️ Advertencia: No se pudo detectar la orientación ({e})")
+        msg.error(f"No se pudo detectar la orientación ({e})")
     
     return 0  # Si hay un error, asumimos que no hay rotación necesaria
 
@@ -70,7 +71,7 @@ def draw_rectangle(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN:
         drawing = True
         ix, iy = x, y
-        print(f"Click en: ({ix}, {iy})")
+        msg.info(f"Click en: ({ix}, {iy})")
 
     elif event == cv2.EVENT_MOUSEMOVE:
         if drawing:
@@ -85,7 +86,7 @@ def draw_rectangle(event, x, y, flags, param):
         fy=img.shape[0] if (fy > img.shape[0]) else fy
         cv2.rectangle(img, (ix, iy), (fx, fy), (255, 0, 255), 5)  # Grosor del borde aumentado
         cv2.imshow(windowName, img)
-        print(f"Rectángulo desde: ({ix}, {iy}) hasta ({fx}, {fy})")
+        msg.info(f"Rectángulo desde: ({ix}, {iy}) hasta ({fx}, {fy})")
 
         # Guardar las coordenadas del rectángulo en el diccionario con una clave única
         key = f"rectangulo_{rectangle_counter}"
@@ -95,7 +96,7 @@ def draw_rectangle(event, x, y, flags, param):
 
 empresa, ruta_PDF = seleccionarEmpresa("empresas.json")
 if not(empresa and ruta_PDF):
-	print("\n👋 Saliendo del programa...\n")
+	msg.salida()
 	exit()
 
 dict_json = cargar_json_completo("rectangulos.json")
@@ -107,7 +108,7 @@ rectangles = dict_json[empresa["nif"]]
 
 img, angulo = extract_first_image_from_pdf(ruta_PDF)
 if img is None:
-	print("No se encontró ninguna imagen en el PDF.")
+	msg.error("No se encontró ninguna imagen en el PDF.")
 	exit()
 
 mostrar_imagen(img, windowName, draw_rectangle)
@@ -115,6 +116,6 @@ rectangles["angulo"] = angulo
 
 with open("rectangulos.json", "w", encoding='utf-8') as f:
     json.dump(dict_json, f, indent=4)
-print(f"Coordenadas guardadas en \"rectangulos.json\"")
+msg.info(f"Coordenadas guardadas en \"rectangulos.json\"")
 
 exit()

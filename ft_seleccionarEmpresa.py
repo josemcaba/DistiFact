@@ -1,6 +1,6 @@
 import json
 import os
-import mensajes_POO as mensajes
+import ft_mensajes_POO as mensajes
 
 msg = mensajes.Mensaje()
 
@@ -40,7 +40,7 @@ def seleccionar_empresa(empresas):
             if opcion in empresas:
                 nombre = empresas[opcion]["nombre"]
                 nif = empresas[opcion]["nif"]
-                print(f"\n✅ Has elegido {nombre} ({nif})\n")
+                msg.info(f"Has elegido {nombre} ({nif})\n")
                 return empresas[opcion]
             elif opcion == 0:  # Opción de salida
                 return None
@@ -53,7 +53,7 @@ def seleccionar_empresa(empresas):
 def obtener_ruta_pdf(empresa):
     directorio = empresa['nombre']
     if not os.path.exists(directorio):
-        print(f"El directorio '{directorio}' no existe.")
+        msg.error(f"El directorio '{directorio}' no existe.")
         return None
     
     while True:
@@ -62,14 +62,14 @@ def obtener_ruta_pdf(empresa):
             if not nombre_pdf.endswith(".pdf"):
                 nombre_pdf += ".pdf"
         else:
-            print("No se ha introducido ningun nombre de archivo.")
+            msg.error("No se ha introducido ningun nombre de archivo.")
             return None
         
         ruta_pdf = os.path.join(directorio, nombre_pdf)
         if os.path.isfile(ruta_pdf):
             return ruta_pdf
         else:
-            print(f"El archivo '{ruta_pdf}' no existe. Inténtelo de nuevo.\n")
+            msg.error(f"El archivo '{ruta_pdf}' no existe. Inténtelo de nuevo.\n")
     
 
 def seleccionarEmpresa(ruta_json):
@@ -90,5 +90,5 @@ def seleccionarEmpresa(ruta_json):
 if __name__ == "__main__":
     datos_empresa, ruta_pdf = seleccionarEmpresa("empresas.json")
     if datos_empresa and ruta_pdf:
-        print(f"\nDatos empresa: {datos_empresa}")
-        print(f"Ruta al PDF: {ruta_pdf}\n")
+        msg.info(f"\nDatos empresa: {datos_empresa}")
+        msg.info(f"Ruta al PDF: {ruta_pdf}\n")

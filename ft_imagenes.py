@@ -4,6 +4,7 @@ import json
 from PIL import Image  # Para convertir imágenes a formato compatible con pytesseract
 from ft_mostrar_imagen import mostrar_imagen
 import pytesseract
+from ft_mensajes_POO import msg
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
@@ -35,11 +36,11 @@ def cargar_rectangulos_json(nif, ruta_json="rectangulos.json"):
         rectangles = coords[nif]
         return rectangles
     except FileNotFoundError:
-        print(f'\n❌ Error: Archivo "{ruta_json}" no encontrado.')
+        msg.error(f'Archivo "{ruta_json}" no encontrado.')
     except (json.JSONDecodeError):
-        print(f'\n❌ Error: El archivo "{ruta_json}" tiene un formato inválido.')
+        msg.error(f'El archivo "{ruta_json}" tiene un formato inválido.')
     except (KeyError):
-        print(f'\n❌ Error: El archivo "{ruta_json}" no contiene la empresa "{nif}"')
+        msg.error(f'El archivo "{ruta_json}" no contiene la empresa "{nif}"')
     return
 
 def extraer_imagenes_de_los_rectangulos(imagen, rectangulos):
@@ -55,7 +56,7 @@ def extraer_imagenes_de_los_rectangulos(imagen, rectangulos):
 
         # Verificar que las coordenadas estén dentro de los límites de la imagen
         if x1 < 0 or y1 < 0 or x2 > width or y2 > height:
-            print(f"Advertencia: Coordenadas {key} fuera de los límites de la imagen.")
+            msg.error(f"Coordenadas {key} fuera de los límites de la imagen.")
             continue
         
         cropped_image = imagen[y1:y2, x1:x2]  # Recortar la región de la imagen
@@ -84,7 +85,7 @@ def extraer_texto_de_imagen(imagen, tesseract_config, verRectangulos=False):
     # tesseract_config = "--psm 6 --oem 3 -c tessedit_char_blacklist=\"@#$&*{A}[]:;\""
     text = pytesseract.image_to_string(pil_image, config=tesseract_config)
     if verRectangulos:
-        print(text)
+        msg.info(text)
         mostrar_imagen(imagen) 
     return text
 
@@ -108,7 +109,7 @@ def preprocesar_imagen(imagen):
     min_text_area=100
     text_area = cv2.countNonZero(binary)
     if text_area < min_text_area:
-        print("⚠️ Advertencia: La imagen no contiene suficiente texto. Se omitirá.")
+        msg.error("La imagen no contiene suficiente texto. Se omitirá.")
         return None
 
     # Aplicar un desenfoque para reducir el ruido

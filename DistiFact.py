@@ -1,7 +1,7 @@
 from importlib import import_module    # Para importar un modulo almacenado en una variable
 import ft_comunes as fc
 from ft_seleccionarEmpresa import seleccionarEmpresa
-import mensajes_POO as mensajes
+import ft_mensajes_POO as mensajes
 
 def main():
     msg = mensajes.Mensaje()

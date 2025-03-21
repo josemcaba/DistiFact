@@ -1,4 +1,3 @@
-
 class Mensaje:
 	def __init__(self):
 		pass
@@ -12,8 +11,9 @@ class Mensaje:
 	def salida(self):
 		print ('\n👋 Saliendo del programa...\n')
 
+# Instanciar la clase Mensaje
+msg = Mensaje()
+
 if __name__ == '__main__':
-	# Instanciar la clase Mensaje
-	msg = Mensaje()
 	msg.error('Error de conexión')
 	msg.info('Conexión exitosa')

@@ -1,5 +1,6 @@
 import cv2
 from screeninfo import get_monitors
+from ft_mensajes_POO import msg
 
 def get_screen_resolution():
     """
@@ -73,6 +74,6 @@ if __name__ == "__main__":
     image = cv2.imread("Koala.jpg")
     
     if image is None:
-        print("Error: No se pudo cargar la imagen.")
+        msg.error("No se pudo cargar la imagen.")
     else:
         mostrar_imagen(image)  # Mostrar la imagen
