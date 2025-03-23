@@ -5,8 +5,8 @@ class Mensaje:
 	def error(self, mensaje):
 		print (f'\n❌ ERROR: {mensaje}')
 	
-	def info(self, mensaje):
-		print (f'{mensaje}')
+	def info(self, mensaje, end='\n'):
+		print (f'{mensaje}', end=end, flush=True)
 	
 	def salida(self):
 		print ('\n👋 Saliendo del programa...\n')
