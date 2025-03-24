@@ -102,8 +102,18 @@ def preprocesar_imagen(imagen):
 
     # Aplicar umbralización (binarización)
     _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    # return binary
 
-    return binary
+    # Aplicar un desenfoque para reducir el ruido
+    blurred = cv2.GaussianBlur(binary, (5, 5), 0)
+    # return blurred
+
+    # Ajustar el contraste y el brillo
+    alpha = 1.5  # Control de contraste (1.0 es neutral)
+    beta = 0     # Control de brillo (0 es neutral)
+    adjusted = cv2.convertScaleAbs(blurred, alpha=alpha, beta=beta)
+    # return adjusted
+
 
     # Calcular el área de píxeles blancos para ver si hay suficiente texto en la imagen
     min_text_area=100
@@ -111,14 +121,3 @@ def preprocesar_imagen(imagen):
     if text_area < min_text_area:
         msg.error("La imagen no contiene suficiente texto. Se omitirá.")
         return None
-
-    # Aplicar un desenfoque para reducir el ruido
-    blurred = cv2.GaussianBlur(binary, (5, 5), 0)
-
-    # Opcional: Ajustar el contraste y el brillo
-    alpha = 1.5  # Control de contraste (1.0 es neutral)
-    beta = 0     # Control de brillo (0 es neutral)
-    adjusted = cv2.convertScaleAbs(blurred, alpha=alpha, beta=beta)
-
-    return adjusted
-
