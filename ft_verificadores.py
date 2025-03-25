@@ -148,7 +148,7 @@ def corrige_por_total(factura):
     factura[KEY.CUOTA_IVA] = cuota_calculada
     factura[KEY.BASE_IRPF] = base_calculada
     factura[KEY.BASE_RE] = base_calculada
-    return (f"Corregido: Base ({base}) y Cuota ({cuota})")
+    return (f"Corregido por total: {total} [Base ({base}) y Cuota ({cuota})]")
 
 def corrige_por_base(factura):
     base = factura[KEY.BASE_IVA]
@@ -159,4 +159,4 @@ def corrige_por_base(factura):
     total_calculado = round(base + cuota_calculada, 2)
     factura[KEY.CUOTA_IVA] = cuota_calculada
     factura[KEY.TOTAL_FACT] = total_calculado
-    return (f"Corregido: Cuota ({cuota}) y Total ({total})") 
+    return (f"Corregido por base: {base} [Cuota ({cuota}) y Total ({total})]") 

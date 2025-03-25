@@ -18,6 +18,9 @@ identificador = "Fecha emisión"
 # fase de verificación
 #
 def extraerDatosFactura(pagina, empresa):
+    num_pag = pagina[0]
+    pagina = pagina[1]
+
     factura = {}
 
     regex = r"Nº factura\s*(\d+)"
@@ -54,7 +57,7 @@ def extraerDatosFactura(pagina, empresa):
     regex = r"Total\s*([\d,\.]+)\s*€?"
     factura[KEY.TOTAL_FACT] = fb.re_search(regex, pagina)
 
-    return(factura) 
+    return([num_pag, factura]) 
 
 
 #########################################################################
@@ -70,6 +73,9 @@ def clasificar_facturas(facturas):
     facturas_con_errores = []
 
     for factura in facturas:
+        num_pag = factura[0]
+        factura = factura[1]
+
         errores = []
         observaciones = []
 
@@ -123,10 +129,11 @@ def clasificar_facturas(facturas):
             observaciones.append(observacion)
 
         if errores:
-            factura["Errores"] = ", ".join(errores)
+            factura["Errores"] = f'<<Pag. {num_pag}>> ' + ", ".join(errores)
             facturas_con_errores.append(factura)
         else:
-            factura["Observaciones"] = ", ".join(observaciones)
+            if observaciones:
+                factura["Observaciones"] = f'<<Pag. {num_pag}>> ' + ", ".join(observaciones)
             facturas_correctas.append(factura)
 
     return facturas_correctas, facturas_con_errores

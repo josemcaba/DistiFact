@@ -17,15 +17,15 @@ def procesarPaginasPDF_tipoImagen(pdf_path, identificador, nif):
     with fitz.open(pdf_path) as pdf_doc:
         total_paginas = len(pdf_doc)
         for n_pag in range(total_paginas):
-            spinner(n_pag)
             imagen_pag = fci.extraer_imagen_de_la_pagina(pdf_doc, n_pag, angulo)
             imagenes = fci.extraer_imagenes_de_los_rectangulos(imagen_pag, rectangulos)
             texto = fci.extraer_texto_de_las_imagenes(imagenes, verRectangulos=False)
+            spinner(n_pag)
             if texto:
                 if identificador in texto:
-                    paginas.append(texto)
+                    paginas.append([n_pag+1, texto])
                 else:
-                    paginas_descartadas.append(str(n_pag))
+                    paginas_descartadas.append(str(n_pag+1))
     msg.info(f'\nProcesadas {total_paginas} páginas')
     if len(paginas_descartadas):
         msg.info(f"Páginas descartadas: {' - '.join(paginas_descartadas)}")
@@ -40,7 +40,7 @@ def procesarPaginasPDF_tipoTexto(pdf_path, identificador):
             spinner(n_pag)
             if texto:
                 if identificador in texto:
-                    paginas.append(texto)
+                    paginas.append([n_pag, texto])
                 else:
                     paginas_descartadas.append(str(n_pag))
     msg.info(f'\nProcesadas {n_pag} páginas')
