@@ -30,8 +30,9 @@ def extraerDatosFactura(pagina, empresa):
 
     regex = r"(.*?)\s*\d{6}\n"
     factura[KEY.NIF] = ftb.re_search(regex, pagina)
+    print(factura[KEY.NIF])
 
-    regex = r"mero\n+(.{2}[/S].{4})\n"
+    regex = r"mero(?:\s+\S+)?\s+(.{2}[/S58].{4})\n"
     factura[KEY.NUM_FACT] = ftb.re_search(regex, pagina)
     factura[KEY.NUM_FACT] = re.sub(r"^(.{2})([58])(.{4})$", r"\1S\3", factura[KEY.NUM_FACT]) if factura[KEY.NUM_FACT] else None
 
@@ -53,7 +54,7 @@ def extraerDatosFactura(pagina, empresa):
     factura[KEY.TIPO_RE] = 0.0
     factura[KEY.CUOTA_RE] = 0.0
 
-    regex = r"\n([\d,]+)\s+Euro"
+    regex = r"\n([-\d,.]+)\s+Euro"
     factura[KEY.TOTAL_FACT] = ftb.re_search(regex, pagina)
 
 
