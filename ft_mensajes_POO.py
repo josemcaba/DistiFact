@@ -17,3 +17,4 @@ msg = Mensaje()
 if __name__ == '__main__':
 	msg.error('Error de conexión')
 	msg.info('Conexión exitosa')
+	msg.salida()

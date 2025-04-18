@@ -99,10 +99,11 @@ def preprocesar_imagen(imagen):
         gray = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
     else:
         raise ValueError("La imagen no tiene un formato válido (1 o 3 canales).")
+    # return gray
 
     # Aplicar umbralización (binarización)
     _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    # return binary
+    return binary
 
     # Aplicar un desenfoque para reducir el ruido
     blurred = cv2.GaussianBlur(binary, (5, 5), 0)

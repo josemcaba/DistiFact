@@ -18,7 +18,7 @@ def procesarPaginasPDF_tipoImagen(pdf_path, identificador, nif):
             imagen_pag = fci.extraer_imagen_de_la_pagina(pdf_doc, n_pag, angulo)
             imagenes = fci.extraer_imagenes_de_los_rectangulos(imagen_pag, rectangulos)
             texto = fci.extraer_texto_de_las_imagenes(imagenes, verRectangulos=False)
-            spinner(n_pag)
+            flush_page(n_pag)
             if texto:
                 if identificador in texto:
                     paginas.append([n_pag+1, texto])
@@ -35,7 +35,7 @@ def procesarPaginasPDF_tipoTexto(pdf_path, identificador):
     with pdfplumber.open(pdf_path) as pdf:
         for n_pag, pagina in enumerate(pdf.pages, start=1):
             texto = pagina.extract_text()
-            spinner(n_pag)
+            flush_page(n_pag)
             if texto:
                 if identificador in texto:
                     paginas.append([n_pag, texto])
@@ -76,5 +76,9 @@ def spinner(indice):
     simbolos = ["-", "\\", "|", "/"]  # Secuencia del spinner
     
     indice = indice % 4
-    sys.stdout.write("\b" + simbolos[indice])  # Mueve el cursor atrás y sobrescribe solo el spinner
+    sys.stdout.write("\b\b\b\b" + simbolos[indice])  # Mueve el cursor atrás y sobrescribe solo el spinner
+    sys.stdout.flush()  # Asegura que se imprima inmediatamente
+
+def flush_page(num_page):
+    sys.stdout.write(f'\b\b\b\b{num_page + 1} ')  # Mueve el cursor atrás y sobrescribe solo el spinner
     sys.stdout.flush()  # Asegura que se imprima inmediatamente

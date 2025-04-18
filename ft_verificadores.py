@@ -38,8 +38,6 @@ def base_iva(factura, decimal=','):
         return (f"{KEY.BASE_IVA} incorrecta")
     
     factura[KEY.BASE_IVA] = base
-    factura[KEY.BASE_IRPF] = base
-    factura[KEY.BASE_RE] = base
     return False # No hay errores
 
 def tipo_iva(factura, decimal=','):
@@ -86,9 +84,11 @@ def nif(factura):
 
 def nombre(factura):
     if factura[KEY.EMPRESA] is None:
-        return (f"{KEY.EMPRESA} no encontrado")
+        return (f"{factura[KEY.EMPRESA]} no encontrado")
     if len(factura[KEY.EMPRESA]) > 40:
-        return (f"{KEY.EMPRESA} demasiado largo. Máximo 40 caracteres.")
+        nombreLargo = factura[KEY.EMPRESA]
+        factura[KEY.EMPRESA] = factura[KEY.EMPRESA][0:40]
+        return (f'"{nombreLargo}" demasiado largo. Máximo 40 caracteres.')
     return False # No hay errores
 
 def calculo_cuota(factura, concepto):

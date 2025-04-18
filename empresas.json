@@ -7,5 +7,6 @@
     "6": {"nombre": "ADISADI", "nif": "B93643245", "funciones": "_ADISADI_Funciones.py", "tipoPDF": "imagen"},
     "7": {"nombre": "Ignacio Ibanez", "nif": "33360360X", "funciones": "_Ignacio_Funciones.py", "tipoPDF": "imagen"},
     "8": {"nombre": "GOMEZ MORENO MIJAS", "nif": "B92421601", "funciones": "_GOMEZ_MORENO_Funciones.py", "tipoPDF": "imagen"},
-    "9": {"nombre": "Antonio Osorio", "nif": "76753510A", "funciones": "_Antonio_Osorio_Funciones.py", "tipoPDF": "imagen"}
+    "9": {"nombre": "Antonio Osorio", "nif": "76753510A", "funciones": "_Antonio_Osorio_Funciones.py", "tipoPDF": "imagen"},
+    "10": {"nombre": "Andres Cazalla", "nif": "26236236K", "funciones": "_Andres_Cazalla_Funciones.py", "tipoPDF": "texto"}  
 }

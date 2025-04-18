@@ -76,7 +76,7 @@ def draw_rectangle(event, x, y, flags, param):
     elif event == cv2.EVENT_MOUSEMOVE:
         if drawing:
             img_copy = img.copy()
-            cv2.rectangle(img_copy, (ix, iy), (x, y), (0, 255, 0), 5)  # Grosor del borde aumentado
+            cv2.rectangle(img_copy, (ix, iy), (x, y), (0, 255, 0), 3)  # Grosor del borde aumentado
             cv2.imshow(windowName, img_copy)
 
     elif event == cv2.EVENT_LBUTTONUP:
@@ -84,7 +84,7 @@ def draw_rectangle(event, x, y, flags, param):
         fx, fy = x, y
         fx=img.shape[1] if (fx > img.shape[1]) else fx
         fy=img.shape[0] if (fy > img.shape[0]) else fy
-        cv2.rectangle(img, (ix, iy), (fx, fy), (255, 0, 255), 5)  # Grosor del borde aumentado
+        cv2.rectangle(img, (ix, iy), (fx, fy), (255, 0, 255), 3)  # Grosor del borde aumentado
         cv2.imshow(windowName, img)
         msg.info(f"Rectángulo desde: ({ix}, {iy}) hasta ({fx}, {fy})")
 

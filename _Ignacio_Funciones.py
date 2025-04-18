@@ -7,7 +7,7 @@ import ft_verificadores as verificar
 # del PDF para ser validada como factura.
 # Las páginas que no contengan este texto son descartadas.
 
-identificador="CLIENTE"
+identificador="FACTURA"
 
 #########################################################################
 #
@@ -23,37 +23,40 @@ def extraerDatosFactura(pagina, empresa):
 
     factura = {}
 
-    regex = r"\s*([\dS/]{7}).*(\d{2}/\d{2}/\d{4})"
-    grupos = ftb.re_search_multiple(regex, pagina)
-    grupos_ok = grupos and (len(grupos) == 2)
-    factura[KEY.NUM_FACT] = grupos[0] if grupos_ok else None
-    factura[KEY.FECHA_FACT] = grupos[1] if grupos_ok else None
+    factura[KEY.CONCEPTO] = 700     # Ingresos
     
-    factura[KEY.FECHA_OPER] = factura[KEY.FECHA_FACT]
-    
-    factura[KEY.CONCEPTO] = 600
+    regex = r"FACTURA\s+(.*)"
+    factura[KEY.EMPRESA] = ftb.re_search(regex, pagina)
 
-    regex = r"([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s"
+    regex = r"(.*?)\s*\d{6}\n"
+    factura[KEY.NIF] = ftb.re_search(regex, pagina)
+
+    regex = r"mero\n+(.{2}[/S].{4})\n"
+    factura[KEY.NUM_FACT] = ftb.re_search(regex, pagina)
+    factura[KEY.NUM_FACT] = re.sub(r"^(.{2})([58])(.{4})$", r"\1S\3", factura[KEY.NUM_FACT]) if factura[KEY.NUM_FACT] else None
+
+    regex = r"Fecha\n+(.*)\n"
+    factura[KEY.FECHA_FACT] = ftb.re_search(regex, pagina)
+    factura[KEY.FECHA_OPER] = factura[KEY.FECHA_FACT]
+
+    regex = r"\n([-\d,.]+)\s+([\d,.]+)\s+([-\d,.]+)\n"
     grupos = ftb.re_search_multiple(regex, pagina)
-    grupos_ok = grupos and (len(grupos) == 6)
+    grupos_ok = grupos and (len(grupos) == 3)
     factura[KEY.BASE_IVA] = grupos[0] if grupos_ok else None
     factura[KEY.TIPO_IVA] = grupos[1] if grupos_ok else None
     factura[KEY.CUOTA_IVA] = grupos[2] if grupos_ok else None
-    factura[KEY.TIPO_RE] = grupos[3] if grupos_ok else None
-    factura[KEY.CUOTA_RE] = grupos[4] if grupos_ok else None
-    factura[KEY.TOTAL_FACT] = grupos[5] if grupos_ok else None
-    
-    factura[KEY.BASE_RE] = factura[KEY.BASE_IVA]
+
     factura[KEY.BASE_IRPF] = factura[KEY.BASE_IVA]
     factura[KEY.TIPO_IRPF] = 0.0
     factura[KEY.CUOTA_IRPF] = 0.0
+    factura[KEY.BASE_RE] = factura[KEY.BASE_IVA]
+    factura[KEY.TIPO_RE] = 0.0
+    factura[KEY.CUOTA_RE] = 0.0
 
-    regex = r"(.+)\n+PLATERO"
-    factura[KEY.NIF] = ftb.re_search(regex, pagina)
+    regex = r"\n([\d,]+)\s+Euro"
+    factura[KEY.TOTAL_FACT] = ftb.re_search(regex, pagina)
 
-    regex = r"CLIENTE\s+(.+)"
-    factura[KEY.EMPRESA] = ftb.re_search(regex, pagina)
-    
+
     # pagina_tmp = re.sub(r"[.-]", "", pagina)
     # pagina_tmp = pagina_tmp.replace(" ", "")
     # lineas = pagina_tmp.splitlines()
@@ -113,8 +116,7 @@ def clasificar_facturas(facturas):
             error = verificar.importe(factura, concepto)
             errores.append(error) if error else None
 
-        # factura[KEY.NIF] = factura[KEY.NIF].replace(" ", "")
-        factura[KEY.NIF] = re.sub(r"[-.]|\s", "", factura[KEY.NIF])
+        factura[KEY.NIF] = re.sub(r"['-. ]", "", factura[KEY.NIF]) if factura[KEY.NIF] else None
         error = verificar.nif(factura)
         errores.append(error) if error else None
 

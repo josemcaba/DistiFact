@@ -89,44 +89,71 @@ def clasificar_facturas(facturas):
         observaciones = []
 
         error = verificar.num_factura(factura)
-        errores.append(error) if error else None
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
 
         error = verificar.fecha(factura)
-        errores.append(error) if error else None
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
 
-        error = verificar.base_iva(factura)
-        errores.append(error) if error else None
+        error = verificar.importe(factura, KEY.BASE_IVA)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
 
-        error = verificar.tipo_iva(factura)
-        errores.append(error) if error else None
+        error = verificar.importe(factura, KEY.TIPO_IVA)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
 
-        error = verificar.cuota_iva(factura)
-        errores.append(error) if error else None
-        if factura[KEY.CUOTA_IVA] == 0.0: 
-            factura[KEY.TIPO_IVA] = 0.0
-            observaciones.append("Factura sin IVA")
-        
-        error = verificar.total_factura(factura)
-        errores.append(error) if error else None
+        error = verificar.importe(factura, KEY.CUOTA_IVA)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
 
+        error = verificar.importe(factura, KEY.BASE_RE)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
+
+        error = verificar.importe(factura, KEY.TIPO_RE)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
+
+        error = verificar.importe(factura, KEY.CUOTA_RE)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
+
+        error = verificar.importe(factura, KEY.BASE_IRPF)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
+
+        error = verificar.importe(factura, KEY.TIPO_IRPF)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
+
+        error = verificar.importe(factura, KEY.CUOTA_IRPF)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
+
+        error = verificar.importe(factura, KEY.TOTAL_FACT)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
+
+        if factura[KEY.NIF] == 'B82382155':
+            factura[KEY.NIF] = 'B82832155'
+            observaciones.append(f'<<Pag. {num_pag}>> NIF incorrecto ha sido corregido')
         error = verificar.nif(factura)
-        errores.append(error) if error else None
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
 
         error = verificar.nombre(factura)
-        errores.append(error) if error else None
+        if error:
+            if "demasiado largo" in error:
+                observaciones.append(f'<<Pag. {num_pag}>> {error}')
+            else:
+                errores.append(f'<<Pag. {num_pag}>> {error}')
 
         error = verificar.calculo_cuota(factura, KEY.CUOTA_IVA)
-        errores.append(error) if error else None
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
+
+        error = verificar.calculo_cuota(factura, KEY.CUOTA_RE)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
+
+        error = verificar.calculo_cuota(factura, KEY.CUOTA_IRPF)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
 
         error = verificar.calculos_totales(factura)
-        errores.append(error) if error else None
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
 
         if errores:
-            factura["Errores"] = f'<<Pag. {num_pag}>> ' + ", ".join(errores)
+            factura["Errores"] = ", ".join(errores)
             facturas_con_errores.append(factura)
         else:
-            if observaciones:
-                factura["Observaciones"] = f'<<Pag. {num_pag}>> ' + ", ".join(observaciones)
+            factura["Observaciones"] = ", ".join(observaciones)
             facturas_correctas.append(factura)
 
     return facturas_correctas, facturas_con_errores
