@@ -30,15 +30,12 @@ def extraerDatosFactura(pagina, empresa):
 
     regex = r"(.*?)\s*\d{6}\n"
     factura[KEY.NIF] = ftb.re_search(regex, pagina)
-    print(factura[KEY.NIF])
 
     regex = r"mero(?:\s+\S+)?\s+(.{2}[/S58].{4})\n"
     factura[KEY.NUM_FACT] = ftb.re_search(regex, pagina)
-    factura[KEY.NUM_FACT] = re.sub(r"^(.{2})([58])(.{4})$", r"\1S\3", factura[KEY.NUM_FACT]) if factura[KEY.NUM_FACT] else None
 
     regex = r"Fecha\n+(.*)\n"
     factura[KEY.FECHA_FACT] = ftb.re_search(regex, pagina)
-    factura[KEY.FECHA_OPER] = factura[KEY.FECHA_FACT]
 
     regex = r"\n([-\d,.]+)\s+([\d,.]+)\s+([-\d,.]+)\n"
     grupos = ftb.re_search_multiple(regex, pagina)
@@ -56,17 +53,6 @@ def extraerDatosFactura(pagina, empresa):
 
     regex = r"\n([-\d,.]+)\s+Euro"
     factura[KEY.TOTAL_FACT] = ftb.re_search(regex, pagina)
-
-
-    # pagina_tmp = re.sub(r"[.-]", "", pagina)
-    # pagina_tmp = pagina_tmp.replace(" ", "")
-    # lineas = pagina_tmp.splitlines()
-    # for linea in lineas:
-    #     if (len(linea) == 9) and (linea != empresa["nif"]):
-    #         factura[KEY.NIF] = linea
-    #         if not verificar.nif(factura):
-    #             break
-    #         factura[KEY.NIF] = None
 
     return([num_pag, factura]) 
 
@@ -103,6 +89,7 @@ def clasificar_facturas(facturas):
         errores = []
         observaciones = []
         
+        factura[KEY.NUM_FACT] = re.sub(r"^(.{2})([58])(.{4})$", r"\1S\3", factura[KEY.NUM_FACT]) if factura[KEY.NUM_FACT] else None
         error = verificar.num_factura(factura)
         errores.append(error) if error else None
 

@@ -57,19 +57,24 @@ def obtener_ruta_pdf(empresa):
         return None
     
     while True:
-        nombre_pdf = input(f"Nombre del archivo PDF en directorio '{directorio}': ")
-        if nombre_pdf:
-            if not nombre_pdf.endswith(".pdf"):
-                nombre_pdf += ".pdf"
+        if empresa["tipoPDF"] == "excel":
+            nombre = input(f"Nombre del archivo Excel en directorio '{directorio}': ")
+            if nombre and not nombre.endswith(".xlsx"):
+                nombre += ".xlsx"
         else:
+            nombre = input(f"Nombre del archivo PDF en directorio '{directorio}': ")
+            if nombre and not nombre.endswith(".pdf"):
+                nombre += ".pdf"
+        
+        if not nombre:
             msg.error("No se ha introducido ningun nombre de archivo.")
             return None
-        
-        ruta_pdf = os.path.join(directorio, nombre_pdf)
-        if os.path.isfile(ruta_pdf):
-            return ruta_pdf
+                   
+        ruta = os.path.join(directorio, nombre)
+        if os.path.isfile(ruta):
+            return ruta
         else:
-            msg.error(f"El archivo '{ruta_pdf}' no existe. Inténtelo de nuevo.\n")
+            msg.error(f"El archivo '{ruta}' no existe. Inténtelo de nuevo.\n")
     
 
 def seleccionarEmpresa(ruta_json):
