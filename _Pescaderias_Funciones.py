@@ -87,21 +87,42 @@ def clasificar_facturas(facturas):
         error = verificar.fecha(factura, is_eeuu=True)
         errores.append(error) if error else None
 
-        error = verificar.base_iva(factura, decimal=',')
-        errores.append(error) if error else None
+        error = verificar.importe(factura, KEY.BASE_IVA)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
 
-        error = verificar.cuota_iva(factura, decimal=',')
-        errores.append(error) if error else None
-        
-        error = verificar.total_factura(factura, decimal=',')
-        errores.append(error) if error else None
+        error = verificar.importe(factura, KEY.TIPO_IVA)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
+
+        error = verificar.importe(factura, KEY.CUOTA_IVA)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
+
+        error = verificar.importe(factura, KEY.BASE_RE)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
+
+        error = verificar.importe(factura, KEY.TIPO_RE)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
+
+        error = verificar.importe(factura, KEY.CUOTA_RE)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
+
+        error = verificar.importe(factura, KEY.BASE_IRPF)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
+
+        error = verificar.importe(factura, KEY.TIPO_IRPF)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
+
+        error = verificar.importe(factura, KEY.CUOTA_IRPF)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
+
+        error = verificar.importe(factura, KEY.TOTAL_FACT)
+        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
 
         # >>>>>>>>>> AJUSTES PROVISIONALES <<<<<<<<<< #
-        nif = re.sub(r"[^a-zA-Z0-9]","",factura[KEY.NIF]).upper() if factura[KEY.NIF] else None
-        if nif == "X3581661W":
-            nif = "X3586116W"
-            observaciones.append("Corregido NIF erroneo que aparece en factura: X3581661W")
-        factura[KEY.NIF] = nif
+        # nif = re.sub(r"[^a-zA-Z0-9]","",factura[KEY.NIF]).upper() if factura[KEY.NIF] else None
+        # if nif == "X3581661W":
+        #     nif = "X3586116W"
+        #     observaciones.append("Corregido NIF erroneo que aparece en factura: X3581661W")
+        # factura[KEY.NIF] = nif
         error = verificar.nif(factura)
         errores.append(error) if error else None
  
