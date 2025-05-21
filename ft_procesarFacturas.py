@@ -6,7 +6,7 @@ import sys
 from ft_mensajes_POO import msg
 import openpyxl
 
-def procesarPaginasPDF_tipoImagen(pdf_path, identificador, nif):
+def procesarPaginas_tipo_PDFImagen(pdf_path, identificador, nif):
     rectangulos = fci.cargar_rectangulos_json(nif, ruta_json="rectangulos.json")   # Cargamos solo la informacion de la empresa
     if not rectangulos:
         return
@@ -29,8 +29,8 @@ def procesarPaginasPDF_tipoImagen(pdf_path, identificador, nif):
     if len(paginas_descartadas):
         msg.info(f"Páginas descartadas: {' - '.join(paginas_descartadas)}")
     return (paginas)
-    
-def procesarPaginasPDF_tipoTexto(pdf_path, identificador):
+ 
+def procesarPaginas_tipo_PDFTexto(pdf_path, identificador):
     paginas = []
     paginas_descartadas = []
     with pdfplumber.open(pdf_path) as pdf:
@@ -42,12 +42,14 @@ def procesarPaginasPDF_tipoTexto(pdf_path, identificador):
                     paginas.append([n_pag, texto])
                 else:
                     paginas_descartadas.append(str(n_pag))
+            else:
+                paginas_descartadas.append(str(n_pag))
     msg.info(f'\nProcesadas {n_pag} páginas')
     if len(paginas_descartadas):
         msg.info(f"Páginas descartadas: {' - '.join(paginas_descartadas)}")
     return (paginas)
 
-def procesarPaginas_tipoExcel(excel_path, identificador, nif):
+def procesarPaginas_tipo_Excel(excel_path, identificador, nif):
     # Cargar el libro de trabajo
     libro = openpyxl.load_workbook(excel_path, data_only=True)
     
@@ -95,14 +97,14 @@ def procesarFacturas(path, empresa):
     except:
         msg.error(f'No existe el modulo "{empresa["funciones"]}"')
         return
-    if empresa["tipoPDF"] == "texto":
-        paginas = procesarPaginasPDF_tipoTexto(path, fe.identificador)
-    elif empresa["tipoPDF"] == "imagen":
-        paginas = procesarPaginasPDF_tipoImagen(path, fe.identificador, empresa["nif"])
-    elif empresa["tipoPDF"] == "excel":
-        paginas = procesarPaginas_tipoExcel(path, fe.identificador, empresa["nif"])
+    if empresa["tipo"] == "PDFtexto":
+        paginas = procesarPaginas_tipo_PDFTexto(path, fe.identificador)
+    elif empresa["tipo"] == "PDFimagen":
+        paginas = procesarPaginas_tipo_PDFImagen(path, fe.identificador, empresa["nif"])
+    elif empresa["tipo"] == "excel":
+        paginas = procesarPaginas_tipo_Excel(path, fe.identificador, empresa["nif"])
     else:
-        msg.error(f'PDF tipo "{empresa["tipoPDF"]}" no es válido')
+        msg.error(f'PDF tipo "{empresa["tipo"]}" no es válido')
         return
     if not paginas:
         return

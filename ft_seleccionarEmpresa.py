@@ -57,7 +57,7 @@ def obtener_ruta_pdf(empresa):
         return None
     
     while True:
-        if empresa["tipoPDF"] == "excel":
+        if empresa["tipo"] == "excel":
             nombre = input(f"Nombre del archivo Excel en directorio '{directorio}': ")
             if nombre and not nombre.endswith(".xlsx"):
                 nombre += ".xlsx"
