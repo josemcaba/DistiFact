@@ -23,7 +23,7 @@ def extraerDatosFactura(pagina, empresa):
 
     factura = {}
 
-    regex = r"Nº factura\s*(\d+)"
+    regex = r"Nº factura\s*(.+)"
     factura[KEY.NUM_FACT] = fb.re_search(regex, pagina)
 
     regex = r"Fecha emisión\s*(.*)"
@@ -83,7 +83,7 @@ def clasificar_facturas(facturas):
         errores.append(error) if error else None
 
         # >>>>>>>>>> AJUSTES PERSONALIZADOS <<<<<<<<<< #
-        factura[KEY.FECHA_FACT] = re.sub(r"[-,]","", factura[KEY.FECHA_FACT])
+        # factura[KEY.FECHA_FACT] = re.sub(r"[-,]","", factura[KEY.FECHA_FACT])
         error = verificar.fecha(factura, is_eeuu=True)
         errores.append(error) if error else None
 
@@ -144,4 +144,8 @@ def acorta_nombre_cliente(factura):
         nombre = "Ramírez Sánchez S.L. 'Rest Refrectorium'"
     elif nombre[:21] == "Luis Gaspar Rodríguez":
         nombre = "Luis Gaspar Rodríguez 'Rest. El Rengue'"
+    elif nombre[:8] == "La Magna":
+        nombre = "La Magna. La oficina se sienta a la mesa"
+    elif nombre[:19] == "Bar Mesón `El Tejón":
+        nombre = "Bar Mesón 'El Tejón' - Enrique Gilabert"
     return nombre
