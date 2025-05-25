@@ -23,8 +23,8 @@ def extraerDatosFactura(pagina, empresa):
 
     factura[KEY.NUM_FACT] = pagina[1]
     factura[KEY.EMPRESA] = pagina[2]
-    factura[KEY.NIF] = pagina[5]
-    
+    factura[KEY.NIF] = str(pagina[5]).upper()
+
     factura[KEY.FECHA_FACT] = pagina[7]
     factura[KEY.FECHA_OPER] = factura[KEY.FECHA_FACT]
     
