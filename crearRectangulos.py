@@ -94,6 +94,12 @@ def draw_rectangle(event, x, y, flags, param):
         rectangles[key]["tesseract"] = "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         rectangle_counter += 1  # Incrementar el contador
 
+
+###############################################################3
+#
+#  main()
+#
+
 empresa, ruta_PDF = seleccionarEmpresa("empresas.json")
 if not(empresa and ruta_PDF):
 	msg.salida()

@@ -92,7 +92,7 @@ def procesarPaginas_tipo_Excel(excel_path, identificador, nif):
 
 def procesarFacturas(path, empresa):
     try:
-        # Carga el modulo de funciones correspondientes a la empresa seleccionada
+        # Carga el modulo de funciones extractoras correspondientes a la empresa seleccionada
         fe = import_module(empresa["funciones"][:-3])
     except:
         msg.error(f'No existe el modulo "{empresa["funciones"]}"')

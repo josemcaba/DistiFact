@@ -1,7 +1,6 @@
 import conceptos_factura as KEY
 import re
 import ft_basicas as ftb
-import ft_verificadores as verificar
 
 # El parámetro identificador es un texto que debe aparecer en la página
 # del PDF para ser validada como factura.
@@ -36,6 +35,7 @@ def extraerDatosFactura(pagina, empresa):
     factura[KEY.EMPRESA] = ftb.re_search(regex, pagina)
 
     factura[KEY.NIF] = nif_cliente(pagina, empresa)
+    factura[KEY.NIF] = re.sub(r"O", "0", factura[KEY.NIF]) if factura[KEY.NIF] else None
 
     # regex = r"IVA\s*(\d+)\s*%"
     # factura[KEY.TIPO_IVA] = ftb.re_search(regex, pagina)
@@ -74,6 +74,7 @@ def nif_cliente(pagina, empresa):
     # Devuelve el primer NIF distinto o None
     return nif_cliente[0] if nif_cliente else None
 
+'''
 #########################################################################
 #
 # VERIFICACION
@@ -136,3 +137,4 @@ def clasificar_facturas(facturas):
             facturas_correctas.append(factura)
 
     return facturas_correctas, facturas_con_errores
+'''

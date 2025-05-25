@@ -1,7 +1,6 @@
 import conceptos_factura as KEY
 import re
 import ft_basicas as ftb
-import ft_verificadores as verificar
 
 # El parámetro identificador es un texto que debe aparecer en la página
 # del PDF para ser validada como factura.
@@ -66,57 +65,3 @@ def nif_cliente(pagina, empresa):
     nif_cliente = [nif for nif in match if nif.replace(" ", "") != empresa["nif"]]
     # Devuelve el primer NIF distinto o None
     return nif_cliente[0] if nif_cliente else None
-
-#########################################################################
-#
-# VERIFICACION
-#
-def clasificar_facturas(facturas):
-    """
-    Clasifica las facturas en correctas y con errores.
-    Retorna dos listas: facturas_correctas y facturas_con_errores.
-    """
-
-    facturas_correctas = []
-    facturas_con_errores = []
-
-    for factura in facturas:
-        num_pag = factura[0]
-        factura = factura[1]
-
-        errores = []
-        observaciones = []
-
-        error = verificar.num_factura(factura)
-        errores.append(error) if error else None
-
-        error = verificar.fecha(factura)
-        errores.append(error) if error else None
-
-        conceptos = [KEY.BASE_IVA, KEY.TIPO_IVA, KEY.CUOTA_IVA,
-                    KEY.BASE_IRPF, KEY.BASE_RE, KEY.TOTAL_FACT]
-        for concepto in conceptos:
-            error = verificar.importe(factura, concepto)
-            errores.append(error) if error else None
-                
-        error = verificar.nif(factura)
-        errores.append(error) if error else None
-
-        error = verificar.nombre(factura)
-        errores.append(error) if error else None
-
-        error = verificar.calculo_cuota(factura, KEY.CUOTA_IVA)
-        errores.append(error) if error else None
-
-        error = verificar.calculos_totales(factura)
-        observaciones.append(error) if error else None
-
-        if errores:
-            factura["Errores"] = f'<<Pag. {num_pag}>> ' + ", ".join(errores)
-            facturas_con_errores.append(factura)
-        else:
-            if observaciones:
-                factura["Observaciones"] = f'<<Pag. {num_pag}>> ' + ", ".join(observaciones)
-            facturas_correctas.append(factura)
-
-    return facturas_correctas, facturas_con_errores

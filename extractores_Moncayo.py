@@ -1,7 +1,6 @@
 import conceptos_factura as KEY
 import re
 import ft_basicas as fb
-import ft_verificadores as verificar
 
 # El parámetro identificador es un texto que debe aparecer en la página
 # del PDF para ser validada como factura.
@@ -49,6 +48,7 @@ def extraerDatosFactura(pagina, empresa):
     factura[KEY.CUOTA_RE] = 0.0
 
     factura[KEY.NIF] = nif_cliente(pagina, empresa)
+    factura[KEY.NIF] = re.sub(r" ", "", factura[KEY.NIF]) if factura[KEY.NIF] else None
 
     regex = r"FECHA\s*FACTURA:\s*.+\s*(?:Referencia\s*[^\n]+)?\n([^\n]+)"
     factura[KEY.EMPRESA] = fb.re_search(regex, pagina)
@@ -70,63 +70,3 @@ def nif_cliente(pagina, empresa):
     nif_cliente = [nif for nif in match if nif.replace(" ", "") != empresa["nif"]]
     # Devuelve el primer NIF distinto o None
     return nif_cliente[0] if nif_cliente else None
-
-#########################################################################
-#
-# VERIFICACION
-#
-def clasificar_facturas(facturas):
-    """
-    Clasifica las facturas en correctas y con errores.
-    Retorna dos listas: facturas_correctas y facturas_con_errores.
-    """
-    facturas_correctas = []
-    facturas_con_errores = []
-
-    for factura in facturas:
-        num_pag = factura[0]
-        factura = factura[1]
-
-        errores = []
-        observaciones = []
-
-        error = verificar.num_factura(factura)
-        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
-
-        error = verificar.fecha(factura)
-        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
-
-        error = verificar.base_iva(factura)
-        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
-
-        error = verificar.tipo_iva(factura)
-        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
-
-        error = verificar.cuota_iva(factura)
-        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
-        
-        error = verificar.total_factura(factura)
-        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
-
-        # >>>>>>>>>> AJUSTES PERSONALIZADOS <<<<<<<<<< #
-        factura[KEY.NIF] = factura[KEY.NIF].replace(" ", "")
-        error = verificar.nif(factura)
-        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
-
-        error = verificar.nombre(factura)
-        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
-
-        error = verificar.calculo_cuota(factura, KEY.CUOTA_IVA)
-        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
-
-        error = verificar.calculos_totales(factura)
-        errores.append(f'<<Pag. {num_pag}>> {error}') if error else None
-
-        if errores:
-            factura["Errores"] = ", ".join(errores)
-            facturas_con_errores.append(factura)
-        else:
-            factura["Observaciones"] = ", ".join(observaciones)
-            facturas_correctas.append(factura)
-
-    return facturas_correctas, facturas_con_errores

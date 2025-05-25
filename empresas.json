@@ -1,13 +1,13 @@
 {
-    "1": {"nombre": "Pescadería Marengo", "nif": "33384986A", "funciones": "_Pescaderias_Funciones.py", "tipo": "PDFtexto"},
-    "2": {"nombre": "Pescadería Salvador", "nif": "25041071M", "funciones": "_Pescaderias_Funciones.py", "tipo": "PDFtexto"},
-    "3": {"nombre": "Gregorio Aranda", "nif": "25693621E", "funciones": "_Gregorio_Funciones.py", "tipo": "PDFtexto"},
-    "4": {"nombre": "Rosa Maria Moncayo", "nif": "25042336M", "funciones": "_Moncayo_Funciones.py", "tipo": "PDFtexto"},
-    "5": {"nombre": "FACCSA", "nif": "A17001231", "funciones": "_FACCSA_Funciones.py", "tipo": "PDFimagen"},
-    "6": {"nombre": "ADISADI", "nif": "B93643245", "funciones": "_ADISADI_Funciones.py", "tipo": "PDFimagen"},
-    "7": {"nombre": "Ignacio Ibanez", "nif": "33360360X", "funciones": "_Ignacio_Funciones.py", "tipo": "PDFtexto"},
-    "8": {"nombre": "GOMEZ MORENO MIJAS", "nif": "B92421601", "funciones": "_GOMEZ_MORENO_Funciones.py", "tipo": "PDFimagen"},
-    "9": {"nombre": "Antonio Osorio", "nif": "76753510A", "funciones": "_Antonio_Osorio_Funciones.py", "tipo": "PDFimagen"},
-    "10": {"nombre": "Andres Cazalla", "nif": "26236236K", "funciones": "_Andres_Cazalla_Funciones.py", "tipo": "PDFtexto"},
-    "11": {"nombre": "Davinia Castillo Ruiz", "nif": "79024342E", "funciones": "_Davinia_Castillo_Funciones.py", "tipo": "excel"}
+    "1": {"nombre": "Pescadería Marengo", "nif": "33384986A", "funciones": "extractores_Pescaderias.py", "tipo": "PDFtexto"},
+    "2": {"nombre": "Pescadería Salvador", "nif": "25041071M", "funciones": "extractores_Pescaderias.py", "tipo": "PDFtexto"},
+    "3": {"nombre": "Gregorio Aranda", "nif": "25693621E", "funciones": "extractores_Gregorio.py", "tipo": "PDFtexto"},
+    "4": {"nombre": "Rosa Maria Moncayo", "nif": "25042336M", "funciones": "extractores_Moncayo.py", "tipo": "PDFtexto"},
+    "5": {"nombre": "FACCSA", "nif": "A17001231", "funciones": "extractores_FACCSA.py", "tipo": "PDFimagen"},
+    "6": {"nombre": "ADISADI", "nif": "B93643245", "funciones": "extractores_ADISADI.py", "tipo": "PDFimagen"},
+    "7": {"nombre": "Ignacio Ibanez", "nif": "33360360X", "funciones": "extractores_Ignacio PDFimagen.py", "tipo": "PDFimagen"},
+    "8": {"nombre": "GOMEZ MORENO MIJAS", "nif": "B92421601", "funciones": "extractores_GOMEZ_MORENO.py", "tipo": "PDFimagen"},
+    "9": {"nombre": "Antonio Osorio", "nif": "76753510A", "funciones": "extractores_Antonio_Osorio.py", "tipo": "PDFimagen"},
+    "10": {"nombre": "Andres Cazalla", "nif": "26236236K", "funciones": "extractores_Andres_Cazalla.py", "tipo": "PDFtexto"},
+    "11": {"nombre": "Davinia Castillo Ruiz", "nif": "79024342E", "funciones": "extractores_Davinia.py", "tipo": "excel"}
 }

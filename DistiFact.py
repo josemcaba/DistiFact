@@ -1,6 +1,6 @@
 from ft_seleccionarEmpresa import seleccionarEmpresa
 from ft_procesarFacturas import procesarFacturas
-from importlib import import_module    # Para importar un modulo almacenado en una variable
+from ft_clasificarFacturas import clasificarFacturas
 from ft_exportarExcel import exportar_a_excel
 from ft_mensajes_POO import msg
 
@@ -17,8 +17,7 @@ def main():
         msg.salida()
         return
 
-    fe = import_module(empresa["funciones"][:-3])
-    facturas_correctas, facturas_con_errores = fe.clasificar_facturas(facturas)
+    facturas_correctas, facturas_con_errores = clasificarFacturas(facturas)
     if not (facturas_correctas or facturas_con_errores):
         msg.salida()
         return
