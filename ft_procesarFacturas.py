@@ -70,26 +70,6 @@ def procesarPaginas_tipo_Excel(excel_path, identificador, nif):
     
     return filas
 
-    # Cargamos solo la informacion de la empresa
-    rectangulos = fci.cargar_rectangulos_json(nif, ruta_json="rectangulos.json")
-    if not rectangulos:
-        return
-    paginas = []
-    paginas_descartadas = []
-    with pdfplumber.open(path) as pdf:
-        for n_pag, pagina in enumerate(pdf.pages, start=1):
-            texto = pagina.extract_text()
-            flush_page(n_pag)
-            if texto:
-                if identificador in texto:
-                    paginas.append([n_pag, texto])
-                else:
-                    paginas_descartadas.append(str(n_pag))
-    msg.info(f'\nProcesadas {n_pag} páginas')
-    if len(paginas_descartadas):
-        msg.info(f"Páginas descartadas: {' - '.join(paginas_descartadas)}")
-    return (paginas)
-
 def procesarFacturas(path, empresa):
     try:
         # Carga el modulo de funciones extractoras correspondientes a la empresa seleccionada
