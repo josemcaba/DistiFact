@@ -2,6 +2,7 @@
 Módulo que contiene la clase ProcesadorFacturas para procesar archivos de facturas.
 """
 from importlib import import_module
+from pathlib import Path
 import pdfplumber
 import fitz  # PyMuPDF
 import openpyxl
@@ -78,8 +79,9 @@ class ProcesadorFacturas:
         
         try:
             # Carga el módulo de funciones extractoras correspondientes a la empresa
-            modulo_nombre = empresa.funciones[:-3]  # Quitamos la extensión .py
-            fe = import_module(modulo_nombre)
+            modulo_path = Path("extractores") / empresa.funciones[:-3]  # Quitamos la extensión .py
+            modulo_str = ".".join(modulo_path.parts)  # convierte Path a string estilo paquete
+            fe = import_module(modulo_str)
         except ImportError:
             self._mostrar_mensaje('error', f'No existe el módulo "{empresa.funciones}"')
             return []
