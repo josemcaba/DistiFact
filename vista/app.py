@@ -31,7 +31,7 @@ class App(tk.Tk):
         self.title("DistiFact - Procesador de Facturas")
         self.geometry("500x500")
         # self.resizable(False, False)
-        self.minsize(350, 420)
+        self.minsize(350, 500)
         
         # Configuración de estilo
         self.configure(bg="#f0f0f0")
