@@ -9,5 +9,6 @@
     "8": {"nombre": "GOMEZ MORENO MIJAS", "nif": "B92421601", "funciones": "extractores_GOMEZ_MORENO.py", "tipo": "PDFimagen"},
     "9": {"nombre": "Antonio Osorio", "nif": "76753510A", "funciones": "extractores_Antonio_Osorio.py", "tipo": "PDFimagen"},
     "10": {"nombre": "Andres Cazalla", "nif": "26236236K", "funciones": "extractores_Andres_Cazalla.py", "tipo": "PDFtexto"},
-    "11": {"nombre": "Davinia Castillo Ruiz", "nif": "79024342E", "funciones": "extractores_Davinia.py", "tipo": "excel"}
+    "11": {"nombre": "Davinia Castillo Ruiz", "nif": "79024342E", "funciones": "extractores_Davinia.py", "tipo": "excel"},
+    "12": {"nombre": "Maria Carmen Blanco Sepulveda", "nif": "33391919J", "funciones": "extractores_Blanco_Sepulveda.py", "tipo": "PDFtexto"}
 }

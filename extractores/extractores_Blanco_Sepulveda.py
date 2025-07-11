@@ -6,7 +6,7 @@ import ft_basicas as fb
 # del PDF para ser validada como factura.
 # Las páginas que no contengan este texto son descartadas.
 
-identificador = "FACTURA"
+identificador = "DATOS BANCARIOS"
 
 #########################################################################
 #
@@ -19,19 +19,20 @@ identificador = "FACTURA"
 def extraerDatosFactura(pagina, empresa):
     num_pag = pagina[0]
     pagina = pagina[1]
-
+    print(pagina)
+    
     factura = {}
 
-    regex = r"FACTURA\s+?(2025[\d]{3})\s+"
+    regex = r"Número:\s+(\d+)"
     factura[KEY.NUM_FACT] = fb.re_search(regex, pagina)
 
-    regex = r"FACTURA\s+[\d]*\s+(.+)"
+    regex = r"Fecha:\s+(.+)"
     factura[KEY.FECHA_FACT] = fb.re_search(regex, pagina)
     factura[KEY.FECHA_OPER] = factura[KEY.FECHA_FACT]
-    
+
     factura[KEY.CONCEPTO] = 700
 
-    regex = r"TOTAL\n.+?\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s"
+    regex = r"TOTAL\n.+?\s(.+?)€\s(.+?)\s(.+?)€\s(.+?)\s(.+?)\s(.+?)\s"
     grupos = fb.re_search_multiple(regex, pagina)
     grupos_ok = grupos and (len(grupos) == 6)
     factura[KEY.BASE_IVA] = grupos[0] if grupos_ok else None
