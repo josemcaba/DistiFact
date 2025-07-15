@@ -107,6 +107,16 @@ class FrameProcesamiento(FrameBase):
             command=self._on_cancelar
         )
         self.btn_cancelar.pack(side="right", padx=5)
+
+        # Botón de continuar (inicialmente desactivado)
+        self.btn_continuar = ttk.Button(
+            self.frame_botones,
+            text="Continuar",
+            command=self._on_continuar,
+            state="disabled"
+        )
+        self.btn_continuar.pack(side="right", padx=5)
+
         
         # Variable para controlar el hilo de procesamiento
         self.hilo_procesamiento = None
@@ -114,6 +124,9 @@ class FrameProcesamiento(FrameBase):
     
     def inicializar(self):
         """Inicializa el frame cuando se muestra."""
+        # 🔽 Aquí se desactiva el botón "Continuar" al iniciar
+        self.btn_continuar.config(state="disabled")
+        
         # Obtener información del archivo
         ruta_archivo = self.controlador.obtener_ruta_archivo()
         
@@ -171,8 +184,9 @@ class FrameProcesamiento(FrameBase):
                 # Mostrar mensaje de éxito
                 self._agregar_mensaje("info", f"Se procesaron {len(resultado)} facturas correctamente.")
                 
-                # Esperar un momento antes de avanzar
-                self.after(1000, lambda: self.app.mostrar_frame("resultados"))
+                # Esperar antes de avanzar
+                self.after(0, lambda: self.btn_continuar.config(state="normal"))
+
             else:
                 # Actualizar estado
                 self._actualizar_estado("Error en el procesamiento", 0)
@@ -262,3 +276,8 @@ class FrameProcesamiento(FrameBase):
         else:
             # Si no hay procesamiento activo, volver directamente
             self.app.mostrar_frame("seleccion_archivo")
+
+    def _on_continuar(self):
+        """Maneja el evento de continuar tras procesamiento."""
+        self.app.mostrar_frame("resultados")
+
