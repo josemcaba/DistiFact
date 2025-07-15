@@ -193,11 +193,15 @@ class FrameProcesamiento(FrameBase):
                 
                 # Mostrar mensaje de error
                 self._agregar_mensaje("error", "No se pudieron procesar facturas.")
+            
+            # ✅ Habilitar botón Continuar pase lo que pase
+            self.after(0, lambda: self.btn_continuar.config(state="normal"))
         
         except Exception as e:
             # Mostrar error
             self._actualizar_estado(f"Error: {str(e)}", 0)
             self._agregar_mensaje("error", f"Error durante el procesamiento: {str(e)}")
+            self.after(0, lambda: self.btn_continuar.config(state="normal"))  # ✅ También en errores críticos
     
     def _actualizar_progreso(self, actual, total):
         """
