@@ -20,7 +20,7 @@ def validar_fecha(fecha_str, is_eeuu=False):
     Valida que una fecha esté en alguno de los formatos:
     desde dd/mm/aaaa hasta d/m/aa.
     
-    Si no is_euro tambien valida los formatos:
+    Si is_eeuu tambien valida los formatos:
     desde mm/dd/aaaa hasta m/d/aa.
     
     Si es válida, retorna la fecha en formato dd/mm/aaaa.
@@ -112,7 +112,7 @@ def re_search(regex, pagina):
     Extrae texto segun un patron regex
     """
     match = re.search(regex, pagina)
-    return match.group(1) if match and match.lastindex else None
+    return match.group(match.lastindex) if match and match.lastindex else None
 
 def re_search_multiple(regex, pagina):
     """
