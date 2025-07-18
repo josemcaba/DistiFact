@@ -51,7 +51,7 @@ def seleccionar_empresa(empresas):
             msg.error("Entrada no válida. Introduce un número.")
 
 def obtener_ruta_pdf(empresa):
-    directorio = empresa['nombre']
+    directorio = os.path.join("..", "DistiFact-Facturas", empresa['nombre'])
     if not os.path.exists(directorio):
         msg.error(f"El directorio '{directorio}' no existe.")
         return None

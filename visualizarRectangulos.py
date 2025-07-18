@@ -56,3 +56,7 @@ class VisualizadorRectangulos:
         except Exception as e:
             msg.error(f"Error al visualizar rectángulos: {str(e)}")
             return False
+
+ver = VisualizadorRectangulos()
+directorio = os.path.join("..", "DistiFact-Facturas", empresa['nombre'])
+ver.visualizar()
