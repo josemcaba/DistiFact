@@ -19,7 +19,8 @@ identificador = "33.360.360-X"
 def extraerDatosFactura(pagina, empresa):
     num_pag = pagina[0]
     pagina = pagina[1]
-
+    print(pagina)
+    
     factura = {}
 
     factura[KEY.CONCEPTO] = 700
@@ -31,10 +32,10 @@ def extraerDatosFactura(pagina, empresa):
     factura[KEY.FECHA_FACT] = fb.re_search(regex, pagina)
     factura[KEY.FECHA_OPER] = factura[KEY.FECHA_FACT]
     
-    regex = r"91\s+(.*)\s+29003"
+    regex = r"91\s+(.*)"
     factura[KEY.EMPRESA] = fb.re_search(regex, pagina)
 
-    regex = r"info@servinfotec\.com 29004 MALAGA\s(.*)"
+    regex = r"\n(.+)\n\d{6}\nN"
     factura[KEY.NIF] = fb.re_search(regex, pagina)
     factura[KEY.NIF] = re.sub(r"['. -]", "", factura[KEY.NIF])
     

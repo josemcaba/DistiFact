@@ -5,7 +5,7 @@
     "4": {"nombre": "Rosa Maria Moncayo", "nif": "25042336M", "funciones": "extractores_Moncayo.py", "tipo": "PDFtexto"},
     "5": {"nombre": "FACCSA", "nif": "A17001231", "funciones": "extractores_FACCSA.py", "tipo": "PDFimagen"},
     "6": {"nombre": "ADISADI", "nif": "B93643245", "funciones": "extractores_ADISADI.py", "tipo": "PDFimagen"},
-    "7": {"nombre": "Ignacio Ibanez", "nif": "33360360X", "funciones": "extractores_Ignacio PDFimagen.py", "tipo": "PDFimagen"},
+    "7": {"nombre": "Ignacio Ibanez", "nif": "33360360X", "funciones": "extractores_Ignacio PDFtexto.py", "tipo": "PDFtexto"},
     "8": {"nombre": "GOMEZ MORENO MIJAS", "nif": "B92421601", "funciones": "extractores_GOMEZ_MORENO.py", "tipo": "PDFimagen"},
     "9": {"nombre": "Antonio Osorio", "nif": "76753510A", "funciones": "extractores_Antonio_Osorio.py", "tipo": "PDFimagen"},
     "10": {"nombre": "Andres Cazalla", "nif": "26236236K", "funciones": "extractores_Andres_Cazalla.py", "tipo": "PDFtexto"},
