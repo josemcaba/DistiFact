@@ -1,6 +1,6 @@
 import conceptos_factura as KEY
 import re
-import ft_basicas as fb
+import modelo.ft_basicas as fb
 
 # El parámetro identificador es un texto que debe aparecer en la página
 # del PDF para ser validada como factura.
