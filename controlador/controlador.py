@@ -10,7 +10,7 @@ from modelo.factura import Factura
 from modelo.procesador import ProcesadorFacturas
 from modelo.clasificador import ClasificadorFacturas
 from modelo.exportador import ExportadorExcel
-from visualizarRectangulos import VisualizadorRectangulos
+from modelo.vizualizador import VisualizadorRectangulos
 
 
 class Controlador:

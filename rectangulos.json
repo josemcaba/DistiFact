@@ -94,17 +94,24 @@
     },
     "B92421601": {
         "rectangulo_1": {
-            "x1": 226,
-            "y1": 855,
-            "x2": 1139,
-            "y2": 1051,
+            "x1": 232,
+            "y1": 831,
+            "x2": 1195,
+            "y2": 1103,
             "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_2": {
-            "x1": 173,
-            "y1": 1467,
-            "x2": 3013,
-            "y2": 3880,
+            "x1": 705,
+            "y1": 1667,
+            "x2": 1367,
+            "y2": 3777,
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+        },
+        "rectangulo_3": {
+            "x1": 2591,
+            "y1": 1561,
+            "x2": 3035,
+            "y2": 3809,
             "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "angulo": 0

@@ -6,7 +6,7 @@ import modelo.ft_basicas as ftb
 # del PDF para ser validada como factura.
 # Las páginas que no contengan este texto son descartadas.
 
-identificador="FACTURA"
+identificador="TOTAL FACTURA"
 
 #########################################################################
 #
@@ -19,25 +19,32 @@ identificador="FACTURA"
 def extraerDatosFactura(pagina, empresa):
     num_pag = pagina[0]
     pagina = pagina[1]
-
+    print(pagina)
     factura = {}
 
-    regex = r"FACTURA\s*FECHA\s*(.+?)\s+([0-9/]+)"
+    factura[KEY.CONCEPTO] = 600
+
+    regex = r"([0-9][A-Z]/[0-9]{7})\s.*?\s([0-9]{2}/[0-9]{2}/[0-9]{4})"
     grupos = ftb.re_search_multiple(regex, pagina)
     grupos_ok = grupos and (len(grupos) == 2)
     factura[KEY.NUM_FACT] = grupos[0] if grupos_ok else None
     factura[KEY.FECHA_FACT] = grupos[1] if grupos_ok else None
-    
-    factura[KEY.CONCEPTO] = 600
 
-    regex = r"(?:IMPONIBLE|IMPORTE).+?([\d,.]+)\s*([\d]+)."
-    grupos = ftb.re_search_multiple(regex, pagina)
-    grupos_ok = grupos and (len(grupos) == 2)
-    factura[KEY.BASE_IVA] = grupos[0] if grupos_ok else None
-    factura[KEY.TIPO_IVA] = grupos[1] if grupos_ok else None
+    # regex = r"FACTURA.*\s([0-9][A-Z]/[0-9]{7})\s"
+    # factura[KEY.NUM_FACT] = ftb.re_search(regex, pagina)
 
-    regex = rf"{factura[KEY.BASE_IVA]}\s.+{factura[KEY.BASE_IVA]}.+?([\d,.]+)\s"
-    factura[KEY.CUOTA_IVA] = ftb.re_search(regex, pagina)
+    # regex = r"FECHA.*\s([0-9]{2}/[0-9]{2}/[0-9]{4})\s"
+    # factura[KEY.FECHA_FACT] = ftb.re_search(regex, pagina)
+
+    regex = r"([\d]+[,.][\d]+)"
+    grupos = re.findall(regex, pagina)
+    grupos_ok = grupos and (len(grupos) >= 3)
+    if grupos_ok:
+        factura[KEY.BASE_IVA] = grupos[len(grupos)-3]
+        factura[KEY.CUOTA_IVA] = grupos[len(grupos)-2]
+        factura[KEY.TOTAL_FACT] = grupos[len(grupos)-1]
+
+    factura[KEY.TIPO_IVA] = 21.0
 
     factura[KEY.BASE_IRPF] = factura[KEY.BASE_IVA]
     factura[KEY.TIPO_IRPF] = 0.0
@@ -51,21 +58,4 @@ def extraerDatosFactura(pagina, empresa):
 
     factura[KEY.EMPRESA] = "GOMEZ MORENO MIJAS S.L."
 
-    regex = r"TOTAL\s*FACTURA.*?([\d,]+)\s"
-    factura[KEY.TOTAL_FACT] = ftb.re_search(regex, pagina)
-
     return([num_pag, factura]) 
-
-
-def nif_cliente(pagina, empresa):
-    '''
-    De todos los NIF que aparezcan en la factura, devuelve el primero que sea
-    distinto del NIF de la empresa.
-    Los devuelve tal como están en la página de la factura
-    '''
-    regex = r"(?:NIF\s+|CIF\s+|CIF:\s+|TARJETA DE RESIDENCIA\s+)\b([a-zA-Z0-9](?:\s*)?\d{7}(?:\s*)?[a-zA-Z0-9])\b"
-    match = re.findall(regex, pagina)
-    # Filtrar para descartar el NIF de la empresa y seleccionar el correcto
-    nif_cliente = [nif for nif in match if nif.replace(" ", "") != empresa["nif"]]
-    # Devuelve el primer NIF distinto o None
-    return nif_cliente[0] if nif_cliente else None
