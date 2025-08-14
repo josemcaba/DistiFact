@@ -1,5 +1,5 @@
 """
-Módulo que contiene la clase ClasificadorFacturas para clasificar facturas corrrectas o con errores.
+Módulo que contiene la clase ClasificadorFacturas para clasificar facturas correctas o con errores.
 """
 from typing import List, Tuple, Dict, Any
 import conceptos_factura as KEY
@@ -27,11 +27,22 @@ class ClasificadorFacturas:
         """
         facturas_correctas = []
         facturas_con_errores = []
-        numeros_factura = []
+
+        vistos = {}
+        for factura in facturas:
+            # Detectamos duplicados por número de factura
+            numero = factura.datos[KEY.NUM_FACT]
+            if not numero:
+                continue
+            if numero in vistos:
+                factura.agregar_error(f"Número de factura duplicado: {numero}")
+                vistos[numero].agregar_error(f"Número de factura duplicado: {numero}")
+            else:
+                vistos[numero] = factura
 
         for factura in facturas:
             # Verificamos los campos de la factura
-            self._verificar_campos(factura, numeros_factura)
+            self._verificar_campos(factura)
             
             # Clasificamos según si tiene errores
             if factura.tiene_errores():
@@ -41,7 +52,7 @@ class ClasificadorFacturas:
 
         return facturas_correctas, facturas_con_errores
     
-    def _verificar_campos(self, factura: Factura, numeros_factura) -> None:
+    def _verificar_campos(self, factura: Factura) -> None:
         """
         Verifica los campos de una factura y agrega errores u observaciones.
         
@@ -51,7 +62,7 @@ class ClasificadorFacturas:
         datos = factura.datos
         
         # Verificar número de factura
-        error = verificar.num_factura(datos, numeros_factura)
+        error = verificar.num_factura(datos)
         if error:
             factura.agregar_error(error)
         

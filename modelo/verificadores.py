@@ -1,15 +1,9 @@
 import conceptos_factura as KEY
 import modelo.ft_basicas as fb
 
-def num_factura(factura, numeros_factura):
+def num_factura(factura):
     if factura[KEY.NUM_FACT] is None:
         return (f"Núm. {KEY.NUM_FACT} no encontrado")
-    # Verificación de duplicados
-    numero = factura[KEY.NUM_FACT]
-    if numero in numeros_factura:
-        return(f"Núm. {KEY.NUM_FACT} duplicado")
-    else:
-        numeros_factura.append(numero)
     return False # No hay errores
 
 def fecha(factura, is_eeuu=False):
