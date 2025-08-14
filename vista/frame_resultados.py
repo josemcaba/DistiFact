@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter import ttk
 import os
 from typing import Dict, Any, Optional, List
-
+import extractores.conceptos_factura as KEY
 from vista.frame_base import FrameBase
 from modelo.factura import Factura
 
@@ -101,10 +101,10 @@ class FrameResultados(FrameBase):
         # Configurar encabezados
         for col in columnas:
             self.tabla_correctas.heading(col, text=col)
-            self.tabla_correctas.column(col, width=100, anchor="center")
+            self.tabla_correctas.column(col, width=50, anchor="center")
         
         # Ajustar columnas específicas
-        self.tabla_correctas.column("Observaciones", width=200, anchor="w")
+        self.tabla_correctas.column("Observaciones", width=100, anchor="w")
         
         # Empaquetar tabla
         self.tabla_correctas.pack(side="left", fill="both", expand=True)
@@ -187,8 +187,6 @@ class FrameResultados(FrameBase):
         Args:
             facturas: Lista de facturas correctas
         """
-        import conceptos_factura as KEY
-        
         for factura in facturas:
             datos = factura.datos
             
@@ -215,8 +213,6 @@ class FrameResultados(FrameBase):
         Args:
             facturas: Lista de facturas con errores
         """
-        import conceptos_factura as KEY
-        
         for factura in facturas:
             datos = factura.datos
             

@@ -2,7 +2,7 @@
 Módulo que contiene la clase ClasificadorFacturas para clasificar facturas correctas o con errores.
 """
 from typing import List, Tuple, Dict, Any
-import conceptos_factura as KEY
+import extractores.conceptos_factura as KEY
 from modelo.factura import Factura
 from modelo.verificador import VerificadorFactura
 

@@ -1,4 +1,4 @@
-import conceptos_factura as KEY
+import extractores.conceptos_factura as KEY
 import re
 import modelo.ft_basicas as fb
 

@@ -51,7 +51,8 @@ class FrameSeleccionArchivo(FrameBase):
         
         self.lbl_archivo = ttk.Label(
             self.frame_archivo,
-            text="Seleccione el archivo a procesar:"
+            text="Seleccione el archivo a procesar:",
+            font=("Arial", 10, "bold")
         )
         self.lbl_archivo.pack(anchor="w", pady=(0, 5))
         
@@ -75,6 +76,14 @@ class FrameSeleccionArchivo(FrameBase):
         # Frame para botones
         self.frame_botones = ttk.Frame(self.frame_contenido)
         self.frame_botones.pack(fill="x", pady=20)
+
+        # Botón para crear rectángulos (solo visible para PDF imagen)
+        self.btn_crear = ttk.Button(
+            self.frame_botones,
+            text="Crear Rectángulos",
+            command=self._on_crear_rectangulos
+        )
+        # No se empaqueta aquí, se mostrará solo si es PDF imagen
         
         # Botón para visualizar rectángulos (solo visible para PDF imagen)
         self.btn_visualizar = ttk.Button(
@@ -118,8 +127,10 @@ class FrameSeleccionArchivo(FrameBase):
         # Mostrar u ocultar botón de visualizar rectángulos según tipo de empresa
         if empresa.tipo == "PDFimagen":
             self.btn_visualizar.pack(side="left", padx=5)
+            self.btn_crear.pack(side="left", padx=5)
         else:
             self.btn_visualizar.pack_forget()
+            self.btn_crear.pack_forget()
         
         # Limpiar campo de ruta
         self.entry_ruta.delete(0, tk.END)
@@ -173,7 +184,33 @@ class FrameSeleccionArchivo(FrameBase):
         
         # Visualizar rectángulos
         self.controlador.visualizar_rectangulos(ruta, empresa.to_dict())
+
+    def _on_crear_rectangulos(self):
+        """Maneja el evento de crear rectángulos."""
+        ruta = self.entry_ruta.get().strip()
     
+        if not ruta:
+            self.mostrar_mensaje("warning", "Debe seleccionar un archivo PDF.")
+            return
+    
+        if not os.path.isfile(ruta):
+            self.mostrar_mensaje("error", f"El archivo '{ruta}' no existe.")
+            return
+    
+        if not ruta.lower().endswith(".pdf"):
+            self.mostrar_mensaje("error", "El archivo debe ser un PDF.")
+            return
+    
+        empresa = self.controlador.obtener_empresa_actual()
+    
+        if not empresa or empresa.tipo != "PDFimagen":
+            self.mostrar_mensaje("error", "Esta función solo está disponible para empresas de tipo PDF imagen.")
+            return
+    
+        # Llamar al controlador para crear los rectángulos
+        self.controlador.crear_rectangulos(ruta, empresa.to_dict())
+
+        
     def _on_procesar(self):
         """Maneja el evento de procesar archivo."""
         # Obtener ruta del archivo

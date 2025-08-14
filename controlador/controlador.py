@@ -11,7 +11,7 @@ from modelo.procesador import ProcesadorFacturas
 from modelo.clasificador import ClasificadorFacturas
 from modelo.exportador import ExportadorExcel
 from modelo.vizualizador import VisualizadorRectangulos
-
+# from modelo.creador import CreadorRectangulos
 
 class Controlador:
     """
@@ -25,6 +25,7 @@ class Controlador:
         self._clasificador = ClasificadorFacturas()
         self._exportador = ExportadorExcel()
         self._visualizador = VisualizadorRectangulos(self)
+        # self._creador = CreadorRectangulos(self)
         
         # Estado actual
         self._empresa_actual = None
@@ -176,3 +177,16 @@ class Controlador:
             True si se completó correctamente, False en caso contrario
         """
         return self._visualizador.visualizar(ruta_pdf, empresa_dict)
+    
+    def crear_rectangulos(self, ruta_pdf: str, empresa_dict: Dict[str, Any]) -> bool:
+        """
+        Crea los rectángulos en las imágenes de un PDF.
+        
+        Args:
+            ruta_pdf: Ruta al archivo PDF
+            empresa_dict: Diccionario con información de la empresa
+            
+        Returns:
+            True si se completó correctamente, False en caso contrario
+        """
+        # return self._creador.crear(ruta_pdf, empresa_dict)

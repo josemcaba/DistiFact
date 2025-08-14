@@ -1,4 +1,4 @@
-import conceptos_factura as KEY
+import extractores.conceptos_factura as KEY
 
 # El parámetro identificador es un texto que debe aparecer en la página
 # del PDF para ser validada como factura.

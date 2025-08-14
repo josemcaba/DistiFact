@@ -3,7 +3,7 @@ Módulo que contiene la clase ExportadorExcel para exportar facturas a Excel.
 """
 import pandas as pd
 from typing import List, Dict, Any
-import conceptos_factura as KEY
+import extractores.conceptos_factura as KEY
 from modelo.factura import Factura
 
 
