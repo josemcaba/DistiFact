@@ -20,6 +20,7 @@ class Factura:
         self._datos = datos
         self._errores = []
         self._observaciones = []
+        self._error_numerico = False
     
     @property
     def num_pagina(self) -> int:
@@ -41,6 +42,17 @@ class Factura:
         """Retorna las observaciones de la factura."""
         return self._observaciones
     
+    @property
+    def error_numerico(self) -> int:
+        """Retorna si hay error numérico en la factura."""
+        return self._error_numerico
+
+    def set_error_numerico(self) -> None:
+        """
+        Activa el flag de error numérico
+        """
+        self._error_numerico = True
+
     def agregar_error(self, error: str) -> None:
         """
         Agrega un error a la factura.
@@ -48,7 +60,10 @@ class Factura:
         Args:
             error: Descripción del error
         """
-        self._errores.append(f'<<Pag. {self._num_pagina}>> {error}')
+        if not self.tiene_errores():
+            self._errores.append(f'<<Pag. {self._num_pagina}>> {error}')
+        else:
+            self._errores.append(f' {error}')
     
     def agregar_observacion(self, observacion: str) -> None:
         """

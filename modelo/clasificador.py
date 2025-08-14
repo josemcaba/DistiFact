@@ -3,8 +3,8 @@ Módulo que contiene la clase ClasificadorFacturas para clasificar facturas corr
 """
 from typing import List, Tuple, Dict, Any
 import conceptos_factura as KEY
-import modelo.verificadores as verificar
 from modelo.factura import Factura
+from modelo.verificador import VerificadorFactura
 
 
 class ClasificadorFacturas:
@@ -60,24 +60,25 @@ class ClasificadorFacturas:
             factura: Factura a verificar
         """
         datos = factura.datos
-        
+        verificador = VerificadorFactura(datos)
+
         # Verificar número de factura
-        error = verificar.num_factura(datos)
+        error = verificador.num_factura()
         if error:
             factura.agregar_error(error)
         
         # Verificar fecha
-        error = verificar.fecha(datos)
+        error = verificador.fecha()
         if error:
             factura.agregar_error(error)
         
         # Verificar NIF
-        error = verificar.nif(datos)
+        error = verificador.nif()
         if error:
             factura.agregar_error(error)
         
         # Verificar nombre
-        error = verificar.nombre(datos)
+        error = verificador.nombre()
         if error:
             if "demasiado largo" in error:
                 factura.agregar_observacion(error)
@@ -93,21 +94,23 @@ class ClasificadorFacturas:
         ]
         
         for concepto in conceptos:
-            error = verificar.importe(datos, concepto)
+            error = verificador.importe(concepto)
             if error:
                 if concepto == KEY.TOTAL_FACT:
                     factura.agregar_observacion(error)
                 else:
+                    factura.set_error_numerico()
                     factura.agregar_error(error)
         
-        # Verificar cálculos de cuotas
-        conceptos_cuota = [KEY.CUOTA_IVA, KEY.CUOTA_IRPF, KEY.CUOTA_RE]
-        for concepto in conceptos_cuota:
-            error = verificar.calculo_cuota(datos, concepto)
+        if not factura.error_numerico:
+            # Verificar cálculos de cuotas
+            conceptos_cuota = [KEY.CUOTA_IVA, KEY.CUOTA_IRPF, KEY.CUOTA_RE]
+            for concepto in conceptos_cuota:
+                error = verificador.calculo_cuota(concepto)
+                if error:
+                    factura.agregar_error(error)
+        
+            # Verificar cálculos totales
+            error = verificador.calculos_totales()
             if error:
                 factura.agregar_error(error)
-        
-        # Verificar cálculos totales
-        error = verificar.calculos_totales(datos)
-        if error:
-            factura.agregar_error(error)
