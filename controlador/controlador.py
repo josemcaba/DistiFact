@@ -11,7 +11,7 @@ from modelo.procesador import ProcesadorFacturas
 from modelo.clasificador import ClasificadorFacturas
 from modelo.exportador import ExportadorExcel
 from modelo.vizualizador import VisualizadorRectangulos
-# from modelo.creador import CreadorRectangulos
+from modelo.creador import CreadorRectangulos
 
 class Controlador:
     """
@@ -25,7 +25,7 @@ class Controlador:
         self._clasificador = ClasificadorFacturas()
         self._exportador = ExportadorExcel()
         self._visualizador = VisualizadorRectangulos(self)
-        # self._creador = CreadorRectangulos(self)
+        self._creador = CreadorRectangulos(self)
         
         # Estado actual
         self._empresa_actual = None
@@ -109,6 +109,7 @@ class Controlador:
         """
         self._procesador.set_callbacks(progreso_callback, mensaje_callback)
         self._exportador.set_mensaje_callback(mensaje_callback)
+        self._creador.set_mensaje_callback(mensaje_callback)
     
     def procesar_archivo(self) -> List[Factura]:
         """
@@ -189,4 +190,4 @@ class Controlador:
         Returns:
             True si se completó correctamente, False en caso contrario
         """
-        # return self._creador.crear(ruta_pdf, empresa_dict)
+        return self._creador.crear(ruta_pdf, empresa_dict)

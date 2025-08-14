@@ -5,14 +5,14 @@
             "y1": 483,
             "x2": 1004,
             "y2": 850,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_2": {
             "x1": 2180,
             "y1": 3481,
             "x2": 3160,
             "y2": 4087,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "angulo": 270
     },
@@ -22,14 +22,14 @@
             "y1": 868,
             "x2": 1224,
             "y2": 1388,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_2": {
             "x1": 557,
             "y1": 3051,
             "x2": 2424,
             "y2": 3980,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "angulo": 0
     },
@@ -39,56 +39,56 @@
             "y1": 136,
             "x2": 1410,
             "y2": 229,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_2": {
             "x1": 855,
             "y1": 298,
             "x2": 1588,
             "y2": 485,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_3": {
             "x1": 112,
             "y1": 439,
             "x2": 220,
             "y2": 519,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_4": {
             "x1": 240,
             "y1": 426,
             "x2": 405,
             "y2": 519,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_5": {
             "x1": 495,
             "y1": 431,
             "x2": 596,
             "y2": 522,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_6": {
             "x1": 610,
             "y1": 431,
             "x2": 789,
             "y2": 522,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_7": {
             "x1": 442,
             "y1": 1899,
             "x2": 932,
             "y2": 2048,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_8": {
             "x1": 1257,
             "y1": 1907,
             "x2": 1598,
             "y2": 2066,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "angulo": 0
     },
@@ -98,40 +98,40 @@
             "y1": 831,
             "x2": 1195,
             "y2": 1103,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_2": {
             "x1": 705,
             "y1": 1667,
             "x2": 1367,
             "y2": 3777,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_3": {
             "x1": 2591,
             "y1": 1561,
             "x2": 3035,
             "y2": 3809,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "angulo": 0
     },
     "76753510A": {
+        "angulo": 0,
         "rectangulo_1": {
             "x1": 13,
-            "y1": 13,
-            "x2": 2467,
-            "y2": 1697,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "y1": 9,
+            "x2": 2471,
+            "y2": 1533,
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_2": {
-            "x1": 1383,
-            "y1": 2728,
-            "x2": 2467,
-            "y2": 3243,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
-        },
-        "angulo": 0
+            "x1": 1373,
+            "y1": 2775,
+            "x2": 2303,
+            "y2": 3143,
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
+        }
     },
     "Y7080956Y": {
         "rectangulo_1": {
@@ -139,28 +139,28 @@
             "y1": 63,
             "x2": 2445,
             "y2": 340,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_2": {
             "x1": 1239,
             "y1": 294,
             "x2": 1840,
             "y2": 533,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_3": {
             "x1": 1601,
             "y1": 592,
             "x2": 2374,
             "y2": 1012,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_4": {
             "x1": 1479,
             "y1": 1718,
             "x2": 2449,
             "y2": 2268,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$\u00a3&*{}[]:;\" -c preserve_interword_spaces=1"
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "angulo": 0
     }
