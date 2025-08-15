@@ -3,14 +3,15 @@ import os
 import json
 import cv2
 from typing import Dict, Any
-from .manejo_imagenes import ManejadorImagenes
+from .extractor_imagenes import ExtractorImagenes
 from .interfaz_rectangulos import InterfazRectangulos
 import pytesseract
+import fitz  # PyMuPDF
 
 class CreadorRectangulos:
     def __init__(self, controlador):
         self.controlador = controlador
-        self.manejador_imagenes = ManejadorImagenes()
+        self.extractor = ExtractorImagenes()
         self.interfaz = InterfazRectangulos()
         self.rectangles = {}
         self.rectangle_counter = 1
@@ -44,10 +45,6 @@ class CreadorRectangulos:
             self.interfaz.set_mensaje_callback(self._mensaje)
             
             # 2. Verificar entrada
-            if not os.path.isfile(ruta_pdf):
-                self._mensaje("error", f"Archivo no encontrado: {ruta_pdf}")
-                return False
-                
             if not empresa_dict or "nif" not in empresa_dict:
                 self._mensaje("error", "Datos de empresa inválidos")
                 return False
@@ -63,9 +60,10 @@ class CreadorRectangulos:
             dict_json = self._cargar_json_rectangulos(ruta_json)
             
             # 5. Extraer imagen del PDF
-            self.img, angulo = self.manejador_imagenes.extraer_imagen_pdf(ruta_pdf)
-            if self.img is None:
-                return False
+            with fitz.open(ruta_pdf) as pdf_doc:
+                self.img, angulo = self.extractor.extraer_imagen_de_pdf(pdf_doc)
+                if self.img is None:
+                    return False
                 
             # 6. Configurar interfaz
             callback_dibujo = self.interfaz.crear_callback_dibujo(

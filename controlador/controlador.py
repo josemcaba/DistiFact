@@ -1,7 +1,6 @@
 """
 Módulo que contiene la clase Controlador, que coordina el modelo y la vista.
 """
-import os
 from typing import Dict, Any, Optional, List, Tuple, Callable
 
 # Importamos clases del modelo
@@ -10,7 +9,7 @@ from modelo.factura import Factura
 from modelo.procesador import ProcesadorFacturas
 from modelo.clasificador import ClasificadorFacturas
 from modelo.exportador import ExportadorExcel
-from modelo.vizualizador import VisualizadorRectangulos
+from modelo.vizualizador_rectangulos import VisualizadorRectangulos
 from modelo.creador_rectangulos import CreadorRectangulos
 
 class Controlador:
@@ -177,7 +176,7 @@ class Controlador:
         Returns:
             True si se completó correctamente, False en caso contrario
         """
-        return self._visualizador.visualizar(ruta_pdf, empresa_dict)
+        return self._visualizador.visualizar_rectangulos(ruta_pdf, empresa_dict)
     
     def crear_rectangulos(self, ruta_pdf: str, empresa_dict: Dict[str, Any]) -> bool:
         """
