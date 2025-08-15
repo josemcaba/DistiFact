@@ -19,7 +19,6 @@ identificador = "Factura"
 def extraerDatosFactura(pagina, empresa):
     num_pag = pagina[0]
     pagina = pagina[1]
-    print(pagina)
     
     factura = {}
 

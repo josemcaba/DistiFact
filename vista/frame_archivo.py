@@ -177,11 +177,7 @@ class FrameSeleccionArchivo(FrameBase):
         
         # Obtener empresa actual
         empresa = self.controlador.obtener_empresa_actual()
-        
-        if not empresa or empresa.tipo != "PDFimagen":
-            self.mostrar_mensaje("error", "Esta función solo está disponible para empresas de tipo PDF imagen.")
-            return
-        
+
         # Visualizar rectángulos
         self.controlador.visualizar_rectangulos(ruta, empresa.to_dict())
 
@@ -202,10 +198,6 @@ class FrameSeleccionArchivo(FrameBase):
             return
     
         empresa = self.controlador.obtener_empresa_actual()
-    
-        if not empresa or empresa.tipo != "PDFimagen":
-            self.mostrar_mensaje("error", "Esta función solo está disponible para empresas de tipo PDF imagen.")
-            return
     
         # Llamar al controlador para crear los rectángulos
         self.controlador.crear_rectangulos(ruta, empresa.to_dict())

@@ -7,7 +7,7 @@ import numpy as np
 class InterfazRectangulos:
     def __init__(self, mensaje_callback=None):
         self._mensaje_callback = mensaje_callback
-        self.window_name = "Crear Rectángulos"
+        self.window_name = "Crear Rectangulos"
         self.drawing = False
         self.ix, self.iy = -1, -1
     

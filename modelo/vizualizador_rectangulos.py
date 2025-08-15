@@ -5,7 +5,10 @@ Adaptado para la estructura orientada a objetos de la aplicación.
 import fitz  # PyMuPDF
 import json
 from .extractor_imagenes import ExtractorImagenes
-import ft_imagenes as fti
+from .extractor_texto import ExtractorTexto
+from .exhibidor_imagenes import ExhibidorImagenes
+
+# import ft_imagenes as fti
 
 class VisualizadorRectangulos:
     """
@@ -20,6 +23,8 @@ class VisualizadorRectangulos:
         """
         self.controlador = controlador
         self.extractor = ExtractorImagenes()
+        self.ocr = ExtractorTexto()
+        self.exhibidor = ExhibidorImagenes()
 
     def _mensaje(self, tipo: str, mensaje: str):
         if self.controlador and hasattr(self.controlador, '_mensaje_callback'):
@@ -72,8 +77,8 @@ class VisualizadorRectangulos:
                     imagenes = self.extractor.extraer_imagenes_de_rectangulos(imagen_pag, rectangulos)
                     self._mensaje("", f"\n>>>>> Página {n_pag+1}")
                     for imagen in imagenes:
-                        texto = fti.extraer_texto_de_imagen(imagen[0], imagen[1], verRectangulos=True)
-            
+                        _ = self.ocr.extraer_texto_de_imagen(imagen[0], imagen[1], printTexto=True)
+                        self.exhibidor.mostrar_imagen(imagen[0], window_name=f">>>>> Pagina {n_pag+1}")
             return True
         except Exception as e:
             self._mensaje("error", f"Error al visualizar rectángulos: {str(e)}")

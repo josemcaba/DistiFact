@@ -249,7 +249,7 @@ class FrameProcesamiento(FrameBase):
         elif tipo == "warning":
             prefijo = "⚠️ AVISO: "
         else:
-            prefijo = "ℹ️ INFO: "
+            prefijo = "INFO: "
         
         # Agregar mensaje en el hilo principal
         self.after(0, lambda: self._insertar_mensaje(f"{prefijo}{mensaje}\n"))

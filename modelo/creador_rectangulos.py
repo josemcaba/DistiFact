@@ -41,7 +41,7 @@ class CreadorRectangulos:
         """Método principal para crear rectángulos (sobrescribe configuración existente)"""
         try:
             # 1. Configurar callbacks
-            self.manejador_imagenes.set_mensaje_callback(self._mensaje)
+            self.extractor.set_mensaje_callback(self._mensaje)
             self.interfaz.set_mensaje_callback(self._mensaje)
             
             # 2. Verificar entrada
