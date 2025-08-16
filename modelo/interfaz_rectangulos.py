@@ -69,6 +69,14 @@ class InterfazRectangulos:
                 self._mensaje("info", f"Rectángulo creado: ({self.ix}, {self.iy}) a ({fx}, {fy})")
                 
                 # Guardar coordenadas
+                if self.ix > fx:
+                    x = self.ix
+                    self.ix = fx
+                    fx = x
+                if self.iy > fy:
+                    y = self.iy
+                    self.iy = fy
+                    fy = y
                 key = f"rectangulo_{rectangle_counter}"
                 rectangles[key] = {
                     "x1": self.ix, 

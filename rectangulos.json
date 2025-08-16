@@ -119,17 +119,24 @@
     "76753510A": {
         "angulo": 0,
         "rectangulo_1": {
-            "x1": 9,
+            "x1": 13,
             "y1": 9,
-            "x2": 2471,
-            "y2": 2052,
+            "x2": 2463,
+            "y2": 680,
             "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_2": {
-            "x1": 1379,
-            "y1": 2745,
-            "x2": 2350,
-            "y2": 3230,
+            "x1": 22,
+            "y1": 862,
+            "x2": 1517,
+            "y2": 1779,
+            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
+        },
+        "rectangulo_3": {
+            "x1": 1396,
+            "y1": 2741,
+            "x2": 2341,
+            "y2": 3187,
             "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         }
     },

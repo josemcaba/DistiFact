@@ -6,7 +6,6 @@ from typing import List, Dict, Any
 import extractores.conceptos_factura as KEY
 from modelo.factura import Factura
 
-
 class ExportadorExcel:
     """
     Clase que exporta facturas a archivos Excel.
