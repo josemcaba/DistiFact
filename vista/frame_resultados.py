@@ -1,9 +1,7 @@
 """
 Módulo que contiene la clase FrameResultados para mostrar los resultados del procesamiento.
 """
-import tkinter as tk
 from tkinter import ttk
-import os
 from typing import Dict, Any, Optional, List
 import extractores.conceptos_factura as KEY
 from vista.frame_base import FrameBase
@@ -79,16 +77,22 @@ class FrameResultados(FrameBase):
         scrollbar_x.pack(side="bottom", fill="x")
         
         # Columnas de la tabla
-        columnas = [
-            "Núm. Factura", "Fecha", "NIF", "Empresa", 
-            "Base IVA", "Tipo IVA", "Cuota IVA", 
-            "Total", "Observaciones"
-        ]
-        
+        columnas = {
+            "Núm. Factura":  [100, "center"],
+            "Fecha":         [75, "center"],
+            "NIF":           [75, "center"],
+            "Empresa":       [225, "w"],
+            "Base IVA":      [75, "e"],
+            "Tipo IVA":      [60, "e"],
+            "Cuota IVA":     [75, "e"],
+            "Total":         [75, "e"],
+            "Observaciones": [50, "w"]
+        }
+
         # Crear Treeview
         self.tabla_correctas = ttk.Treeview(
             frame_tabla,
-            columns=columnas,
+            columns=list(columnas),
             show="headings",
             yscrollcommand=scrollbar_y.set,
             xscrollcommand=scrollbar_x.set
@@ -98,14 +102,13 @@ class FrameResultados(FrameBase):
         scrollbar_y.config(command=self.tabla_correctas.yview)
         scrollbar_x.config(command=self.tabla_correctas.xview)
         
-        # Configurar encabezados
-        for col in columnas:
-            self.tabla_correctas.heading(col, text=col)
-            self.tabla_correctas.column(col, width=50, anchor="center")
-        
-        # Ajustar columnas específicas
-        self.tabla_correctas.column("Observaciones", width=100, anchor="w")
-        
+        # Configurar encabezados y columnas
+        for col in list(columnas):
+            self.tabla_correctas.heading(col, text=col, anchor=columnas[col][1])
+            self.tabla_correctas.column(col, width=columnas[col][0], anchor=columnas[col][1], stretch=False)
+        col = list(columnas)[-1]
+        self.tabla_correctas.column(col, width=columnas[col][0], anchor=columnas[col][1], stretch=True)
+
         # Empaquetar tabla
         self.tabla_correctas.pack(side="left", fill="both", expand=True)
     
@@ -124,16 +127,22 @@ class FrameResultados(FrameBase):
         scrollbar_x.pack(side="bottom", fill="x")
         
         # Columnas de la tabla
-        columnas = [
-            "Núm. Factura", "Fecha", "NIF", "Empresa", 
-            "Base IVA", "Tipo IVA", "Cuota IVA", 
-            "Total", "Errores"
-        ]
+        columnas = {
+            "Núm. Factura": [100, "center"],
+            "Fecha":        [75, "center"],
+            "NIF":          [75, "center"],
+            "Empresa":      [225, "w"],
+            "Base IVA":     [75, "e"],
+            "Tipo IVA":     [60, "e"],
+            "Cuota IVA":    [75, "e"],
+            "Total":        [75, "e"],
+            "Errores":      [50, "w"]
+        }
         
         # Crear Treeview
         self.tabla_errores = ttk.Treeview(
             frame_tabla,
-            columns=columnas,
+            columns=list(columnas),
             show="headings",
             yscrollcommand=scrollbar_y.set,
             xscrollcommand=scrollbar_x.set
@@ -143,13 +152,12 @@ class FrameResultados(FrameBase):
         scrollbar_y.config(command=self.tabla_errores.yview)
         scrollbar_x.config(command=self.tabla_errores.xview)
         
-        # Configurar encabezados
-        for col in columnas:
-            self.tabla_errores.heading(col, text=col)
-            self.tabla_errores.column(col, width=100, anchor="center")
-        
-        # Ajustar columnas específicas
-        self.tabla_errores.column("Errores", width=200, anchor="w")
+        # Configurar encabezados y columnas
+        for col in list(columnas):
+            self.tabla_errores.heading(col, text=col, anchor=columnas[col][1])
+            self.tabla_errores.column(col, width=columnas[col][0], anchor=columnas[col][1], stretch=False)
+        col = list(columnas)[-1]
+        self.tabla_errores.column(col, width=columnas[col][0], anchor=columnas[col][1], stretch=True)
         
         # Empaquetar tabla
         self.tabla_errores.pack(side="left", fill="both", expand=True)
