@@ -37,7 +37,7 @@ class FrameSeleccionArchivo(FrameBase):
             font=("Arial", 10, "bold")
         )
         self.lbl_empresa_titulo.pack(anchor="w")
-        
+
         self.lbl_empresa_info = ttk.Label(
             self.frame_empresa,
             text="",
@@ -58,20 +58,20 @@ class FrameSeleccionArchivo(FrameBase):
         
         # Frame para entrada y botón
         self.frame_entrada = ttk.Frame(self.frame_archivo)
-        self.frame_entrada.pack(fill="x")
-        
-        self.entry_ruta = ttk.Entry(
-            self.frame_entrada,
-            width=50
-        )
-        self.entry_ruta.pack(side="left", fill="x", expand=True, padx=(0, 5))
-        
+        self.frame_entrada.pack(fill="x", pady=5)
+
         self.btn_examinar = ttk.Button(
             self.frame_entrada,
             text="Examinar",
             command=self._on_examinar
         )
-        self.btn_examinar.pack(side="right")
+        self.btn_examinar.pack(side="left")
+        
+        self.entry_ruta = ttk.Entry(
+            self.frame_entrada,
+            # width=50
+        )
+        self.entry_ruta.pack(side="right", fill="x", expand=True, padx=(10, 0))
         
         # Frame para botones
         self.frame_botones = ttk.Frame(self.frame_contenido)

@@ -1,7 +1,6 @@
 """
 Módulo que contiene la clase FrameBase, base para todos los frames de la aplicación.
 """
-import tkinter as tk
 from tkinter import ttk
 from typing import Dict, Any, Optional
 

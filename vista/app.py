@@ -36,7 +36,7 @@ class App(tk.Tk):
         # Configuración de estilo
         self.configure(bg="#f0f0f0")
         self.style = ttk.Style()
-        self.style.theme_use("clam")  # Usar un tema moderno
+        self.style.theme_use("clam")  # clam alt default classic aqua
         
         # Configurar colores y estilos
         self.style.configure("TFrame", background="#f0f0f0")

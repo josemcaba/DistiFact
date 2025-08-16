@@ -8,7 +8,9 @@ import fitz  # PyMuPDF
 import openpyxl
 import sys
 import os
-from typing import List, Dict, Any, Tuple, Optional, Callable
+from typing import List, Callable
+from .extractor_imagenes import ExtractorImagenes
+from .extractor_texto import ExtractorTexto
 
 # Importamos módulos del proyecto
 from modelo.factura import Factura
@@ -22,6 +24,8 @@ class ProcesadorFacturas:
         """Inicializa el procesador de facturas."""
         self._progreso_callback = None
         self._mensaje_callback = None
+        self.extractor = ExtractorImagenes()
+        self.ocr = ExtractorTexto()
     
     def set_callbacks(self, progreso_callback: Callable[[int, int], None], 
                      mensaje_callback: Callable[[str, str], None]) -> None:
@@ -186,10 +190,7 @@ class ProcesadorFacturas:
         Returns:
             Lista de páginas procesadas [num_pagina, texto]
         """
-        # Importamos aquí para evitar dependencias circulares
-        import ft_imagenes as fci
-        
-        rectangulos = fci.cargar_rectangulos_json(nif, ruta_json="rectangulos.json")
+        rectangulos = self.extractor.cargar_rectangulos_json(nif)
         if not rectangulos:
             self._mostrar_mensaje('error', f'No se encontraron rectángulos para el NIF {nif}')
             return []
@@ -200,15 +201,13 @@ class ProcesadorFacturas:
         
         try:
             with fitz.open(ruta_pdf) as pdf_doc:
-                total_paginas = len(pdf_doc)
+                total_paginas = pdf_doc.page_count
                 
                 for n_pag in range(total_paginas):
                     self._actualizar_progreso(n_pag + 1, total_paginas)
-                    
-                    imagen_pag = fci.extraer_imagen_de_la_pagina(pdf_doc, n_pag, angulo)
-                    imagenes = fci.extraer_imagenes_de_los_rectangulos(imagen_pag, rectangulos)
-                    texto = fci.extraer_texto_de_las_imagenes(imagenes, verRectangulos=False)
-                    
+                    imagen_pag, angulo = self.extractor.extraer_imagen_de_pdf(pdf_doc, n_pag, angulo)
+                    imagenes = self.extractor.extraer_imagenes_de_rectangulos(imagen_pag, rectangulos)
+                    texto = self.ocr.extraer_texto_de_las_imagenes(imagenes)
                     if texto and identificador in texto:
                         paginas.append([n_pag + 1, texto])
                     else:

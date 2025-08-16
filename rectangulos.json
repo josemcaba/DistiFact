@@ -119,17 +119,17 @@
     "76753510A": {
         "angulo": 0,
         "rectangulo_1": {
-            "x1": 13,
+            "x1": 9,
             "y1": 9,
             "x2": 2471,
-            "y2": 1931,
+            "y2": 2052,
             "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_2": {
             "x1": 1379,
-            "y1": 2767,
-            "x2": 2324,
-            "y2": 3148,
+            "y1": 2745,
+            "x2": 2350,
+            "y2": 3230,
             "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         }
     },

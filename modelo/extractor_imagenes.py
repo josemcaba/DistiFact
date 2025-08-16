@@ -1,5 +1,6 @@
 # modelo/manejo_imagenes.py
 
+import json
 import cv2
 import numpy as np
 from PIL import Image
@@ -15,6 +16,20 @@ class ExtractorImagenes:
             self._mensaje_callback(tipo, mensaje)
         else:
             print(f"[{tipo}] {mensaje}")
+
+    def cargar_rectangulos_json(self, nif, ruta_json="rectangulos.json"):
+        try:
+            with open(ruta_json, "r", encoding='utf-8') as archivo:
+                coords = json.load(archivo)
+            rectangles = coords[nif]
+            return rectangles
+        except FileNotFoundError:
+            self._mensaje("error", f'Archivo "{ruta_json}" no encontrado.')
+        except (json.JSONDecodeError):
+            self._mensaje("error", f'El archivo "{ruta_json}" tiene un formato inválido.')
+        except (KeyError):
+            self._mensaje("error", f'El archivo "{ruta_json}" no contiene la empresa "{nif}"')
+        return
 
     def detectar_orientacion(self, imagen: np.ndarray) -> int:
         """Detecta la orientación de la imagen usando Tesseract"""
