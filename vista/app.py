@@ -3,11 +3,9 @@ Módulo que contiene la clase App, ventana principal de la aplicación.
 """
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
-import os
-from typing import Dict, Any, Optional, Callable
+from typing import Optional
 
 # Importamos los frames de la aplicación
-from vista.frame_base import FrameBase
 from vista.frame_empresa import FrameSeleccionEmpresa
 from vista.frame_archivo import FrameSeleccionArchivo
 from vista.frame_proceso import FrameProcesamiento
