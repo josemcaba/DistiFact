@@ -4,10 +4,7 @@ Módulo que contiene la clase FrameProcesamiento para mostrar el progreso del pr
 import tkinter as tk
 from tkinter import ttk
 import threading
-from typing import Dict, Any, Optional
-
 from vista.frame_base import FrameBase
-
 
 class FrameProcesamiento(FrameBase):
     """
@@ -136,6 +133,9 @@ class FrameProcesamiento(FrameBase):
             return
         
         # Mostrar información del archivo
+        if len(ruta_archivo) > 75:
+            ruta_archivo = ruta_archivo[-75:]
+            ruta_archivo = "..." + ruta_archivo[ruta_archivo.index("/"):]
         self.lbl_archivo_info.config(text=ruta_archivo)
         
         # Limpiar área de mensajes
