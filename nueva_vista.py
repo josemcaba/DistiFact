@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import showinfo
-from claseTabla import Tabla
+from vista.claseTabla import Tabla
 
 class App(tk.Tk):
 	def __init__(self):
