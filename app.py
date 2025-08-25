@@ -11,9 +11,9 @@ from typing import Optional
 
 # Importamos los frames de la aplicación
 from vista.frame_empresa import FrameSeleccionEmpresa
-from vista.frame_archivo import FrameSeleccionArchivo
-from vista.frame_proceso import FrameProcesamiento
-from vista.frame_resultados import FrameResultados
+# from vista.frame_archivo import FrameSeleccionArchivo
+# from vista.frame_proceso import FrameProcesamiento
+# from vista.frame_resultados import FrameResultados
 
 
 class App(tk.Tk):
@@ -35,23 +35,28 @@ class App(tk.Tk):
             return
 
         # Inicializa frame de seleccion de empresa
-
-    '''
-        # Contenedor principal
-        self.container = ttk.Frame(self)
-        self.container.pack(side="top", fill="both", expand=True, padx=10, pady=10)
-        self.container.grid_rowconfigure(0, weight=1)
-        self.container.grid_columnconfigure(0, weight=1)
-        
-        # Diccionario para almacenar los frames
+        nombre_frame = FrameSeleccionEmpresa.nombre
+        frame = FrameSeleccionEmpresa()
         self.frames = {}
-        
-        # Inicializar frames
-        self._inicializar_frames()
-        
-        # Mostrar el frame inicial
+        self.frames[nombre_frame] = frame
+        frame.grid(row=0, column=0, sticky="nsew")
         self.mostrar_frame("seleccion_empresa")
-    '''    
+    
+        # # Contenedor principal
+        # self.container = ttk.Frame(self)
+        # self.container.pack(side="top", fill="both", expand=True, padx=10, pady=10)
+        # self.container.grid_rowconfigure(0, weight=1)
+        # self.container.grid_columnconfigure(0, weight=1)
+        
+        # # Diccionario para almacenar los frames
+        # self.frames = {}
+        
+        # # Inicializar frames
+        # self._inicializar_frames()
+        
+        # # Mostrar el frame inicial
+        # self.mostrar_frame("seleccion_empresa")
+        
     def _configurar_estilo(self):
         """Configura el estilo global de la aplicación."""
         estilo_bg = "#f0f0f0"
@@ -67,22 +72,22 @@ class App(tk.Tk):
         self.style.configure("Header.TLabel", font=("Arial", 14, "bold"), background=estilo_bg)
 
 
-    def _inicializar_frames(self):
-        """Inicializa todos los frames de la aplicación."""
-        # Lista de clases de frames a inicializar
-        frame_classes = [
-            FrameSeleccionEmpresa,
-            FrameSeleccionArchivo,
-            FrameProcesamiento,
-            FrameResultados
-        ]
+    # def _inicializar_frames(self):
+    #     """Inicializa todos los frames de la aplicación."""
+    #     # Lista de clases de frames a inicializar
+    #     frame_classes = [
+    #         FrameSeleccionEmpresa,
+    #         FrameSeleccionArchivo,
+    #         FrameProcesamiento,
+    #         FrameResultados
+    #     ]
         
-        # Crear instancias de cada frame
-        for F in frame_classes:
-            nombre_frame = F.nombre
-            frame = F(parent=self.container, app=self, controlador=self.controlador)
-            self.frames[nombre_frame] = frame
-            frame.grid(row=0, column=0, sticky="nsew")
+    #     # Crear instancias de cada frame
+    #     for F in frame_classes:
+    #         nombre_frame = F.nombre
+    #         frame = F(parent=self.container, app=self, controlador=self.controlador)
+    #         self.frames[nombre_frame] = frame
+    #         frame.grid(row=0, column=0, sticky="nsew")
     
     def mostrar_frame(self, nombre_frame: str):
         """
