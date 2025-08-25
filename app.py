@@ -2,7 +2,7 @@
 Módulo que contiene la clase App, ventana principal de la aplicación.
 """
 import tkinter as tk
-from .controlador.controlador import Controlador
+from controlador.controlador import Controlador
 
 from tkinter import ttk, messagebox, filedialog
 from typing import Optional
@@ -23,21 +23,8 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("DistiScan V1.0 - Distirel ©")
-        # self.geometry("600x600")
-        # # self.resizable(False, False)
-        # self.minsize(600, 600)
-        
-        # Configuración de estilo
-        self.configure(bg="#f0f0f0")
-        self.style = ttk.Style()
-        self.style.theme_use("clam")  # clam alt default classic aqua
-        
-        # Configurar colores y estilos
-        self.style.configure("TFrame", background="#f0f0f0")
-        self.style.configure("TButton", font=("Arial", 10), background="#4a7abc")
-        self.style.configure("TLabel", font=("Arial", 10), background="#f0f0f0")
-        self.style.configure("Header.TLabel", font=("Arial", 14, "bold"), background="#f0f0f0")
-        
+        self._configurar_estilo()
+    
         # Referencia al controlador
         self.controlador = Controlador()
         # Inicializar controlador
@@ -60,6 +47,21 @@ class App(tk.Tk):
         # Mostrar el frame inicial
         self.mostrar_frame("seleccion_empresa")
     
+    def _configurar_estilo(self):
+        """Configura el estilo global de la aplicación."""
+        estilo_bg = "#f0f0f0"
+        estilo_font = ("Arial", 10)
+        self.configure(bg=estilo_bg)
+        self.style = ttk.Style()
+        self.style.theme_use("clam")  # clam alt default classic aqua
+        
+        # Configurar colores y estilos
+        self.style.configure("TFrame", background=estilo_bg)
+        self.style.configure("TButton", font=estilo_font, background="#4a7abc")
+        self.style.configure("TLabel", font=estilo_font, background=estilo_bg)
+        self.style.configure("Header.TLabel", font=("Arial", 14, "bold"), background=estilo_bg)
+
+
     def _inicializar_frames(self):
         """Inicializa todos los frames de la aplicación."""
         # Lista de clases de frames a inicializar
