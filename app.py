@@ -30,17 +30,11 @@ class App(tk.Tk):
         self._configurar_estilo()
 
         self.controlador = Controlador()
-        
-        ruta_empresas = Path("datos") / Path("empresas.json")
-        if not self.controlador.iniciar(ruta_empresas):
-            messagebox.showerror("DistiScan", f"Error al cargar el archivo {ruta_empresas}")
-            self.destroy()
-            return
-
+     
         # Inicializa frame de seleccion de empresa
-        self.frame_actual = SeleccionarEmpresa(self)
+        self.frame_actual = SeleccionarEmpresa(self, self, self.controlador)
         self.frame_actual.grid(row=0, column=0, sticky='nsew')
-
+        print(self.controlador.obtener_empresa_actual())
     
         # # Contenedor principal
         # self.container = ttk.Frame(self)
@@ -61,14 +55,14 @@ class App(tk.Tk):
         """Configura el estilo global de la aplicación."""
         estilo_bg = "#f0f0f0"
         estilo_font = ("Arial", 10)
-        self.configure(bg=estilo_bg)
+        self.configure(background=estilo_bg)
         self.style = ttk.Style()
         self.style.theme_use("clam")  # clam alt default classic aqua
         
         # Configurar colores y estilos
         self.style.configure("TFrame", background=estilo_bg)
         self.style.configure("TButton", font=estilo_font, background="#4a7abc")
-        self.style.configure("TLabel", font=estilo_font, background=estilo_bg)
+        self.style.configure("TLabel", font=estilo_font, background='green')
         self.style.configure("Header.TLabel", font=("Arial", 14, "bold"), background=estilo_bg)
 
 

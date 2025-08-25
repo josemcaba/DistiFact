@@ -62,8 +62,7 @@ class Tabla(tk.Frame):
 		if seleccion:
 			return self.tabla.item(seleccion[0])["values"]
 		return None
-
-	def limpiar_tabla(self):
-		"""Limpia todos los elementos de la tabla"""
-		for item in self.tabla.get_children():
-			self.tabla.delete(item)
+	
+	def deseleccionar(self):
+		"""Deselecciona el elemento seleccionado"""
+		self.tabla.selection_set()
