@@ -10,11 +10,12 @@ from typing import Optional
 
 
 # Importamos los frames de la aplicación
-from vista.frame_empresa import FrameSeleccionEmpresa
+# from vista.frame_empresa import FrameSeleccionEmpresa
 # from vista.frame_archivo import FrameSeleccionArchivo
 # from vista.frame_proceso import FrameProcesamiento
 # from vista.frame_resultados import FrameResultados
 
+from vista.frameSeleccionarEmpresa import SeleccionarEmpresa
 
 class App(tk.Tk):
     """
@@ -24,6 +25,8 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("DistiScan V1.0 - Distirel ©")
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=1)
         self._configurar_estilo()
 
         self.controlador = Controlador()
@@ -35,12 +38,9 @@ class App(tk.Tk):
             return
 
         # Inicializa frame de seleccion de empresa
-        nombre_frame = FrameSeleccionEmpresa.nombre
-        frame = FrameSeleccionEmpresa()
-        self.frames = {}
-        self.frames[nombre_frame] = frame
-        frame.grid(row=0, column=0, sticky="nsew")
-        self.mostrar_frame("seleccion_empresa")
+        self.frame_actual = SeleccionarEmpresa(self)
+        self.frame_actual.grid(row=0, column=0, sticky='nsew')
+
     
         # # Contenedor principal
         # self.container = ttk.Frame(self)

@@ -3,37 +3,29 @@ from tkinter import ttk
 from tkinter.messagebox import showinfo
 from vista.frameTabla import Tabla
 
-class App(tk.Tk):
-	def __init__(self):
-		super().__init__()
+class SeleccionarEmpresa(tk.Frame):
+	def __init__(self, parent):
+		super().__init__(parent)
+		self._configurar_frame()
 		self._configurar_titulo()
-		self._configurar_ventana()
 		self._mostrar_tabla_empresas()
-		self._crear_botones()
 
-	def _configurar_ventana(self):
-		self.title('Manejo de tabla')
-		# self.geometry('688x600')
-		# self.minsize(688,600)
-		self.configure(background='#f0f0f0')
-		# self.columnconfigure(0, weight=1)
-		# self.rowconfigure(0, weight=0)
-		# self.rowconfigure(1, weight=1)
-		# self.rowconfigure(2, weight=0)
+	def _configurar_frame(self):
+        # Configure the frame itself to expand
+		self.columnconfigure(0, weight=1)
+		self.rowconfigure(0, weight=0)
+		self.rowconfigure(1, weight=1)
+		self.rowconfigure(2, weight=0)
 
 	def _configurar_titulo(self):
 		marco_titulo = ttk.Label(self)
 		marco_titulo.configure(text="DistiSCAN", background='green', foreground='white', font=('Arial', 15, 'bold'))
-		# marco_titulo.columnconfigure(0, weight=1)
-		marco_titulo.grid(row=0, column=0, sticky="nsew")
+		marco_titulo.grid(row=0, column=0, sticky="ew")
 
 	def _mostrar_tabla_empresas(self):
-		# Crear un marco contenedor para la tabla
-		marco_tabla = ttk.Frame(self)
-		marco_tabla.rowconfigure(0, weight=1)
-		marco_tabla.grid(row=1, column=0, sticky="nsew", padx=10, pady=5)
-		
-		self.tabla_empresas = Tabla(marco_tabla)
+		# Crear un marco contenedor para la tabla		
+		self.tabla_empresas = Tabla(self)
+		self.tabla_empresas.grid(row=1, column=0, sticky="nsew", padx=10, pady=5)
 
 		columnas = [
 			{"ancho":  50, "alineacion": "c", "expandible": False, "nombre": "Núm."},
@@ -101,6 +93,3 @@ class App(tk.Tk):
 		
 		return resultado
 
-if __name__ == "__main__":
-    app = App()
-    app.mainloop()

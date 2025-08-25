@@ -1,29 +1,26 @@
 import tkinter as tk
 from tkinter import ttk
 
-class Tabla():
-	def __init__(self, contenedor):
-		self.contenedor = contenedor
-		self.marco = None
-		self._definir_marco()
+class Tabla(tk.Frame):
+	def __init__(self, parent):
+		super().__init__(parent)
+		self._configurar_frame()
 		self._agregar_tabla()
 		self._agregar_scrollbar()
 		self._definir_estilo()
 
-	def _definir_marco(self):
-		self.marco = ttk.Frame(self.contenedor)
-		self.marco.columnconfigure(0, weight=1) # Columna para la tabla
-		self.marco.columnconfigure(1, weight=0) # Columna para la scrollbar
-		self.marco.rowconfigure(0, weight=1)
-		self.marco.grid(row=0, column=0, sticky="nsew")
+	def _configurar_frame(self):
+		self.columnconfigure(0, weight=1) # Columna para la tabla
+		self.columnconfigure(1, weight=0) # Columna para la scrollbar
+		self.rowconfigure(0, weight=1)
 
 	def _agregar_tabla(self):
-		self.tabla = ttk.Treeview(self.marco)
+		self.tabla = ttk.Treeview(self)
 		self.tabla.grid(row=0, column=0, sticky="nsew")
 
 	def _agregar_scrollbar(self):
-		self.scrollbar = ttk.Scrollbar(self.marco, orient=tk.VERTICAL, command=self.tabla.yview)
-		self.tabla.configure(yscroll=self.scrollbar.set)
+		self.scrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL, command=self.tabla.yview)
+		self.tabla.configure(yscrollcommand=self.scrollbar.set)
 		self.scrollbar.grid(row=0, column=1, sticky="ns")
 
 	def _definir_estilo(self):
@@ -66,3 +63,7 @@ class Tabla():
 			return self.tabla.item(seleccion[0])["values"]
 		return None
 
+	def limpiar_tabla(self):
+		"""Limpia todos los elementos de la tabla"""
+		for item in self.tabla.get_children():
+			self.tabla.delete(item)
