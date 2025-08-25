@@ -3,6 +3,7 @@ Módulo que contiene la clase App, ventana principal de la aplicación.
 """
 import tkinter as tk
 from controlador.controlador import Controlador
+from pathlib import Path
 
 from tkinter import ttk, messagebox, filedialog
 from typing import Optional
@@ -24,14 +25,18 @@ class App(tk.Tk):
         super().__init__()
         self.title("DistiScan V1.0 - Distirel ©")
         self._configurar_estilo()
-    
-        # Referencia al controlador
+
         self.controlador = Controlador()
-        # Inicializar controlador
-        if not self.controlador.iniciar("empresas.json"):
-            print("Error al cargar el archivo de empresas.")
+        
+        ruta_empresas = Path("datos") / Path("empresas.json")
+        if not self.controlador.iniciar(ruta_empresas):
+            messagebox.showerror("DistiScan", f"Error al cargar el archivo {ruta_empresas}")
+            self.destroy()
             return
 
+        # Inicializa frame de seleccion de empresa
+
+    '''
         # Contenedor principal
         self.container = ttk.Frame(self)
         self.container.pack(side="top", fill="both", expand=True, padx=10, pady=10)
@@ -46,7 +51,7 @@ class App(tk.Tk):
         
         # Mostrar el frame inicial
         self.mostrar_frame("seleccion_empresa")
-    
+    '''    
     def _configurar_estilo(self):
         """Configura el estilo global de la aplicación."""
         estilo_bg = "#f0f0f0"
