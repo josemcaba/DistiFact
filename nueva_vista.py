@@ -13,13 +13,13 @@ class App(tk.Tk):
 
 	def _configurar_ventana(self):
 		self.title('Manejo de tabla')
-		self.geometry('688x600')
-		self.minsize(688,600)
+		# self.geometry('688x600')
+		# self.minsize(688,600)
 		self.configure(background='#f0f0f0')
-		self.columnconfigure(0, weight=1)
-		self.rowconfigure(0, weight=0)
-		self.rowconfigure(1, weight=1)
-		self.rowconfigure(2, weight=0)
+		# self.columnconfigure(0, weight=1)
+		# self.rowconfigure(0, weight=0)
+		# self.rowconfigure(1, weight=1)
+		# self.rowconfigure(2, weight=0)
 
 	def _configurar_titulo(self):
 		marco_titulo = ttk.Label(self)

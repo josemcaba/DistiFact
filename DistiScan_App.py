@@ -3,11 +3,11 @@ import tkinter.ttk as ttk # Importar el módulo ttk para usar widgets mejorados
 
 # Crear y configurar la ventana principal
 ventana = tk.Tk()
-ventana.geometry("600x600")
-ventana.minsize(600, 600)
+# ventana.geometry("600x600")
+# ventana.minsize(600, 600)
 ventana.title("DistiScan V1.0 - Distirel ©")
 ventana.configure(background="#1d2d3d")
-ventana.iconbitmap("vista/Distirel.ico")
+ventana.iconbitmap("recursos/Distirel.ico")
 
 #
 

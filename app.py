@@ -2,8 +2,11 @@
 Módulo que contiene la clase App, ventana principal de la aplicación.
 """
 import tkinter as tk
+from .controlador.controlador import Controlador
+
 from tkinter import ttk, messagebox, filedialog
 from typing import Optional
+
 
 # Importamos los frames de la aplicación
 from vista.frame_empresa import FrameSeleccionEmpresa
@@ -17,19 +20,12 @@ class App(tk.Tk):
     Clase principal de la aplicación que hereda de tk.Tk.
     Gestiona la ventana principal y los diferentes frames.
     """
-    def __init__(self, controlador):
-        """
-        Inicializa la ventana principal de la aplicación.
-        
-        Args:
-            controlador: Instancia del controlador de la aplicación
-        """
+    def __init__(self):
         super().__init__()
-        
-        self.title("DistiFact - Procesador de Facturas")
-        self.geometry("600x600")
-        # self.resizable(False, False)
-        self.minsize(600, 600)
+        self.title("DistiScan V1.0 - Distirel ©")
+        # self.geometry("600x600")
+        # # self.resizable(False, False)
+        # self.minsize(600, 600)
         
         # Configuración de estilo
         self.configure(bg="#f0f0f0")
@@ -43,8 +39,12 @@ class App(tk.Tk):
         self.style.configure("Header.TLabel", font=("Arial", 14, "bold"), background="#f0f0f0")
         
         # Referencia al controlador
-        self.controlador = controlador
-        
+        self.controlador = Controlador()
+        # Inicializar controlador
+        if not self.controlador.iniciar("empresas.json"):
+            print("Error al cargar el archivo de empresas.")
+            return
+
         # Contenedor principal
         self.container = ttk.Frame(self)
         self.container.pack(side="top", fill="both", expand=True, padx=10, pady=10)

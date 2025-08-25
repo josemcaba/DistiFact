@@ -2,18 +2,10 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import json
 
-class DistiFactWindow(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        self.title("DistiFact")
-        self.geometry("550x344")
-        self.resizable(False, False)
-        self.configure(bg="#1e1e2e")    # Fondo oscuro
-        
-
 class DistiFactApp(tk.Tk):
     def __init__(self):
         super().__init__()
+        self.title("DistiFact V1.0")
         self.seleccion = None
         self.empresas = {}  # Para guardar todas las empresas cargadas
 
@@ -76,7 +68,7 @@ class DistiFactApp(tk.Tk):
             self.tabla.heading(col, text=col)
 
         self.tabla.column("Id", anchor="center", width=75, stretch=False)
-        self.tabla.column("Empresa", anchor="w", width=200, stretch=True)
+        self.tabla.column("Empresa", anchor="w", width=300, stretch=True)
         self.tabla.column("NIF", anchor="center", width=125, stretch=False)
 
         self.tabla.pack(side="left", fill="both", expand=True)
