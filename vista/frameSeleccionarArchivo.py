@@ -26,7 +26,7 @@ class SeleccionarArchivo(FrameBase):
             text="Procesar", 
             command=None
         )
-        btn_procesar.grid(row=0, column=0, ipady=10, padx=5)
+        btn_procesar.grid(row=0, column=0, padx=5)
 
         # Botón de salir
         self.btn_salir = ttk.Button(
@@ -34,7 +34,7 @@ class SeleccionarArchivo(FrameBase):
             text="Salir",
             command=lambda: self.app.mostrar_frame("SeleccionarEmpresa")
         )
-        self.btn_salir.grid(row=0, column=1, ipady=10)
+        self.btn_salir.grid(row=0, column=1)
 
     # def _inicializar_componentes(self):
     #     """Inicializa los componentes del frame."""

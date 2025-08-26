@@ -18,7 +18,7 @@ class SeleccionarEmpresa(FrameBase):
 
 		columnas = [
 			{"ancho":  50, "alineacion": "c", "expandible": False, "nombre": "Núm."},
-			{"ancho": 100, "alineacion": "c", "expandible": False, "nombre": "DNI/CIF"},
+			{"ancho": 125, "alineacion": "c", "expandible": False, "nombre": "DNI/CIF"},
 			{"ancho": 275, "alineacion": "w", "expandible": True,  "nombre": "Apellidos y Nombre o Razón Social"},
 			{"ancho": 125, "alineacion": "w", "expandible": False, "nombre": "Tipo"}
 		]
@@ -39,12 +39,12 @@ class SeleccionarEmpresa(FrameBase):
 		# Botón para procesar la selección
 		btn_procesar = ttk.Button(marco_botones, text="Seleccionar", 
 									command=self._on_seleccionar)
-		btn_procesar.grid(row=0, column=0, ipady=10, padx=5)
+		btn_procesar.grid(row=0, column=0, padx=5)
 
 		# Botón de salir
 		self.btn_salir = ttk.Button(marco_botones, text="Salir",
 									command=self.app.quit)
-		self.btn_salir.grid(row=0, column=1, ipady=10)
+		self.btn_salir.grid(row=0, column=1)
 	
 	def _on_seleccionar(self):
 		seleccion = self.tabla_empresas.seleccionar()

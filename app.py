@@ -35,15 +35,15 @@ class App(tk.Tk):
     def _configurar_estilo(self):
         """Configura el estilo global de la aplicación."""
         estilo_bg = "#f0f0f0"
-        estilo_font = ("Arial", 10)
+        estilo_font = ("Arial", 10, "bold")
         self.configure(background=estilo_bg)
         self.style = ttk.Style()
         self.style.theme_use("clam")  # clam alt default classic aqua
         
         # Configurar colores y estilos
         self.style.configure("TFrame", background=estilo_bg)
-        self.style.configure("TButton", font=estilo_font, background="#4a7abc")
-        self.style.configure("TLabel", font=estilo_font, background='green')
+        self.style.configure("TButton", font=estilo_font, background="#e1e1e1", width=14, padding=(0, 7, 0, 7))
+        self.style.configure("TLabel", font=estilo_font, background='#3d8624')
         self.style.configure("Header.TLabel", font=("Arial", 14, "bold"), background=estilo_bg)
 
 

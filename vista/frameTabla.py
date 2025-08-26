@@ -26,8 +26,14 @@ class Tabla(tk.Frame):
 	def _definir_estilo(self):
 		self.estilo = ttk.Style()
 		self.estilo.theme_use('clam')
-		self.estilo.configure('Treeview', background='#ffffee', rowheight=30, font=('Arial', 10))
-		self.estilo.configure('Treeview.Heading', background='#a6caf0', font=('Arial', 10, 'bold'))
+		self.estilo.configure('Treeview', 
+							background='#ffffee',      # Color de fondo de las celdas con datos
+                         	fieldbackground='#ffffee', # Color de fondo de las celdas vacías							rowheight=30, 
+							rowheight=26,
+							font=('Arial', 13))        
+		self.estilo.configure('Treeview.Heading', 
+							background='#a6caf0', 
+							font=('Arial', 10, 'bold'))
 		self.estilo.map('Treeview', background=[('selected','#0078d7')])
 
 	def cabecera(self, columnas):
