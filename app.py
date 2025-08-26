@@ -70,7 +70,6 @@ class App(tk.Tk):
             nombre_frame: Nombre del frame a mostrar
         """
         if nombre_frame in self.frames:
-            print(nombre_frame)
             frame = self.frames[nombre_frame]
             frame.grid(row=0, column=0, sticky="nsew")
             frame.tkraise()

@@ -4,30 +4,40 @@ Módulo que contiene la clase FrameBase, base para todos los frames de la aplica
 from tkinter import ttk
 from typing import Dict, Any, Optional
 
-
 class FrameBase(ttk.Frame):
-    """
-    Clase base para todos los frames de la aplicación.
-    """
-    def __init__(self, parent, app, controlador):
+    def __init__(self, parent, app, controlador, titulo):
         """
-        Inicializa el frame base.
-        
         Args:
-            app: Instancia de la aplicación principal
             parent: Widget padre
+            app: Instancia de la aplicación principal
             controlador: Instancia del controlador
         """
         super().__init__(parent)
         self.app = app
         self.controlador = controlador
+        self._nombre = self.__class__.__name__
+        self.titulo = titulo
+        self._configurar_frame()
+        self._configurar_titulo()
+
+    @property
+    def nombre(self) -> str:
+        return self._nombre
         
-        # Configuración del frame
-        self.configure(padding="10")
+    # Configure the frame itself to expand
+    def _configurar_frame(self):
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=0)  # Título
+        self.rowconfigure(1, weight=1)  # Marco principal
+        self.rowconfigure(2, weight=0)  # Botones
+
+    def _configurar_titulo(self):
+        marco_titulo = ttk.Label(self)
+        marco_titulo.grid(row=0, column=0, sticky="ew", pady=5)
+        marco_titulo.configure(text=self.titulo, anchor='c', 
+                                foreground='white', font=('Arial', 15, 'bold'))
+
         
-        # Inicializar componentes
-        self._inicializar_componentes()
-    
     def _inicializar_componentes(self):
         """
         Inicializa los componentes del frame.
