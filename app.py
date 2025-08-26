@@ -3,19 +3,15 @@ Módulo que contiene la clase App, ventana principal de la aplicación.
 """
 import tkinter as tk
 from controlador.controlador import Controlador
-from pathlib import Path
 
-from tkinter import ttk, messagebox, filedialog
+from tkinter import ttk, filedialog
 from typing import Optional
 
-
-# Importamos los frames de la aplicación
-# from vista.frame_empresa import FrameSeleccionEmpresa
-# from vista.frame_archivo import FrameSeleccionArchivo
+# Importamos las clases de los frames de la aplicación
+from vista.frameSeleccionarEmpresa import SeleccionarEmpresa
+from vista.frameSeleccionarArchivo import SeleccionarArchivo
 # from vista.frame_proceso import FrameProcesamiento
 # from vista.frame_resultados import FrameResultados
-
-from vista.frameSeleccionarEmpresa import SeleccionarEmpresa
 
 class App(tk.Tk):
     """
@@ -30,26 +26,11 @@ class App(tk.Tk):
         self._configurar_estilo()
 
         self.controlador = Controlador()
-     
-        # Inicializa frame de seleccion de empresa
-        self.frame_actual = SeleccionarEmpresa(self, self, self.controlador)
-        self.frame_actual.grid(row=0, column=0, sticky='nsew')
-        print(self.controlador.obtener_empresa_actual())
-    
-        # # Contenedor principal
-        # self.container = ttk.Frame(self)
-        # self.container.pack(side="top", fill="both", expand=True, padx=10, pady=10)
-        # self.container.grid_rowconfigure(0, weight=1)
-        # self.container.grid_columnconfigure(0, weight=1)
-        
-        # # Diccionario para almacenar los frames
-        # self.frames = {}
-        
-        # # Inicializar frames
-        # self._inicializar_frames()
-        
-        # # Mostrar el frame inicial
-        # self.mostrar_frame("seleccion_empresa")
+          
+        # Diccionario para almacenar los frames
+        self.frames = {}
+        self._inicializar_frames()
+        self.mostrar_frame('SeleccionarEmpresa')
         
     def _configurar_estilo(self):
         """Configura el estilo global de la aplicación."""
@@ -66,22 +47,20 @@ class App(tk.Tk):
         self.style.configure("Header.TLabel", font=("Arial", 14, "bold"), background=estilo_bg)
 
 
-    # def _inicializar_frames(self):
-    #     """Inicializa todos los frames de la aplicación."""
-    #     # Lista de clases de frames a inicializar
-    #     frame_classes = [
-    #         FrameSeleccionEmpresa,
-    #         FrameSeleccionArchivo,
-    #         FrameProcesamiento,
-    #         FrameResultados
-    #     ]
+    def _inicializar_frames(self):
+        """Inicializa todos los frames de la aplicación."""
+        # Lista de clases de frames a inicializar
+        frameClasses = [
+            SeleccionarEmpresa,
+            SeleccionarArchivo
+            # FrameProcesamiento,
+            # FrameResultados
+            ]
         
-    #     # Crear instancias de cada frame
-    #     for F in frame_classes:
-    #         nombre_frame = F.nombre
-    #         frame = F(parent=self.container, app=self, controlador=self.controlador)
-    #         self.frames[nombre_frame] = frame
-    #         frame.grid(row=0, column=0, sticky="nsew")
+        # Crear instancias de cada frame
+        for frameClass in frameClasses:
+            frame = frameClass(parent=self, app=self, controlador=self.controlador)
+            self.frames[frame.nombre] = frame
     
     def mostrar_frame(self, nombre_frame: str):
         """
@@ -91,31 +70,15 @@ class App(tk.Tk):
             nombre_frame: Nombre del frame a mostrar
         """
         if nombre_frame in self.frames:
+            print(nombre_frame)
             frame = self.frames[nombre_frame]
+            frame.grid(row=0, column=0, sticky="nsew")
             frame.tkraise()
             # Si el frame tiene un método de inicialización, lo llamamos
             if hasattr(frame, "inicializar"):
                 frame.inicializar()
     
-    def mostrar_mensaje(self, tipo: str, mensaje: str, titulo: Optional[str] = None):
-        """
-        Muestra un mensaje en un diálogo.
-        
-        Args:
-            tipo: Tipo de mensaje ('info', 'error', 'warning')
-            mensaje: Contenido del mensaje
-            titulo: Título del diálogo (opcional)
-        """
-        if not titulo:
-            titulo = tipo.capitalize()
-        
-        if tipo == "info":
-            messagebox.showinfo(titulo, mensaje)
-        elif tipo == "error":
-            messagebox.showerror(titulo, mensaje)
-        elif tipo == "warning":
-            messagebox.showwarning(titulo, mensaje)
-    
+   
     def seleccionar_archivo(self, tipos_archivo: list, titulo: str = "Seleccionar archivo") -> Optional[str]:
         """
         Muestra un diálogo para seleccionar un archivo.

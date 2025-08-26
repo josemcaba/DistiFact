@@ -8,10 +8,16 @@ class SeleccionarEmpresa(tk.Frame):
 		super().__init__(parent)
 		self.app = app
 		self.controlador = controlador
+		self._nombre = self.__class__.__name__
 		self._configurar_frame()
 		self._configurar_titulo()
 		self._mostrar_tabla_empresas()
 		self._crear_botones()
+
+	@property
+	def nombre(self) -> str:
+		"""Retorna el nombre del frame."""
+		return self._nombre
 
 	def _configurar_frame(self):
         # Configure the frame itself to expand
@@ -23,7 +29,8 @@ class SeleccionarEmpresa(tk.Frame):
 	def _configurar_titulo(self):
 		marco_titulo = ttk.Label(self)
 		marco_titulo.grid(row=0, column=0, sticky="ew")
-		marco_titulo.configure(text="DistiSCAN - Selección de Empresa", foreground='white', font=('Arial', 15, 'bold'))
+		marco_titulo.configure(text="DistiSCAN - Selección de Empresa", 
+								foreground='white', font=('Arial', 15, 'bold'))
 
 	def _mostrar_tabla_empresas(self):
 		# Crear un marco contenedor para la tabla		
@@ -69,8 +76,7 @@ class SeleccionarEmpresa(tk.Frame):
 
 		self.controlador.seleccionar_empresa(seleccion[0])
 		self.tabla_empresas.deseleccionar()
-		# self.destroy()
-		# self.grid_remove()
-		# self.grid()
-	
+		self.app.mostrar_frame('SeleccionarArchivo')
+		print("Adios")
+
 
