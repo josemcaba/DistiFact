@@ -30,7 +30,7 @@ class Controlador:
         
         # Estado actual
         self._empresa_actual = None
-        # self._ruta_archivo = None
+        self._ruta_archivo = None
         # self._facturas = []
         # self._facturas_correctas = []
         # self._facturas_con_errores = []
@@ -84,23 +84,23 @@ class Controlador:
         """
         return self._empresa_actual
     
-    # def establecer_ruta_archivo(self, ruta: str) -> None:
-    #     """
-    #     Establece la ruta del archivo a procesar.
+    def establecer_ruta_archivo(self, ruta: str) -> None:
+        """
+        Establece la ruta del archivo a procesar.
         
-    #     Args:
-    #         ruta: Ruta al archivo
-    #     """
-    #     self._ruta_archivo = ruta
+        Args:
+            ruta: Ruta al archivo
+        """
+        self._ruta_archivo = ruta
     
-    # def obtener_ruta_archivo(self) -> Optional[str]:
-    #     """
-    #     Obtiene la ruta del archivo actual.
+    def obtener_ruta_archivo(self) -> Optional[str]:
+        """
+        Obtiene la ruta del archivo actual.
         
-    #     Returns:
-    #         Ruta del archivo o None si no hay archivo
-    #     """
-    #     return self._ruta_archivo
+        Returns:
+            Ruta del archivo o None si no hay archivo
+        """
+        return self._ruta_archivo
     
     # def configurar_callbacks(self, progreso_callback: Callable[[int, int], None], 
     #                        mensaje_callback: Callable[[str, str], None]) -> None:

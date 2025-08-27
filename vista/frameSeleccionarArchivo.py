@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, filedialog
+from tkinter.messagebox import showerror, showwarning
 import os
 from typing import Dict, Any, Optional
 
@@ -47,15 +48,17 @@ class SeleccionarArchivo(FrameBase):
         # Limpiar campo de ruta
         self.entry_ruta.delete(0, tk.END)
 
-    def _crear_botones(self):	# Marco para los botones
+    def _crear_botones(self):
         marco_botones = ttk.Frame(self)
         marco_botones.grid(row=2, column=0, sticky="e", padx=5, pady=5)
         btn_procesar = ttk.Button(
             marco_botones, 
             text="Procesar", 
-            command=None
+            command=self._on_procesar,
+			# state='disabled'
         )
         btn_procesar.grid(row=0, column=0, padx=5)
+        self._btn_procesar=btn_procesar
 
         self.btn_salir = ttk.Button(
             marco_botones, 
@@ -69,88 +72,49 @@ class SeleccionarArchivo(FrameBase):
             tipos_archivo = [("Archivos Excel", "*.xlsx;*.xls")]
         else:
             tipos_archivo = [("Archivos PDF", "*.pdf")]
-        
+
         # Mostrar diálogo de selección
-        ruta = self.app.seleccionar_archivo(
-            tipos_archivo=tipos_archivo,
-            titulo=f"Seleccionar archivo para {self._empresa.nombre}"
+        ruta = filedialog.askopenfilename(
+            title=f"Seleccionar archivo para {self._empresa.nombre}",
+            filetypes=tipos_archivo
         )
-        
         if ruta:
             self.entry_ruta.delete(0, tk.END)
             self.entry_ruta.insert(0, ruta)
+            # self._btn_procesar.config(state="normal")
 
-    def seleccionar_archivo(self, tipos_archivo: list, titulo: str = "Seleccionar archivo") -> Optional[str]:
-        """
-        Muestra un diálogo para seleccionar un archivo.
+    def _on_procesar(self):
+        """Maneja el evento de procesar archivo."""
+        # Obtener ruta del archivo
+        ruta = self.entry_ruta.get().strip()
         
-        Args:
-            tipos_archivo: Lista de tuplas con descripciones y extensiones
-            titulo: Título del diálogo
-            
-        Returns:
-            Ruta del archivo seleccionado o None si se cancela
-        """
-        ruta = filedialog.askopenfilename(
-            title=titulo,
-            filetypes=tipos_archivo
-        )
-        return ruta if ruta else None
+        if not ruta:
+            showwarning("Atención", "Debe seleccionar un archivo.")
 
-    # def _inicializar_componentes(self):
-    #     """Inicializa los componentes del frame."""
-    #     super()._inicializar_componentes()
+            return
         
-    #     # Contenedor principal
-    #     self.frame_contenido = ttk.Frame(self)
-    #     self.frame_contenido.pack(fill="both", expand=True)
+        if not os.path.isfile(ruta):
+            showerror("Error", f"El archivo '{ruta}' no existe.")
+            return
         
-    #     # Información de la empresa seleccionada
-    #     self.frame_empresa = ttk.Frame(self.frame_contenido)
-    #     self.frame_empresa.pack(fill="x", pady=10)
+        # Verificar extensión según tipo de empresa
+        #empresa = self.controlador.obtener_empresa_actual()
         
-    #     self.lbl_empresa_titulo = ttk.Label(
-    #         self.frame_empresa,
-    #         text="Empresa seleccionada:",
-    #         font=("Arial", 10, "bold")
-    #     )
-    #     self.lbl_empresa_titulo.pack(anchor="w")
+        if self._empresa.tipo in ["PDFtexto", "PDFimagen"] and not ruta.lower().endswith(".pdf"):
+            showerror("Error", "El archivo debe ser un PDF.")
+            return
+        
+        if self._empresa.tipo == "excel" and not ruta.lower().endswith((".xlsx", ".xls")):
+            showerror("Error", "El archivo debe ser un Excel.")
+            return
+        
+        # Establecer ruta en el controlador
+        self.controlador.establecer_ruta_archivo(ruta)
+        
+        # Avanzar al frame de procesamiento
+        self.app.mostrar_frame("SeleccionarEmpresa")
 
-    #     self.lbl_empresa_info = ttk.Label(
-    #         self.frame_empresa,
-    #         text="",
-    #         padding=(20, 5)
-    #     )
-    #     self.lbl_empresa_info.pack(anchor="w")
-        
-    #     # Selección de archivo
-    #     self.frame_archivo = ttk.Frame(self.frame_contenido)
-    #     self.frame_archivo.pack(fill="x", pady=10)
-        
-    #     self.lbl_archivo = ttk.Label(
-    #         self.frame_archivo,
-    #         text="Seleccione el archivo a procesar:",
-    #         font=("Arial", 10, "bold")
-    #     )
-    #     self.lbl_archivo.pack(anchor="w", pady=(0, 5))
-        
-    #     # Frame para entrada y botón
-    #     self.frame_entrada = ttk.Frame(self.frame_archivo)
-    #     self.frame_entrada.pack(fill="x", pady=5)
-
-    #     self.btn_examinar = ttk.Button(
-    #         self.frame_entrada,
-    #         text="Examinar",
-    #         command=self._on_examinar
-    #     )
-    #     self.btn_examinar.pack(side="left")
-        
-    #     self.entry_ruta = ttk.Entry(
-    #         self.frame_entrada,
-    #         # width=50
-    #     )
-    #     self.entry_ruta.pack(side="right", fill="x", expand=True, padx=(10, 0))
-        
+ 
     #     # Frame para botones
     #     self.frame_botones = ttk.Frame(self.frame_contenido)
     #     self.frame_botones.pack(fill="x", pady=20)

@@ -75,24 +75,6 @@ class App(tk.Tk):
             frame.tkraise()
 
     
-   
-    def seleccionar_archivo(self, tipos_archivo: list, titulo: str = "Seleccionar archivo") -> Optional[str]:
-        """
-        Muestra un diálogo para seleccionar un archivo.
-        
-        Args:
-            tipos_archivo: Lista de tuplas con descripciones y extensiones
-            titulo: Título del diálogo
-            
-        Returns:
-            Ruta del archivo seleccionado o None si se cancela
-        """
-        ruta = filedialog.askopenfilename(
-            title=titulo,
-            filetypes=tipos_archivo
-        )
-        return ruta if ruta else None
-    
     def seleccionar_directorio(self, titulo: str = "Seleccionar directorio") -> Optional[str]:
         """
         Muestra un diálogo para seleccionar un directorio.
