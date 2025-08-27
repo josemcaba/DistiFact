@@ -6,6 +6,7 @@ import numpy as np
 from PIL import Image
 import pytesseract
 from typing import Tuple, Optional
+from pathlib import Path
 
 class ExtractorImagenes:
     def __init__(self, mensaje_callback=None):
@@ -17,8 +18,9 @@ class ExtractorImagenes:
         else:
             print(f"[{tipo}] {mensaje}")
 
-    def cargar_rectangulos_json(self, nif, ruta_json="rectangulos.json"):
+    def cargar_rectangulos_json(self, nif, file_json="rectangulos.json"):
         try:
+            ruta_json = Path("datos") / Path(file_json)
             with open(ruta_json, "r", encoding='utf-8') as archivo:
                 coords = json.load(archivo)
             rectangles = coords[nif]

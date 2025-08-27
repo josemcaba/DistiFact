@@ -25,10 +25,10 @@ class SeleccionarEmpresa(FrameBase):
 		self.tabla_empresas.cabecera(columnas)
 		
 		# Cargar datos de empresas
-		empresas = self.controlador.cargar_empresas('empresas.json')
+		empresas = self.controlador.cargar_empresas()
 		if not empresas:
 			# self.mostrar_mensaje("error", "No se pudieron cargar las empresas.")
-			showerror("Error", f"No se puede cargar el archivo 'empresas.json'")
+			showerror("Error", f"No se puede cargar el archivo de empresas.")
 			return
 		self.tabla_empresas.insertar(empresas)
 

@@ -10,7 +10,7 @@ from modelo.cargar_empresas import Empresa, EmpresasManager
 # from modelo.procesador import ProcesadorFacturas
 # from modelo.clasificador import ClasificadorFacturas
 # from modelo.exportador import ExportadorExcel
-# from modelo.vizualizador_rectangulos import VisualizadorRectangulos
+from modelo.vizualizador_rectangulos import VisualizadorRectangulos
 # from modelo.creador_rectangulos import CreadorRectangulos
 
 class Controlador:
@@ -19,13 +19,16 @@ class Controlador:
     """
     def __init__(self):
         """Inicializa el controlador."""
+        self.archivo_de_empresas = 'empresas.json'
+        self.archivo_de_rectangulos = 'rectangulos.json'
+        
         # Instancias del modelo
         self._empresas_manager = EmpresasManager()
         # self._empresa_manager = EmpresaManager()
         # self._procesador = ProcesadorFacturas()
         # self._clasificador = ClasificadorFacturas()
         # self._exportador = ExportadorExcel()
-        # self._visualizador = VisualizadorRectangulos(self)
+        self._visualizador = VisualizadorRectangulos(self)
         # self._creador = CreadorRectangulos(self)
         
         # Estado actual
@@ -35,8 +38,8 @@ class Controlador:
         # self._facturas_correctas = []
         # self._facturas_con_errores = []
     
-    def cargar_empresas(self, archivo_json):
-        if not self._empresas_manager.cargar_empresas(archivo_json):
+    def cargar_empresas(self):
+        if not self._empresas_manager.cargar_empresas(self.archivo_de_empresas):
             return None
         datos = self._empresas_manager.listar_empresas()
         return datos
@@ -170,18 +173,18 @@ class Controlador:
     #     except Exception:
     #         return {}
     
-    # def visualizar_rectangulos(self, ruta_pdf: str, empresa_dict: Dict[str, Any]) -> bool:
-    #     """
-    #     Visualiza los rectángulos definidos en las imágenes de un PDF.
+    def visualizar_rectangulos(self, ruta_pdf: str, empresa_dict: Dict[str, Any]) -> bool:
+        """
+        Visualiza los rectángulos definidos en las imágenes de un PDF.
         
-    #     Args:
-    #         ruta_pdf: Ruta al archivo PDF
-    #         empresa_dict: Diccionario con información de la empresa
+        Args:
+            ruta_pdf: Ruta al archivo PDF
+            empresa_dict: Diccionario con información de la empresa
             
-    #     Returns:
-    #         True si se completó correctamente, False en caso contrario
-    #     """
-    #     return self._visualizador.visualizar_rectangulos(ruta_pdf, empresa_dict)
+        Returns:
+            True si se completó correctamente, False en caso contrario
+        """
+        return self._visualizador.visualizar_rectangulos(ruta_pdf, empresa_dict)
     
     # def crear_rectangulos(self, ruta_pdf: str, empresa_dict: Dict[str, Any]) -> bool:
     #     """
