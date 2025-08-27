@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, filedialog
 import os
 from typing import Dict, Any, Optional
 
@@ -30,20 +30,22 @@ class SeleccionarArchivo(FrameBase):
         etiqueta_archivo = ttk.Label(self._contenedor, text="Archivo a procesar:")
         etiqueta_archivo.grid(row=3, column=0, sticky="w", columnspan=2, padx=5, pady=5)
         
-        btn_examinar = ttk.Button(self._contenedor, text="Examinar", command=None)
+        btn_examinar = ttk.Button(self._contenedor, text="Examinar", command=self._on_examinar)
         btn_examinar.grid(row=4, column=0, sticky='w', padx=5, pady=5)
         
-        self.entry_ruta = ttk.Entry(self._contenedor)
+        self.entry_ruta = ttk.Entry(self._contenedor, font=('Arial', 10))
         self.entry_ruta.grid(row=4, column=1, sticky="nsew", padx=5, pady=10)
-      
 
     def inicializar(self):
         ''' 
         Procesos que no se pueden ejecutar durante la creación del 
         objeto por faltar información de la empresa
         '''
-        empresa_actual = self.controlador.obtener_empresa_actual()
-        self._valor_empresa.configure(text=empresa_actual)
+        self._empresa = self.controlador.obtener_empresa_actual()
+        self._valor_empresa.configure(text=self._empresa)
+
+        # Limpiar campo de ruta
+        self.entry_ruta.delete(0, tk.END)
 
     def _crear_botones(self):	# Marco para los botones
         marco_botones = ttk.Frame(self)
@@ -61,6 +63,39 @@ class SeleccionarArchivo(FrameBase):
             command=lambda: self.app.mostrar_frame("SeleccionarEmpresa")
         )
         self.btn_salir.grid(row=0, column=1)
+    
+    def _on_examinar(self):
+        if self._empresa.tipo == "excel":
+            tipos_archivo = [("Archivos Excel", "*.xlsx;*.xls")]
+        else:
+            tipos_archivo = [("Archivos PDF", "*.pdf")]
+        
+        # Mostrar diálogo de selección
+        ruta = self.app.seleccionar_archivo(
+            tipos_archivo=tipos_archivo,
+            titulo=f"Seleccionar archivo para {self._empresa.nombre}"
+        )
+        
+        if ruta:
+            self.entry_ruta.delete(0, tk.END)
+            self.entry_ruta.insert(0, ruta)
+
+    def seleccionar_archivo(self, tipos_archivo: list, titulo: str = "Seleccionar archivo") -> Optional[str]:
+        """
+        Muestra un diálogo para seleccionar un archivo.
+        
+        Args:
+            tipos_archivo: Lista de tuplas con descripciones y extensiones
+            titulo: Título del diálogo
+            
+        Returns:
+            Ruta del archivo seleccionado o None si se cancela
+        """
+        ruta = filedialog.askopenfilename(
+            title=titulo,
+            filetypes=tipos_archivo
+        )
+        return ruta if ruta else None
 
     # def _inicializar_componentes(self):
     #     """Inicializa los componentes del frame."""

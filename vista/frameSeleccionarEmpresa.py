@@ -40,7 +40,9 @@ class SeleccionarEmpresa(FrameBase):
 		btn_procesar = ttk.Button(
 			marco_botones,
 			text="Seleccionar", 
-			command=self._on_seleccionar
+			command=self._on_seleccionar,
+			state='normal'
+			# state='disabled'
 		)
 		btn_procesar.grid(row=0, column=0, padx=5)
 
