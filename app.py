@@ -34,21 +34,26 @@ class App(tk.Tk):
         
     def _configurar_estilo(self):
         """Configura el estilo global de la aplicación."""
-        estilo_bg = "#f0f0f0"
-        estilo_font = ("Arial", 10, "bold")
-        self.configure(background=estilo_bg)
-        self.style = ttk.Style()
-        self.style.theme_use("clam")  # clam alt default classic aqua
-        
-        # Configurar colores y estilos
-        self.style.configure("TFrame", background=estilo_bg)
-        self.style.configure("TButton", font=estilo_font, background="#e1e1e1", width=14, padding=(0, 7, 0, 7))
-        self.style.configure("TLabel", font=estilo_font, background='#3d8624')
-        self.style.configure("Header.TLabel", font=("Arial", 14, "bold"), background=estilo_bg)
-
+        self.estilo = ttk.Style()
+        self.estilo.theme_use('clam')  # clam alt default classic aqua
+        self.estilo.configure("TFrame", 
+                            background='#f0f0f0', 
+                            font=('Arial', 10))
+        self.estilo.configure('Titulo.TLabel',
+                            background='#3d8624', # verde
+                            foreground='#ffffee', # amarillito
+                            anchor='c',
+                            font=('Arial', 14, 'bold'))
+        self.estilo.configure('TButton', 
+                            background='#e1e1e1',
+                            font=('Arial', 10, 'bold'),
+                            width=14, 
+                            padding=(0, 7, 0, 7))
+        self.estilo.configure('TLabel',
+                            background='#f0f0f0', 
+                            font=('Arial', 10, 'bold'))
 
     def _inicializar_frames(self):
-        """Inicializa todos los frames de la aplicación."""
         # Lista de clases de frames a inicializar
         frameClasses = [
             SeleccionarEmpresa,
@@ -63,19 +68,12 @@ class App(tk.Tk):
             self.frames[frame.nombre] = frame
     
     def mostrar_frame(self, nombre_frame: str):
-        """
-        Muestra el frame especificado.
-        
-        Args:
-            nombre_frame: Nombre del frame a mostrar
-        """
         if nombre_frame in self.frames:
             frame = self.frames[nombre_frame]
             frame.grid(row=0, column=0, sticky="nsew")
+            frame.inicializar()
             frame.tkraise()
-            # Si el frame tiene un método de inicialización, lo llamamos
-            if hasattr(frame, "inicializar"):
-                frame.inicializar()
+
     
    
     def seleccionar_archivo(self, tipos_archivo: list, titulo: str = "Seleccionar archivo") -> Optional[str]:

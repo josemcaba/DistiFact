@@ -24,7 +24,6 @@ class FrameBase(ttk.Frame):
     def nombre(self) -> str:
         return self._nombre
         
-    # Configure the frame itself to expand
     def _configurar_frame(self):
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=0)  # Título
@@ -32,49 +31,55 @@ class FrameBase(ttk.Frame):
         self.rowconfigure(2, weight=0)  # Botones
 
     def _configurar_titulo(self):
-        marco_titulo = ttk.Label(self)
+        '''Configura el titulo de la ventana'''
+        marco_titulo = ttk.Label(self, style="Titulo.TLabel")
+        marco_titulo.configure(text=self.titulo)
         marco_titulo.grid(row=0, column=0, sticky="ew", pady=5)
-        marco_titulo.configure(text=self.titulo, anchor='c', 
-                                foreground='white', font=('Arial', 15, 'bold'))
 
-        
-    def _inicializar_componentes(self):
-        """
-        Inicializa los componentes del frame.
-        Este método debe ser sobrescrito por las clases hijas.
-        """
-        # Título del frame
-        self.lbl_titulo = ttk.Label(
-            self, 
-            text=self._obtener_titulo(),
-            style="Header.TLabel"
-        )
-        self.lbl_titulo.pack(pady=(0, 20))
-    
-    def _obtener_titulo(self) -> str:
-        """
-        Retorna el título del frame.
-        Este método debe ser sobrescrito por las clases hijas.
-        
-        Returns:
-            Título del frame
-        """
-        return "Frame Base"
-    
     def inicializar(self):
         """
         Método llamado cuando el frame se muestra.
         Este método puede ser sobrescrito por las clases hijas.
         """
         pass
+            
+    # def _inicializar_componentes(self):
+    #     """
+    #     Inicializa los componentes del frame.
+    #     Este método debe ser sobrescrito por las clases hijas.
+    #     """
+    #     # Título del frame
+    #     self.lbl_titulo = ttk.Label(
+    #         self, 
+    #         text=self._obtener_titulo(),
+    #         style="Header.TLabel"
+    #     )
+    #     self.lbl_titulo.pack(pady=(0, 20))
     
-    def mostrar_mensaje(self, tipo: str, mensaje: str, titulo: Optional[str] = None):
-        """
-        Muestra un mensaje usando el método de la aplicación principal.
+    # def _obtener_titulo(self) -> str:
+    #     """
+    #     Retorna el título del frame.
+    #     Este método debe ser sobrescrito por las clases hijas.
         
-        Args:
-            tipo: Tipo de mensaje ('info', 'error', 'warning')
-            mensaje: Contenido del mensaje
-            titulo: Título del diálogo (opcional)
-        """
-        self.app.mostrar_mensaje(tipo, mensaje, titulo)
+    #     Returns:
+    #         Título del frame
+    #     """
+    #     return "Frame Base"
+    
+    # def inicializar(self):
+    #     """
+    #     Método llamado cuando el frame se muestra.
+    #     Este método puede ser sobrescrito por las clases hijas.
+    #     """
+    #     pass
+    
+    # def mostrar_mensaje(self, tipo: str, mensaje: str, titulo: Optional[str] = None):
+    #     """
+    #     Muestra un mensaje usando el método de la aplicación principal.
+        
+    #     Args:
+    #         tipo: Tipo de mensaje ('info', 'error', 'warning')
+    #         mensaje: Contenido del mensaje
+    #         titulo: Título del diálogo (opcional)
+    #     """
+    #     self.app.mostrar_mensaje(tipo, mensaje, titulo)

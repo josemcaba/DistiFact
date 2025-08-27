@@ -11,10 +11,14 @@ class SeleccionarArchivo(FrameBase):
         super().__init__(parent, app, controlador, self.titulo)
         self._crear_botones()
     
-    def _configurar_info(self):
-        marco_info = ttk.Label(self)
+    def inicializar(self):
+        ''' 
+        Procesos que no se pueden ejecutar durante la creación del 
+        objeto por faltar información de la empresa
+        '''
+        empresa = self.controlador.obtener_empresa_actual()
+        marco_info = ttk.Label(self, text=f"Empresa seleccionada: {empresa}")
         marco_info.grid(row=1, column=0)
-        marco_info.configure(text="Empresa seleccionada:", font=("Arial", 10, "bold"))
 
     def _crear_botones(self):	# Marco para los botones
         marco_botones = ttk.Frame(self)
@@ -28,10 +32,10 @@ class SeleccionarArchivo(FrameBase):
         )
         btn_procesar.grid(row=0, column=0, padx=5)
 
-        # Botón de salir
+        # Botón de volver atrás
         self.btn_salir = ttk.Button(
             marco_botones, 
-            text="Salir",
+            text="Volver atrás",
             command=lambda: self.app.mostrar_frame("SeleccionarEmpresa")
         )
         self.btn_salir.grid(row=0, column=1)

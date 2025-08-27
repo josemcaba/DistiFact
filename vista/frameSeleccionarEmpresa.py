@@ -1,6 +1,6 @@
 from tkinter import ttk
 from tkinter.messagebox import showerror, showwarning
-from vista.frameTabla import Tabla
+from vista.componentes.Tabla import Tabla
 
 from vista.frameBase import FrameBase
 
@@ -37,13 +37,19 @@ class SeleccionarEmpresa(FrameBase):
 		marco_botones.grid(row=2, column=0, sticky="e", padx=5, pady=5)
 
 		# Botón para procesar la selección
-		btn_procesar = ttk.Button(marco_botones, text="Seleccionar", 
-									command=self._on_seleccionar)
+		btn_procesar = ttk.Button(
+			marco_botones,
+			text="Seleccionar", 
+			command=self._on_seleccionar
+		)
 		btn_procesar.grid(row=0, column=0, padx=5)
 
 		# Botón de salir
-		self.btn_salir = ttk.Button(marco_botones, text="Salir",
-									command=self.app.quit)
+		self.btn_salir = ttk.Button(
+			marco_botones, 
+			text="Salir",
+			command=self.app.quit
+		)
 		self.btn_salir.grid(row=0, column=1)
 	
 	def _on_seleccionar(self):
