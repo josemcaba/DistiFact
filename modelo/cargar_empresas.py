@@ -79,7 +79,7 @@ class Empresa:
     
     def __str__(self) -> str:
         """Representación en cadena de la empresa."""
-        return f"{self._nombre} ({self._nif})"
+        return f"{self._nombre} ({self._nif}) - Tipo: {self._tipo}"
 
 
 class EmpresasManager:

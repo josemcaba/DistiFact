@@ -9,22 +9,45 @@ class SeleccionarArchivo(FrameBase):
     def __init__(self, parent, app, controlador):
         self.titulo="Selección de Archivo"
         super().__init__(parent, app, controlador, self.titulo)
+        self._configurar_marco()
         self._crear_botones()
     
+    def _configurar_marco(self):
+        self._contenedor = ttk.Frame(self)
+        self._contenedor.columnconfigure(0, weight=0)  # Columna de etiquetas y botón
+        self._contenedor.columnconfigure(1, weight=1)  # Columna de valores y entrada
+        self._contenedor.grid(sticky="nsew", padx=5)
+
+        etiqueta_empresa = ttk.Label(self._contenedor, text="Empresa seleccionada:")
+        etiqueta_empresa.grid(row=0, column=0, sticky="w", columnspan=2, padx=5, pady=5)
+
+        self._valor_empresa = ttk.Label(self._contenedor, text="Ninguna", relief="solid", padding=5)
+        self._valor_empresa.grid(row=1, column=0, sticky="w", columnspan=2, pady=(5, 10), padx=(30, 5))
+        
+        separador = ttk.Separator(self._contenedor, orient="horizontal")
+        separador.grid(row=2, column=0, sticky="ew", columnspan=2, pady=5)
+        
+        etiqueta_archivo = ttk.Label(self._contenedor, text="Archivo a procesar:")
+        etiqueta_archivo.grid(row=3, column=0, sticky="w", columnspan=2, padx=5, pady=5)
+        
+        btn_examinar = ttk.Button(self._contenedor, text="Examinar", command=None)
+        btn_examinar.grid(row=4, column=0, sticky='w', padx=5, pady=5)
+        
+        self.entry_ruta = ttk.Entry(self._contenedor)
+        self.entry_ruta.grid(row=4, column=1, sticky="nsew", padx=5, pady=10)
+      
+
     def inicializar(self):
         ''' 
         Procesos que no se pueden ejecutar durante la creación del 
         objeto por faltar información de la empresa
         '''
-        empresa = self.controlador.obtener_empresa_actual()
-        marco_info = ttk.Label(self, text=f"Empresa seleccionada: {empresa}")
-        marco_info.grid(row=1, column=0)
+        empresa_actual = self.controlador.obtener_empresa_actual()
+        self._valor_empresa.configure(text=empresa_actual)
 
     def _crear_botones(self):	# Marco para los botones
         marco_botones = ttk.Frame(self)
         marco_botones.grid(row=2, column=0, sticky="e", padx=5, pady=5)
-
-        # Botón para procesar la selección
         btn_procesar = ttk.Button(
             marco_botones, 
             text="Procesar", 
@@ -32,7 +55,6 @@ class SeleccionarArchivo(FrameBase):
         )
         btn_procesar.grid(row=0, column=0, padx=5)
 
-        # Botón de volver atrás
         self.btn_salir = ttk.Button(
             marco_botones, 
             text="Volver atrás",

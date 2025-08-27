@@ -30,7 +30,7 @@ class Tabla(tk.Frame):
 							background='#ffffee',      # Color de fondo de las celdas con datos
                          	fieldbackground='#ffffee', # Color de fondo de las celdas vacías							rowheight=30, 
 							rowheight=26,
-							font=('Arial', 13))        
+							font=('Arial', 12))        
 		self.estilo.configure('Treeview.Heading', 
 							background='#a6caf0', 
 							font=('Arial', 10, 'bold'))
