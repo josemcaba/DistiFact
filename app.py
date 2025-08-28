@@ -52,6 +52,10 @@ class App(tk.Tk):
         self.estilo.configure('TLabel',
                             background='#f0f0f0', 
                             font=('Arial', 10, 'bold'))
+        self.estilo.configure('TNotebook',
+                            background='#f0f0f0')
+        self.estilo.configure('TNotebook.Tab',
+                             font=('Arial', 10))
 
     def _inicializar_frames(self):
         # Lista de clases de frames a inicializar

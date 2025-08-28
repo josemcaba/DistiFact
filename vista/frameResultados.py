@@ -5,6 +5,7 @@ from tkinter import ttk
 from typing import Dict, Any, Optional, List
 import extractores.conceptos_factura as KEY
 from modelo.factura import Factura
+from vista.componentes.Tabla import Tabla
 
 from vista.frameBase import FrameBase
 
@@ -17,15 +18,47 @@ class Resultados(FrameBase):
 
     def _configurar_marco(self):
         self._contenedor = ttk.Frame(self)
-        self._contenedor.columnconfigure(0, weight=0)  # Columna de etiquetas y botón
-        self._contenedor.columnconfigure(1, weight=1)  # Columna de valores y entrada
         self._contenedor.grid(sticky="nsew", padx=5)
+        self._contenedor.columnconfigure(0, weight=1)  # Para permitir expansión horizontal
 
         etiqueta_empresa = ttk.Label(self._contenedor, text="Empresa seleccionada:")
-        etiqueta_empresa.grid(row=0, column=0, sticky="w", columnspan=2, padx=5, pady=5)
+        etiqueta_empresa.grid(row=0, column=0, sticky="w", padx=5, pady=5)
 
         self._valor_empresa = ttk.Label(self._contenedor, text="Ninguna", relief="solid", padding=5)
-        self._valor_empresa.grid(row=1, column=0, sticky="w", columnspan=2, pady=(5, 10), padx=(30, 5))
+        self._valor_empresa.grid(row=1, column=0, sticky="w", pady=(5, 10), padx=(30, 5))
+
+        self._notebook = ttk.Notebook(self._contenedor)
+        self._notebook.grid(row=2, column=0, sticky="nsew")
+        self._contenedor.rowconfigure(2, weight=1)     # Para permitir expansión vertical
+        
+        self.tab_correctas = ttk.Frame(self._notebook)
+        self._notebook.add(self.tab_correctas, text="Facturas Correctas")
+        self.tab_correctas.columnconfigure(0, weight=1)
+        self.tab_correctas.rowconfigure(0, weight=1)
+        
+        self.tabla_correcta = Tabla(self.tab_correctas)
+        self.tabla_correcta.grid(row=0, column=0, sticky='nsew')
+        columnas = [
+			{"ancho": 100, "alineacion": "c", "expandible": False, "nombre": "Núm. Factura"},
+            {"ancho":  75, "alineacion": "c", "expandible": False, "nombre": "Fecha"},
+			{"ancho": 125, "alineacion": "c", "expandible": False, "nombre": "NIF"},
+			{"ancho": 250, "alineacion": "w", "expandible": False, "nombre": "Razón Social"},
+            {"ancho": 100, "alineacion": "e", "expandible": False, "nombre": "Base IVA"},
+            {"ancho": 100, "alineacion": "e", "expandible": False, "nombre": "Tipo IVA"},
+            {"ancho": 100, "alineacion": "e", "expandible": False, "nombre": "Cuota IVA"},
+            {"ancho": 100, "alineacion": "e", "expandible": False, "nombre": "Total"},
+			{"ancho": 150, "alineacion": "w", "expandible": True,  "nombre": "Observaciones"}
+		]
+        self.tabla_correcta.cabecera(columnas)
+
+        self.tab_errores = ttk.Frame(self._notebook)
+        self._notebook.add(self.tab_errores, text="Facturas con Errores")
+        self.tab_errores.columnconfigure(0, weight=1)
+        self.tab_errores.rowconfigure(0, weight=1)
+        
+        self.tabla_errores = Tabla(self.tab_errores)
+        self.tabla_errores.grid(row=0, column=0, sticky='nsew')
+        self.tabla_errores.cabecera(columnas)
 
     def inicializar(self):
         ''' 
