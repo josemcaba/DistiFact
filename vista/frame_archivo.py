@@ -29,30 +29,32 @@ class FrameSeleccionArchivo(FrameBase):
         
         # Información de la empresa seleccionada
         self.frame_empresa = ttk.Frame(self.frame_contenido)
-        self.frame_empresa.pack(fill="x", pady=10)
+        self.frame_empresa.pack(fill="x", padx=5, pady=10)
         
         self.lbl_empresa_titulo = ttk.Label(
             self.frame_empresa,
-            text="Empresa seleccionada:",
-            font=("Arial", 10, "bold")
+            text="Empresa seleccionada:"
         )
         self.lbl_empresa_titulo.pack(anchor="w")
 
         self.lbl_empresa_info = ttk.Label(
             self.frame_empresa,
             text="",
-            padding=(20, 5)
+            relief="solid", 
+            padding=5,
         )
-        self.lbl_empresa_info.pack(anchor="w")
-        
+        self.lbl_empresa_info.pack(anchor="w", pady=(5, 10), padx=(25, 5))
+
+        separador = ttk.Separator(self.frame_empresa, orient="horizontal")
+        separador.pack(fill='x', pady=5)
+
         # Selección de archivo
         self.frame_archivo = ttk.Frame(self.frame_contenido)
-        self.frame_archivo.pack(fill="x", pady=10)
+        self.frame_archivo.pack(fill="x", pady=5)
         
         self.lbl_archivo = ttk.Label(
             self.frame_archivo,
-            text="Seleccione el archivo a procesar:",
-            font=("Arial", 10, "bold")
+            text="Archivo a procesar:"
         )
         self.lbl_archivo.pack(anchor="w", pady=(0, 5))
         
