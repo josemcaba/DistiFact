@@ -4,26 +4,22 @@ from tkinter import ttk
 class Tabla(tk.Frame):
 	def __init__(self, parent):
 		super().__init__(parent)
-		self._configurar_frame()
-		self._agregar_tabla()
-		self._agregar_scrollbar()
-		self._definir_estilo()
-
-	def _configurar_frame(self):
 		self.columnconfigure(0, weight=1) # Columna para la tabla
-		self.columnconfigure(1, weight=0) # Columna para la scrollbar
-		self.rowconfigure(0, weight=1)
+		self.columnconfigure(1, weight=0) # Columna para la scrollbar vertical
+		self.rowconfigure(0, weight=1)    # Columna para la tabla
+		self.rowconfigure(1, weight=0)    # Columna para la scrollbar horizontal
 
-	def _agregar_tabla(self):
 		self.tabla = ttk.Treeview(self)
 		self.tabla.grid(row=0, column=0, sticky="nsew")
 
-	def _agregar_scrollbar(self):
-		self.scrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL, command=self.tabla.yview)
-		self.tabla.configure(yscrollcommand=self.scrollbar.set)
-		self.scrollbar.grid(row=0, column=1, sticky="ns")
+		self.scrollbar_v = ttk.Scrollbar(self, orient=tk.VERTICAL, command=self.tabla.yview)
+		self.tabla.configure(yscrollcommand=self.scrollbar_v.set)
+		self.scrollbar_v.grid(row=0, column=1, sticky="ns", pady=(27, 0))
 
-	def _definir_estilo(self):
+		self.scrollbar_h = ttk.Scrollbar(self, orient=tk.HORIZONTAL, command=self.tabla.xview)
+		self.tabla.configure(xscrollcommand=self.scrollbar_h.set)
+		self.scrollbar_h.grid(row=1, column=0, sticky="ew")
+
 		self.estilo = ttk.Style()
 		self.estilo.theme_use('clam')
 		self.estilo.configure('Treeview', 
