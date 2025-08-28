@@ -25,15 +25,7 @@ class FrameSeleccionEmpresa(FrameBase):
         # Contenedor principal
         self.frame_contenido = ttk.Frame(self)
         self.frame_contenido.pack(fill="both", expand=True)
-        
-        # Etiqueta de instrucción
-        self.lbl_instruccion = ttk.Label(
-            self.frame_contenido,
-            text="Seleccione una empresa de la lista:",
-            padding=(0, 10)
-        )
-        self.lbl_instruccion.pack(anchor="w")
-        
+         
         # Frame para la lista y scrollbar
         self.frame_lista = ttk.Frame(self.frame_contenido)
         self.frame_lista.pack(fill="both", expand=True, pady=10)

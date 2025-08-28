@@ -28,28 +28,39 @@ class App(tk.Tk):
         """
         super().__init__()
         
-        self.title("DistiFact - Procesador de Facturas")
+        self.title("DistiScan V1.0 - Distirel ©")
         self.geometry("600x600")
         # self.resizable(False, False)
-        self.minsize(600, 600)
+        # self.minsize(600, 600)
         
         # Configuración de estilo
-        self.configure(bg="#f0f0f0")
         self.style = ttk.Style()
         self.style.theme_use("clam")  # clam alt default classic aqua
         
         # Configurar colores y estilos
-        self.style.configure("TFrame", background="#f0f0f0")
-        self.style.configure("TButton", font=("Arial", 10), background="#4a7abc")
-        self.style.configure("TLabel", font=("Arial", 10), background="#f0f0f0")
-        self.style.configure("Header.TLabel", font=("Arial", 14, "bold"), background="#f0f0f0")
+        self.style.configure("TFrame", 
+                            background='#f0f0f0', 
+                            font=('Arial', 10))
+        self.style.configure('TButton', 
+                            background='#e1e1e1',
+                            font=('Arial', 10, 'bold'),
+                            width=14, 
+                            padding=(0, 7, 0, 7))
+        self.style.configure('TLabel',
+                            background='#f0f0f0', 
+                            font=('Arial', 10, 'bold'))
+        self.style.configure("Header.TLabel", 
+                            background='#3d8624', # verde
+                            foreground='#ffffee', # amarillito
+                            anchor='c',
+                            font=('Arial', 14, 'bold'))
         
         # Referencia al controlador
         self.controlador = controlador
         
         # Contenedor principal
         self.container = ttk.Frame(self)
-        self.container.pack(side="top", fill="both", expand=True, padx=10, pady=10)
+        self.container.pack(side="top", fill="both", expand=True, padx=5, pady=5)
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
         

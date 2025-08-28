@@ -24,10 +24,7 @@ class FrameBase(ttk.Frame):
         super().__init__(parent)
         self.app = app
         self.controlador = controlador
-        
-        # Configuración del frame
-        self.configure(padding="10")
-        
+
         # Inicializar componentes
         self._inicializar_componentes()
     
@@ -42,7 +39,7 @@ class FrameBase(ttk.Frame):
             text=self._obtener_titulo(),
             style="Header.TLabel"
         )
-        self.lbl_titulo.pack(pady=(0, 20))
+        self.lbl_titulo.pack(fill='x')
     
     def _obtener_titulo(self) -> str:
         """
