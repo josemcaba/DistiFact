@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 from tkinter.messagebox import showerror, showwarning
 import os
-from typing import Dict, Any, Optional
 
 from vista.frameBase import FrameBase
 
@@ -13,26 +12,6 @@ class SeleccionarArchivo(FrameBase):
         self._configurar_marco()
         self._crear_botones()
     
-    def inicializar(self):
-        ''' 
-        Procesos que no se pueden ejecutar durante la construccion
-        del objeto por faltar información de la empresa
-        '''
-        # Rellena el campo con el nombre de la empresa y otros datos
-        self._empresa = self.controlador.obtener_empresa_actual()
-        self._valor_empresa.configure(text=self._empresa)
-
-        # Limpiar campo de ruta
-        self.entry_ruta.delete(0, tk.END)
-
-        # Botones sobre rectanguls que se mostrarán solo si es PDF imagen
-        if self._empresa.tipo=='PDFimagen':
-            self.btn_crear.grid(row=0, column=0, sticky='w')
-            self.btn_visualizar.grid(row=0, column=1, sticky='w', padx=5)
-        else:
-            self.btn_crear.grid_forget()
-            self.btn_visualizar.grid_forget()
-
     def _configurar_marco(self):
         self._contenedor = ttk.Frame(self)
         self._contenedor.columnconfigure(0, weight=0)  # Columna de etiquetas y botón
@@ -56,6 +35,26 @@ class SeleccionarArchivo(FrameBase):
         
         self.entry_ruta = ttk.Entry(self._contenedor, font=('Arial', 10))
         self.entry_ruta.grid(row=4, column=1, sticky="nsew", padx=5, pady=10)
+
+    def inicializar(self):
+        ''' 
+        Procesos que no se pueden ejecutar durante la construccion
+        del objeto por faltar información de la empresa
+        '''
+        # Rellena el campo con el nombre de la empresa y otros datos
+        self._empresa = self.controlador.obtener_empresa_actual()
+        self._valor_empresa.configure(text=self._empresa)
+
+        # Limpiar campo de ruta
+        self.entry_ruta.delete(0, tk.END)
+
+        # Botones sobre rectanguls que se mostrarán solo si es PDF imagen
+        if self._empresa.tipo=='PDFimagen':
+            self.btn_crear.grid(row=0, column=0, sticky='w')
+            self.btn_visualizar.grid(row=0, column=1, sticky='w', padx=5)
+        else:
+            self.btn_crear.grid_forget()
+            self.btn_visualizar.grid_forget()
 
 
     def _crear_botones(self):

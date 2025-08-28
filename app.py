@@ -10,8 +10,8 @@ from typing import Optional
 # Importamos las clases de los frames de la aplicación
 from vista.frameSeleccionarEmpresa import SeleccionarEmpresa
 from vista.frameSeleccionarArchivo import SeleccionarArchivo
-# from vista.frame_proceso import FrameProcesamiento
-# from vista.frame_resultados import FrameResultados
+from vista.frameProcesarArchivo import ProcesarArchivo
+from vista.frameResultados import Resultados
 
 class App(tk.Tk):
     """
@@ -57,10 +57,10 @@ class App(tk.Tk):
         # Lista de clases de frames a inicializar
         frameClasses = [
             SeleccionarEmpresa,
-            SeleccionarArchivo
-            # FrameProcesamiento,
-            # FrameResultados
-            ]
+            SeleccionarArchivo,
+            ProcesarArchivo,
+            Resultados
+        ]
         
         # Crear instancias de cada frame
         for frameClass in frameClasses:
