@@ -44,7 +44,7 @@ class App(tk.Tk):
         self.style.configure('TButton', 
                             background='#e1e1e1',
                             font=('Arial', 10, 'bold'),
-                            width=14, 
+                            width=17, 
                             padding=(0, 7, 0, 7))
         self.style.configure('TLabel',
                             background='#f0f0f0', 

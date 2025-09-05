@@ -82,7 +82,7 @@ class FrameSeleccionArchivo(FrameBase):
         # Botón para crear rectángulos (solo visible para PDF imagen)
         self.btn_crear = ttk.Button(
             self.frame_botones,
-            text="Crear Rectángulos",
+            text="Crear rectángulos",
             command=self._on_crear_rectangulos
         )
         # No se empaqueta aquí, se mostrará solo si es PDF imagen
@@ -90,7 +90,7 @@ class FrameSeleccionArchivo(FrameBase):
         # Botón para visualizar rectángulos (solo visible para PDF imagen)
         self.btn_visualizar = ttk.Button(
             self.frame_botones,
-            text="Visualizar Rectángulos",
+            text="Ver rectángulos",
             command=self._on_visualizar_rectangulos
         )
         # No se empaqueta aquí, se mostrará solo si es PDF imagen
