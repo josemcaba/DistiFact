@@ -19,12 +19,15 @@ identificador = "Factura"
 def extraerDatosFactura(pagina, empresa):
     num_pag = pagina[0]
     pagina = pagina[1]
+
+    print(pagina)
     
     factura = {}
 
     factura[KEY.CONCEPTO] = 700
 
-    regex = r"Factura\n(\d+)"
+    # regex = r"Factura\n(\d+)"
+    regex = r"(\d+)\nF. Emisi"
     factura[KEY.NUM_FACT] = fb.re_search(regex, pagina)
 
     regex = r"Fecha:\s*(.*?[\d]{4})|Emisión:\s*(.*?[\d]{4})"
@@ -35,19 +38,21 @@ def extraerDatosFactura(pagina, empresa):
     factura[KEY.FECHA_FACT] = fecha
     factura[KEY.FECHA_OPER] = factura[KEY.FECHA_FACT]
     
-    factura[KEY.NIF] = nif_cliente(pagina, empresa)
+    # factura[KEY.NIF] = nif_cliente(pagina, empresa)
+    regex = r"Y7080956Y\s+([A-Z0-9\d]+)"
+    factura[KEY.NIF] = fb.re_search(regex, pagina)
 
     regex = r"Cliente.(.*)|Eslava\s(.*)"
     factura[KEY.EMPRESA] = fb.re_search(regex, pagina)
 
-    regex = r"IVA\s*(\d+).*?([\d.,]+).*?([\d.,]+)"
+    regex = r"IVA\s*(\d+).*?([-\d.,]+).*?([-\d.,]+)"
     grupos = fb.re_search_multiple(regex, pagina)
     grupos_ok = grupos and (len(grupos) == 3)
     factura[KEY.BASE_IVA] = grupos[1] if grupos_ok else None
     factura[KEY.TIPO_IVA] = grupos[0] if grupos_ok else None
     factura[KEY.CUOTA_IVA] = grupos[2] if grupos_ok else None
 
-    regex = r"Total:\s+([\d.,]+)"
+    regex = r"Total:\s+([-\d.,]+)"
     factura[KEY.TOTAL_FACT] = fb.re_search(regex, pagina)
 
     factura[KEY.BASE_RE] = factura[KEY.BASE_IVA]

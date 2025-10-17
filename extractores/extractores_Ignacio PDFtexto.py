@@ -19,7 +19,6 @@ identificador = "33.360.360-X"
 def extraerDatosFactura(pagina, empresa):
     num_pag = pagina[0]
     pagina = pagina[1]
-    print(pagina)
     
     factura = {}
 
@@ -39,7 +38,7 @@ def extraerDatosFactura(pagina, empresa):
     factura[KEY.NIF] = fb.re_search(regex, pagina)
     factura[KEY.NIF] = re.sub(r"['. -]", "", factura[KEY.NIF])
     
-    regex = r"TOTAL\n.+?\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s"
+    regex = r"TOTAL\n.*?%\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s"
     grupos = fb.re_search_multiple(regex, pagina)
     grupos_ok = grupos and (len(grupos) == 6)
     factura[KEY.BASE_IVA] = grupos[0] if grupos_ok else None

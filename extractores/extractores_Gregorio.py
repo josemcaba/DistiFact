@@ -32,7 +32,7 @@ def extraerDatosFactura(pagina, empresa):
     factura[KEY.CONCEPTO] = 700
     
     # regex = r"(?:Descuento\s*[-\d,]+\s*Total\s*|Subtotal\s*)([\d,]+)"
-    regex = r"otal\s*([\d,.]+)\s+IVA"
+    regex = r"otal\s*([-\d,.]+)\s+IVA"
     factura[KEY.BASE_IVA] = fb.re_search(regex, pagina)
     
     regex = r"IVA\s+\((\d+)%\)"
