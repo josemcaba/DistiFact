@@ -22,7 +22,7 @@ def extraerDatosFactura(pagina, empresa):
 
     factura = {}
 
-    regex = r"FACTURA\s+?(2025[\d]{3})\s+"
+    regex = r"FACTURA\s+?(202[\d]{4})\s+"
     factura[KEY.NUM_FACT] = fb.re_search(regex, pagina)
 
     regex = r"FACTURA\s+[\d]*\s+(.+)"
@@ -31,20 +31,20 @@ def extraerDatosFactura(pagina, empresa):
     
     factura[KEY.CONCEPTO] = 700
 
-    regex = r"TOTAL\n.+?\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s"
+    regex = r"TOTAL\n*?\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s"
     grupos = fb.re_search_multiple(regex, pagina)
-    grupos_ok = grupos and (len(grupos) == 6)
-    factura[KEY.BASE_IVA] = grupos[0] if grupos_ok else None
-    factura[KEY.TIPO_IVA] = grupos[1] if grupos_ok else None
-    factura[KEY.CUOTA_IVA] = grupos[2] if grupos_ok else None
+    grupos_ok = grupos and (len(grupos) == 7)
+    offset = 0 if grupos[6] =='€' else 1 
+    factura[KEY.BASE_IVA] = grupos[0 + offset] if grupos_ok else None
+    factura[KEY.TIPO_IVA] = grupos[1 + offset] if grupos_ok else None
+    factura[KEY.CUOTA_IVA] = grupos[2 + offset] if grupos_ok else None
     factura[KEY.BASE_RE] = factura[KEY.BASE_IVA]
-    factura[KEY.TIPO_RE] = grupos[3] if grupos_ok else None
-    factura[KEY.CUOTA_RE] = grupos[4] if grupos_ok else None
-    factura[KEY.TOTAL_FACT] = grupos[5] if grupos_ok else None
-
+    factura[KEY.TIPO_RE] = 0.0
+    factura[KEY.CUOTA_RE] = 0.0
     factura[KEY.BASE_IRPF] = factura[KEY.BASE_IVA]
-    factura[KEY.TIPO_IRPF] = 0.0
-    factura[KEY.CUOTA_IRPF] = 0.0
+    factura[KEY.TIPO_IRPF] = grupos[3 + offset] if grupos_ok else None
+    factura[KEY.CUOTA_IRPF] = grupos[4 + offset] if grupos_ok else None
+    factura[KEY.TOTAL_FACT] = grupos[5 + offset] if grupos_ok else None
 
     factura[KEY.NIF] = nif_cliente(pagina, empresa)
 

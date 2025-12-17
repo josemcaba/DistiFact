@@ -74,7 +74,7 @@ class VerificadorFactura:
         cuota_irpf = self.factura[KEY.CUOTA_IRPF]
         cuota_re = self.factura[KEY.CUOTA_RE]
         total = self.factura[KEY.TOTAL_FACT]
-        total_calculado = round(base + cuota_iva + cuota_irpf + cuota_re, 2)
+        total_calculado = round(base + cuota_iva - cuota_irpf + cuota_re, 2)
         if abs(total_calculado - total) >= 0.015:
             return (f"{KEY.TOTAL_FACT}={total} != Calculado={total_calculado}")
         return False # No hay errores

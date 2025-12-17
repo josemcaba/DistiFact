@@ -96,11 +96,11 @@ class ClasificadorFacturas:
         for concepto in conceptos:
             error = verificador.importe(concepto)
             if error:
-                if concepto == KEY.TOTAL_FACT:
-                    factura.agregar_observacion(error)
-                else:
-                    factura.set_error_numerico()
-                    factura.agregar_error(error)
+                # if concepto == KEY.TOTAL_FACT:
+                #     factura.agregar_observacion(error)
+                # else:
+                factura.set_error_numerico()
+                factura.agregar_error(error)
         
         if not factura.error_numerico:
             # Verificar cálculos de cuotas
