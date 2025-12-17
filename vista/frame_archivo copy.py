@@ -2,7 +2,7 @@
 Módulo que contiene la clase FrameSeleccionArchivo para seleccionar un archivo.
 """
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk
 import os
 from typing import Dict, Any, Optional
 
@@ -94,14 +94,6 @@ class FrameSeleccionArchivo(FrameBase):
             command=self._on_visualizar_rectangulos
         )
         # No se empaqueta aquí, se mostrará solo si es PDF imagen
-        
-        # Botón para unificar PDFs
-        self.btn_unificar = ttk.Button(
-            self.frame_botones,
-            text="Unificar PDFs",
-            command=self._on_unificar_pdfs
-        )
-        self.btn_unificar.pack(side="left", padx=5)
         
         # Botón de procesar
         self.btn_procesar = ttk.Button(
@@ -211,131 +203,7 @@ class FrameSeleccionArchivo(FrameBase):
     
         # Llamar al controlador para crear los rectángulos
         self.controlador.crear_rectangulos(ruta, empresa.to_dict())
-    
-    def _on_unificar_pdfs(self):
-        """Maneja el evento de unificar PDFs."""
-        try:
-            # Pedir al usuario que seleccione un directorio
-            directorio = self.app.seleccionar_directorio(
-                titulo="Seleccionar directorio con PDFs a unificar"
-            )
-            
-            if not directorio:
-                return  # El usuario canceló
-            
-            # Verificar que el directorio existe
-            if not os.path.isdir(directorio):
-                self.mostrar_mensaje("error", f"El directorio '{directorio}' no existe.")
-                return
-            
-            # Llamar al controlador para unificar los PDFs
-            resultado = self.controlador.unificar_pdfs(directorio)
-            
-            # Mostrar mensaje de resultado
-            if resultado["exito"]:
-                # Crear ventana de mensaje personalizada
-                self._mostrar_resultado_unificacion(
-                    success=True,
-                    mensaje=resultado["mensaje"],
-                    ruta_salida=resultado.get("ruta_salida")
-                )
-            else:
-                self._mostrar_resultado_unificacion(
-                    success=False,
-                    mensaje=resultado["mensaje"]
-                )
-                
-        except Exception as e:
-            self.mostrar_mensaje("error", f"Error inesperado: {str(e)}")
-    
-    def _mostrar_resultado_unificacion(self, success: bool, mensaje: str, ruta_salida: str = None):
-        """Muestra un mensaje con el resultado de la unificación."""
-        # Crear ventana de diálogo personalizada
-        dialogo = tk.Toplevel(self)
-        dialogo.title("Resultado de Unificación")
-        dialogo.geometry("400x200")
-        dialogo.resizable(False, False)
-        dialogo.transient(self)  # Hacerla modal relativa al frame principal
-        dialogo.grab_set()  # Hacerla modal
-        
-        # Centrar la ventana
-        dialogo.update_idletasks()
-        ancho = dialogo.winfo_width()
-        alto = dialogo.winfo_height()
-        x = (dialogo.winfo_screenwidth() // 2) - (ancho // 2)
-        y = (dialogo.winfo_screenheight() // 2) - (alto // 2)
-        dialogo.geometry(f'{ancho}x{alto}+{x}+{y}')
-        
-        # Configurar estilo según éxito o error
-        color_fondo = "#d4edda" if success else "#f8d7da"
-        color_borde = "#c3e6cb" if success else "#f5c6cb"
-        color_texto = "#155724" if success else "#721c24"
-        icono = "✓" if success else "✗"
-        
-        # Frame principal
-        frame_principal = ttk.Frame(dialogo, padding=20)
-        frame_principal.pack(fill="both", expand=True)
-        
-        # Icono y mensaje
-        frame_mensaje = ttk.Frame(frame_principal)
-        frame_mensaje.pack(fill="x", pady=(0, 20))
-        
-        # Icono
-        lbl_icono = tk.Label(
-            frame_mensaje,
-            text=icono,
-            font=("Arial", 24, "bold"),
-            fg=color_texto
-        )
-        lbl_icono.pack(side="left", padx=(0, 15))
-        
-        # Mensaje
-        frame_texto = ttk.Frame(frame_mensaje)
-        frame_texto.pack(side="left", fill="both", expand=True)
-        
-        lbl_titulo = tk.Label(
-            frame_texto,
-            text="Operación completada" if success else "Error en la operación",
-            font=("Arial", 12, "bold"),
-            fg=color_texto,
-            justify="left"
-        )
-        lbl_titulo.pack(anchor="w")
-        
-        lbl_mensaje = tk.Label(
-            frame_texto,
-            text=mensaje,
-            wraplength=300,
-            justify="left",
-            fg=color_texto
-        )
-        lbl_mensaje.pack(anchor="w", pady=(5, 0))
-        
-        # Si hay ruta de salida, mostrarla
-        if ruta_salida and success:
-            lbl_ruta = tk.Label(
-                frame_texto,
-                text=f"Archivo generado: {ruta_salida}",
-                wraplength=300,
-                justify="left",
-                font=("Arial", 9),
-                fg="#0c5460"
-            )
-            lbl_ruta.pack(anchor="w", pady=(10, 0))
-        
-        # Botón continuar
-        btn_continuar = ttk.Button(
-            frame_principal,
-            text="Continuar",
-            command=dialogo.destroy
-        )
-        btn_continuar.pack(pady=(10, 0))
-        
-        # Configurar cierre de ventana
-        dialogo.protocol("WM_DELETE_WINDOW", dialogo.destroy)
-        
-        # Esperar a que se cierre la ventana
-        self.wait_window(dialogo)
+
         
     def _on_procesar(self):
         """Maneja el evento de procesar archivo."""

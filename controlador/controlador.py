@@ -78,6 +78,34 @@ class Controlador:
             Instancia de Empresa o None si no hay empresa seleccionada
         """
         return self._empresa_actual
+
+    def unificar_pdfs(self, directorio: str) -> dict:
+        """
+        Unifica todos los PDFs en un directorio.
+        
+        Args:
+            directorio: Ruta del directorio con PDFs
+            
+        Returns:
+            dict: Resultado de la operación
+        """
+        from modelo.unir_pdfs import unificar_pdfs_directorio
+        
+        try:
+            # Llamar a la función del modelo
+            exito, mensaje, ruta_salida = unificar_pdfs_directorio(directorio)
+            
+            return {
+                "exito": exito,
+                "mensaje": mensaje,
+                "ruta_salida": ruta_salida
+            }
+        except Exception as e:
+            return {
+                "exito": False,
+                "mensaje": f"Error inesperado: {str(e)}",
+                "ruta_salida": None
+            }
     
     def establecer_ruta_archivo(self, ruta: str) -> None:
         """
