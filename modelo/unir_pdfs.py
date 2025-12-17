@@ -138,8 +138,7 @@ class UnificadorPDF:
                 
                 merger.close()
                 
-                mensaje = (f"Se unificaron {archivos_procesados} archivos PDF "
-                          f"en '{ruta_salida_final}'.")
+                mensaje = (f"Se unificaron {archivos_procesados} archivos PDF.")
                 
                 logger.info(mensaje)
                 return True, mensaje, ruta_salida_final

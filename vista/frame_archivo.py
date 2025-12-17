@@ -27,30 +27,47 @@ class FrameSeleccionArchivo(FrameBase):
         self.frame_contenido = ttk.Frame(self)
         self.frame_contenido.pack(fill="both", expand=True)
         
-        # Información de la empresa seleccionada
-        self.frame_empresa = ttk.Frame(self.frame_contenido)
-        self.frame_empresa.pack(fill="x", padx=5, pady=10)
+        # Contenedor para empresa seleccionada y botón de unificar
+        self.frame_empresa_superior = ttk.Frame(self.frame_contenido)
+        self.frame_empresa_superior.pack(fill="x", padx=5, pady=(10, 5))
+        
+        # Frame para información de la empresa (izquierda)
+        self.frame_empresa_info = ttk.Frame(self.frame_empresa_superior)
+        self.frame_empresa_info.pack(side="left", fill="x", expand=True)
         
         self.lbl_empresa_titulo = ttk.Label(
-            self.frame_empresa,
+            self.frame_empresa_info,
             text="Empresa seleccionada:"
         )
         self.lbl_empresa_titulo.pack(anchor="w")
 
         self.lbl_empresa_info = ttk.Label(
-            self.frame_empresa,
+            self.frame_empresa_info,
             text="",
             relief="solid", 
             padding=5,
         )
-        self.lbl_empresa_info.pack(anchor="w", pady=(5, 10), padx=(25, 5))
-
-        separador = ttk.Separator(self.frame_empresa, orient="horizontal")
-        separador.pack(fill='x', pady=5)
+        self.lbl_empresa_info.pack(anchor="w", pady=(5, 0), padx=(0, 5))
+        
+        # Frame para botón de unificar PDFs (derecha)
+        self.frame_boton_unificar = ttk.Frame(self.frame_empresa_superior)
+        self.frame_boton_unificar.pack(side="right", padx=(0, 5), pady=(25, 0))
+        
+        # Botón para unificar PDFs (no se empaqueta aquí, se mostrará según tipo de empresa)
+        self.btn_unificar = ttk.Button(
+            self.frame_boton_unificar,
+            text="Unificar PDFs",
+            command=self._on_unificar_pdfs
+        )
+        # No se empaqueta aquí, se mostrará solo si la empresa NO es "excel"
+        
+        # Separador horizontal
+        separador = ttk.Separator(self.frame_contenido, orient="horizontal")
+        separador.pack(fill='x', padx=5, pady=5)
 
         # Selección de archivo
         self.frame_archivo = ttk.Frame(self.frame_contenido)
-        self.frame_archivo.pack(fill="x", pady=5)
+        self.frame_archivo.pack(fill="x", padx=5, pady=5)
         
         self.lbl_archivo = ttk.Label(
             self.frame_archivo,
@@ -75,13 +92,13 @@ class FrameSeleccionArchivo(FrameBase):
         )
         self.entry_ruta.pack(side="right", fill="x", expand=True, padx=(10, 0))
         
-        # Frame para botones
-        self.frame_botones = ttk.Frame(self.frame_contenido)
-        self.frame_botones.pack(fill="x", pady=20)
+        # Frame para botones de acción
+        self.frame_botones_accion = ttk.Frame(self.frame_contenido)
+        self.frame_botones_accion.pack(fill="x", padx=5, pady=10)
 
         # Botón para crear rectángulos (solo visible para PDF imagen)
         self.btn_crear = ttk.Button(
-            self.frame_botones,
+            self.frame_botones_accion,
             text="Crear rectángulos",
             command=self._on_crear_rectangulos
         )
@@ -89,23 +106,19 @@ class FrameSeleccionArchivo(FrameBase):
         
         # Botón para visualizar rectángulos (solo visible para PDF imagen)
         self.btn_visualizar = ttk.Button(
-            self.frame_botones,
+            self.frame_botones_accion,
             text="Ver rectángulos",
             command=self._on_visualizar_rectangulos
         )
         # No se empaqueta aquí, se mostrará solo si es PDF imagen
         
-        # Botón para unificar PDFs
-        self.btn_unificar = ttk.Button(
-            self.frame_botones,
-            text="Unificar PDFs",
-            command=self._on_unificar_pdfs
-        )
-        self.btn_unificar.pack(side="left", padx=5)
+        # Frame para botones de navegación (a la derecha)
+        self.frame_botones_nav = ttk.Frame(self.frame_botones_accion)
+        self.frame_botones_nav.pack(side="right")
         
         # Botón de procesar
         self.btn_procesar = ttk.Button(
-            self.frame_botones,
+            self.frame_botones_nav,
             text="Procesar",
             command=self._on_procesar
         )
@@ -113,7 +126,7 @@ class FrameSeleccionArchivo(FrameBase):
         
         # Botón de volver
         self.btn_volver = ttk.Button(
-            self.frame_botones,
+            self.frame_botones_nav,
             text="Volver",
             command=lambda: self.app.mostrar_frame("seleccion_empresa")
         )
@@ -134,13 +147,20 @@ class FrameSeleccionArchivo(FrameBase):
             text=f"{empresa.nombre} ({empresa.nif}) - Tipo: {empresa.tipo}"
         )
         
-        # Mostrar u ocultar botón de visualizar rectángulos según tipo de empresa
+        # Mostrar u ocultar botones según tipo de empresa
         if empresa.tipo == "PDFimagen":
             self.btn_visualizar.pack(side="left", padx=5)
             self.btn_crear.pack(side="left", padx=5)
         else:
             self.btn_visualizar.pack_forget()
             self.btn_crear.pack_forget()
+        
+        # Mostrar u ocultar botón de unificar PDFs
+        # Solo se muestra si la empresa NO es de tipo "excel"
+        if empresa.tipo != "excel":
+            self.btn_unificar.pack(side="right")
+        else:
+            self.btn_unificar.pack_forget()
         
         # Limpiar campo de ruta
         self.entry_ruta.delete(0, tk.END)
@@ -231,111 +251,17 @@ class FrameSeleccionArchivo(FrameBase):
             # Llamar al controlador para unificar los PDFs
             resultado = self.controlador.unificar_pdfs(directorio)
             
-            # Mostrar mensaje de resultado
+            # Mostrar mensaje de resultado usando el mismo estilo de la aplicación
             if resultado["exito"]:
-                # Crear ventana de mensaje personalizada
-                self._mostrar_resultado_unificacion(
-                    success=True,
-                    mensaje=resultado["mensaje"],
-                    ruta_salida=resultado.get("ruta_salida")
-                )
+                mensaje = resultado["mensaje"]
+                if resultado.get("ruta_salida"):
+                    mensaje += f"\n\nArchivo generado: {resultado.get('ruta_salida')}"
+                self.mostrar_mensaje("info", mensaje, titulo="Operación completada")
             else:
-                self._mostrar_resultado_unificacion(
-                    success=False,
-                    mensaje=resultado["mensaje"]
-                )
+                self.mostrar_mensaje("error", resultado["mensaje"], titulo="Error en la operación")
                 
         except Exception as e:
-            self.mostrar_mensaje("error", f"Error inesperado: {str(e)}")
-    
-    def _mostrar_resultado_unificacion(self, success: bool, mensaje: str, ruta_salida: str = None):
-        """Muestra un mensaje con el resultado de la unificación."""
-        # Crear ventana de diálogo personalizada
-        dialogo = tk.Toplevel(self)
-        dialogo.title("Resultado de Unificación")
-        dialogo.geometry("400x200")
-        dialogo.resizable(False, False)
-        dialogo.transient(self)  # Hacerla modal relativa al frame principal
-        dialogo.grab_set()  # Hacerla modal
-        
-        # Centrar la ventana
-        dialogo.update_idletasks()
-        ancho = dialogo.winfo_width()
-        alto = dialogo.winfo_height()
-        x = (dialogo.winfo_screenwidth() // 2) - (ancho // 2)
-        y = (dialogo.winfo_screenheight() // 2) - (alto // 2)
-        dialogo.geometry(f'{ancho}x{alto}+{x}+{y}')
-        
-        # Configurar estilo según éxito o error
-        color_fondo = "#d4edda" if success else "#f8d7da"
-        color_borde = "#c3e6cb" if success else "#f5c6cb"
-        color_texto = "#155724" if success else "#721c24"
-        icono = "✓" if success else "✗"
-        
-        # Frame principal
-        frame_principal = ttk.Frame(dialogo, padding=20)
-        frame_principal.pack(fill="both", expand=True)
-        
-        # Icono y mensaje
-        frame_mensaje = ttk.Frame(frame_principal)
-        frame_mensaje.pack(fill="x", pady=(0, 20))
-        
-        # Icono
-        lbl_icono = tk.Label(
-            frame_mensaje,
-            text=icono,
-            font=("Arial", 24, "bold"),
-            fg=color_texto
-        )
-        lbl_icono.pack(side="left", padx=(0, 15))
-        
-        # Mensaje
-        frame_texto = ttk.Frame(frame_mensaje)
-        frame_texto.pack(side="left", fill="both", expand=True)
-        
-        lbl_titulo = tk.Label(
-            frame_texto,
-            text="Operación completada" if success else "Error en la operación",
-            font=("Arial", 12, "bold"),
-            fg=color_texto,
-            justify="left"
-        )
-        lbl_titulo.pack(anchor="w")
-        
-        lbl_mensaje = tk.Label(
-            frame_texto,
-            text=mensaje,
-            wraplength=300,
-            justify="left",
-            fg=color_texto
-        )
-        lbl_mensaje.pack(anchor="w", pady=(5, 0))
-        
-        # Si hay ruta de salida, mostrarla
-        if ruta_salida and success:
-            lbl_ruta = tk.Label(
-                frame_texto,
-                text=f"Archivo generado: {ruta_salida}",
-                wraplength=300,
-                justify="left",
-                font=("Arial", 9),
-                fg="#0c5460"
-            )
-            lbl_ruta.pack(anchor="w", pady=(10, 0))
-        
-        # Botón continuar
-        btn_continuar = ttk.Button(
-            frame_principal,
-            text="Continuar",
-            command=dialogo.destroy
-        )
-        btn_continuar.pack(pady=(10, 0))
-        
-        # Configurar cierre de ventana
-        dialogo.protocol("WM_DELETE_WINDOW", dialogo.destroy)
-        
-        # Esperar a que se cierre la ventana
-        self.wait_window(dialogo)
+            self.mostrar_mensaje("error", f"Error inesperado: {str(e)}", titulo="Error")
         
     def _on_procesar(self):
         """Maneja el evento de procesar archivo."""

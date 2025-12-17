@@ -28,7 +28,7 @@ class App(tk.Tk):
         """
         super().__init__()
         
-        self.title("DistiScan V1.0 - Distirel ©")
+        self.title("DistiScan V2.0 - Distirel ©")
         self.geometry("600x600")
         # self.resizable(False, False)
         # self.minsize(600, 600)
