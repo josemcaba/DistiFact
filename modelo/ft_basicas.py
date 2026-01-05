@@ -26,6 +26,10 @@ def validar_fecha(fecha_str, is_eeuu=False):
     Si es válida, retorna la fecha en formato dd/mm/aaaa.
     Si no, retorna False.
     """
+    # Si es formato fecha se devuleve directamente en el formato dd/mm/aaaa
+    if type(fecha_str) == datetime:
+        return fecha_str.strftime("%d/%m/%Y")
+
     # Se valida la estructura general con una expresión regular
     if not re.match(r"^\d{1,2}/\d{1,2}/(\d{2}|\d{4})$", fecha_str):
         return False
