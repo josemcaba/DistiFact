@@ -1,5 +1,6 @@
 # modelo/manejo_imagenes.py
 
+import os
 import json
 import cv2
 import numpy as np
@@ -16,20 +17,67 @@ class ExtractorImagenes:
             self._mensaje_callback(tipo, mensaje)
         else:
             print(f"[{tipo}] {mensaje}")
-
-    def cargar_rectangulos_json(self, nif, ruta_json="rectangulos.json"):
+    
+    def cargar_rectangulos_json(self, nif, ruta_json=None):
+        """
+        Carga los rectángulos del archivo JSON para un NIF específico.
+        
+        Args:
+            nif: NIF de la empresa
+            ruta_json: Ruta personalizada al archivo JSON (opcional)
+                     Si no se proporciona, busca en datos/rectangulos.json
+                     
+        Returns:
+            dict: Rectángulos para la empresa especificada o None en caso de error
+        """
         try:
+            # Si no se proporciona ruta, usar la ruta por defecto en el directorio datos
+            if ruta_json is None:
+                # Obtener el directorio del archivo actual (modelo/)
+                current_dir = os.path.dirname(os.path.abspath(__file__))
+                # Subir un nivel al directorio del proyecto (raíz)
+                project_dir = os.path.dirname(current_dir)
+                # Construir la ruta al archivo en datos
+                ruta_json = os.path.join(project_dir, "datos", "rectangulos.json")
+            
+            # Verificar si el archivo existe
+            if not os.path.exists(ruta_json):
+                self._mensaje("error", f'Archivo "{ruta_json}" no encontrado.')
+                # Intentar buscar en el directorio de trabajo actual como fallback
+                ruta_alternativa = "rectangulos.json"
+                if os.path.exists(ruta_alternativa):
+                    self._mensaje("info", f'Usando archivo alternativo: {ruta_alternativa}')
+                    ruta_json = ruta_alternativa
+                else:
+                    return None
+            
+            # Leer y cargar el JSON
             with open(ruta_json, "r", encoding='utf-8') as archivo:
                 coords = json.load(archivo)
+            
+            # Verificar que existe la clave para el NIF
+            if nif not in coords:
+                self._mensaje("error", f'El archivo "{ruta_json}" no contiene datos para la empresa con NIF "{nif}"')
+                # Mostrar las claves disponibles para facilitar la depuración
+                claves_disponibles = list(coords.keys())
+                if claves_disponibles:
+                    self._mensaje("info", f"NIFs disponibles en el archivo: {', '.join(claves_disponibles)}")
+                return None
+            
             rectangles = coords[nif]
+            self._mensaje("info", f"Rectángulos cargados correctamente para NIF: {nif}")
             return rectangles
+            
         except FileNotFoundError:
             self._mensaje("error", f'Archivo "{ruta_json}" no encontrado.')
-        except (json.JSONDecodeError):
-            self._mensaje("error", f'El archivo "{ruta_json}" tiene un formato inválido.')
-        except (KeyError):
-            self._mensaje("error", f'El archivo "{ruta_json}" no contiene la empresa "{nif}"')
-        return
+        except json.JSONDecodeError as e:
+            self._mensaje("error", f'El archivo "{ruta_json}" tiene un formato JSON inválido: {str(e)}')
+        except KeyError as e:
+            self._mensaje("error", f'Error de clave en el JSON: {str(e)}')
+        except Exception as e:
+            self._mensaje("error", f'Error inesperado al cargar rectángulos: {str(e)}')
+        
+        return None
 
     def detectar_orientacion(self, imagen: np.ndarray) -> int:
         """Detecta la orientación de la imagen usando Tesseract"""

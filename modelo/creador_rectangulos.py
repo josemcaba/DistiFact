@@ -17,8 +17,14 @@ class CreadorRectangulos:
         self.rectangle_counter = 1
         self.img = None
         
-        # Configuración de Tesseract
-        pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+        # Configuración de Tesseract - mantener la existente
+        # Se mantiene por compatibilidad, aunque lo ideal sería tenerlo configurable
+        try:
+            # Windows (puede fallar en otros sistemas)
+            pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+        except:
+            # En otros sistemas, tesseract debería estar en el PATH
+            pass
 
     def _mensaje(self, tipo: str, mensaje: str):
         if self.controlador and hasattr(self.controlador, '_mensaje_callback'):
@@ -26,15 +32,46 @@ class CreadorRectangulos:
         else:
             print(f"[{tipo}] {mensaje}")
 
-    def _cargar_json_rectangulos(self, ruta_json: str) -> Dict:
+    def _obtener_ruta_rectangulos_json(self) -> str:
+        """
+        Obtiene la ruta completa al archivo rectangulos.json en el directorio datos.
+        
+        Returns:
+            str: Ruta completa al archivo rectangulos.json
+        """
+        # Obtener el directorio del archivo actual (modelo/)
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        # Subir un nivel al directorio del proyecto (raíz)
+        project_dir = os.path.dirname(current_dir)
+        # Construir la ruta al archivo en datos
+        return os.path.join(project_dir, "datos", "rectangulos.json")
+
+    def _cargar_json_rectangulos(self) -> Dict:
         """Carga el archivo JSON de rectángulos existente"""
+        ruta_json = self._obtener_ruta_rectangulos_json()
+        
         try:
+            # Asegurarse de que el directorio existe
+            directorio_json = os.path.dirname(ruta_json)
+            if not os.path.exists(directorio_json):
+                os.makedirs(directorio_json, exist_ok=True)
+                self._mensaje("info", f"Directorio creado: {directorio_json}")
+            
+            # Cargar el archivo JSON si existe
             if os.path.exists(ruta_json):
                 with open(ruta_json, "r", encoding='utf-8') as file_json:
-                    return json.load(file_json)
+                    contenido = json.load(file_json)
+                    self._mensaje("info", f"JSON cargado desde: {ruta_json}")
+                    return contenido
+            else:
+                self._mensaje("info", f"Archivo JSON no encontrado. Se creará uno nuevo en: {ruta_json}")
+                return {}
+                
+        except json.JSONDecodeError as e:
+            self._mensaje("error", f"Error decodificando JSON ({ruta_json}): {str(e)}")
             return {}
         except Exception as e:
-            self._mensaje("error", f"Error cargando JSON: {str(e)}")
+            self._mensaje("error", f"Error cargando JSON ({ruta_json}): {str(e)}")
             return {}
 
     def crear(self, ruta_pdf: str, empresa_dict: Dict[str, Any]) -> bool:
@@ -56,8 +93,8 @@ class CreadorRectangulos:
             self.rectangle_counter = 1
             
             # 4. Cargar configuración existente
-            ruta_json = "rectangulos.json"
-            dict_json = self._cargar_json_rectangulos(ruta_json)
+            ruta_json = self._obtener_ruta_rectangulos_json()
+            dict_json = self._cargar_json_rectangulos()
             
             # 5. Extraer imagen del PDF
             with fitz.open(ruta_pdf) as pdf_doc:
@@ -89,11 +126,17 @@ class CreadorRectangulos:
             # Sobrescribir configuración para esta empresa
             dict_json[nif_empresa] = nueva_configuracion
             
+            # Asegurarse de que el directorio existe antes de guardar
+            directorio_json = os.path.dirname(ruta_json)
+            if not os.path.exists(directorio_json):
+                os.makedirs(directorio_json, exist_ok=True)
+            
             with open(ruta_json, "w", encoding='utf-8') as f:
                 json.dump(dict_json, f, indent=4, ensure_ascii=False)
                 
             self._mensaje("success", f"Configuración actualizada para {empresa_dict.get('nombre', nif_empresa)}")
             self._mensaje("info", f"Rectángulos guardados: {len(self.rectangles)}")
+            self._mensaje("info", f"Archivo guardado en: {ruta_json}")
             return True
             
         except Exception as e:
