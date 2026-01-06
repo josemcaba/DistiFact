@@ -38,9 +38,17 @@ class FrameResultados(FrameBase):
         self.tab_errores = ttk.Frame(self.notebook)
         self.notebook.add(self.tab_errores, text="Facturas con Errores")
         
-        # Configurar tablas
-        self._configurar_tabla_correctas()
-        self._configurar_tabla_errores()
+        # Configurar tablas usando método común
+        columnas_base = self._obtener_columnas_base()
+        columnas_correctas = columnas_base + [
+            {"nombre": "Observaciones", "ancho": 150, "alineacion": "w", "expandible": True}
+        ]
+        columnas_errores = columnas_base + [
+            {"nombre": "Errores", "ancho": 150, "alineacion": "w", "expandible": True}
+        ]
+        
+        self.tabla_correctas = self._crear_tabla_en_frame(self.tab_correctas, columnas_correctas)
+        self.tabla_errores = self._crear_tabla_en_frame(self.tab_errores, columnas_errores)
         
         # Frame para botones
         self.frame_botones = ttk.Frame(self.frame_contenido)
@@ -62,105 +70,45 @@ class FrameResultados(FrameBase):
         )
         self.btn_nueva.pack(side="right", padx=5)
     
-    def _configurar_tabla_correctas(self):
-        """Configura la tabla de facturas correctas."""
-        # Frame para la tabla
-        frame_tabla = ttk.Frame(self.tab_correctas)
-        frame_tabla.pack(fill="both", expand=True, padx=5, pady=5)
-        
-        # Scrollbar vertical
-        scrollbar_y = ttk.Scrollbar(frame_tabla)
-        scrollbar_y.pack(side="right", fill="y")
-        
-        # Scrollbar horizontal
-        scrollbar_x = ttk.Scrollbar(frame_tabla, orient="horizontal")
-        scrollbar_x.pack(side="bottom", fill="x")
-        
-        # Columnas de la tabla
-        columnas = {
-            "Núm. Factura":  [100, "center"],
-            "Fecha":         [75, "center"],
-            "NIF":           [75, "center"],
-            "Empresa":       [225, "w"],
-            "Base IVA":      [75, "e"],
-            "Tipo IVA":      [60, "e"],
-            "Cuota IVA":     [75, "e"],
-            "Total":         [75, "e"],
-            "Observaciones": [50, "w"]
-        }
-
-        # Crear Treeview
-        self.tabla_correctas = ttk.Treeview(
-            frame_tabla,
-            columns=list(columnas),
-            show="headings",
-            yscrollcommand=scrollbar_y.set,
-            xscrollcommand=scrollbar_x.set
-        )
-        
-        # Configurar scrollbars
-        scrollbar_y.config(command=self.tabla_correctas.yview)
-        scrollbar_x.config(command=self.tabla_correctas.xview)
-        
-        # Configurar encabezados y columnas
-        for col in list(columnas):
-            self.tabla_correctas.heading(col, text=col, anchor=columnas[col][1])
-            self.tabla_correctas.column(col, width=columnas[col][0], anchor=columnas[col][1], stretch=False)
-        col = list(columnas)[-1]
-        self.tabla_correctas.column(col, width=columnas[col][0], anchor=columnas[col][1], stretch=True)
-
-        # Empaquetar tabla
-        self.tabla_correctas.pack(side="left", fill="both", expand=True)
+    def _obtener_columnas_base(self):
+        """Devuelve las columnas comunes para ambas tablas."""
+        return [
+            {"nombre": "Núm. Factura", "ancho": 100, "alineacion": "w", "expandible": False},
+            {"nombre": "Fecha", "ancho": 100, "alineacion": "center", "expandible": False},
+            {"nombre": "NIF", "ancho": 100, "alineacion": "center", "expandible": False},
+            {"nombre": "Empresa", "ancho": 350, "alineacion": "w", "expandible": False},
+            {"nombre": "Base IVA", "ancho": 75, "alineacion": "e", "expandible": False},
+            {"nombre": "Tipo IVA", "ancho": 75, "alineacion": "e", "expandible": False},
+            {"nombre": "Cuota IVA", "ancho": 75, "alineacion": "e", "expandible": False},
+            {"nombre": "Total", "ancho": 75, "alineacion": "e", "expandible": False}
+        ]
     
-    def _configurar_tabla_errores(self):
-        """Configura la tabla de facturas con errores."""
+    def _crear_tabla_en_frame(self, frame_padre, columnas):
+        """
+        Crea y configura una tabla en el frame proporcionado.
+        
+        Args:
+            frame_padre: Frame donde se colocará la tabla
+            columnas: Lista de diccionarios con configuración de columnas
+            
+        Returns:
+            Instancia de Tabla configurada
+        """
         # Frame para la tabla
-        frame_tabla = ttk.Frame(self.tab_errores)
+        frame_tabla = ttk.Frame(frame_padre)
         frame_tabla.pack(fill="both", expand=True, padx=5, pady=5)
         
-        # Scrollbar vertical
-        scrollbar_y = ttk.Scrollbar(frame_tabla)
-        scrollbar_y.pack(side="right", fill="y")
+        # Importar la clase Tabla
+        from vista.Tabla import Tabla
         
-        # Scrollbar horizontal
-        scrollbar_x = ttk.Scrollbar(frame_tabla, orient="horizontal")
-        scrollbar_x.pack(side="bottom", fill="x")
+        # Crear tabla utilizando la clase Tabla
+        tabla = Tabla(frame_tabla)
+        tabla.pack(fill="both", expand=True)
         
-        # Columnas de la tabla
-        columnas = {
-            "Núm. Factura": [100, "center"],
-            "Fecha":        [75, "center"],
-            "NIF":          [75, "center"],
-            "Empresa":      [225, "w"],
-            "Base IVA":     [75, "e"],
-            "Tipo IVA":     [60, "e"],
-            "Cuota IVA":    [75, "e"],
-            "Total":        [75, "e"],
-            "Errores":      [50, "w"]
-        }
+        # Configurar columnas de la tabla
+        tabla.cabecera(columnas)
         
-        # Crear Treeview
-        self.tabla_errores = ttk.Treeview(
-            frame_tabla,
-            columns=list(columnas),
-            show="headings",
-            yscrollcommand=scrollbar_y.set,
-            xscrollcommand=scrollbar_x.set
-        )
-        
-        # Configurar scrollbars
-        scrollbar_y.config(command=self.tabla_errores.yview)
-        scrollbar_x.config(command=self.tabla_errores.xview)
-        
-        # Configurar encabezados y columnas
-        for col in list(columnas):
-            self.tabla_errores.heading(col, text=col, anchor=columnas[col][1])
-            self.tabla_errores.column(col, width=columnas[col][0], anchor=columnas[col][1], stretch=False)
-        col = list(columnas)[-1]
-        self.tabla_errores.column(col, width=columnas[col][0], anchor=columnas[col][1], stretch=True)
-        
-        # Empaquetar tabla
-        self.tabla_errores.pack(side="left", fill="both", expand=True)
+        return tabla
     
     def inicializar(self):
         """Inicializa el frame cuando se muestra."""
@@ -168,37 +116,37 @@ class FrameResultados(FrameBase):
         facturas_correctas, facturas_con_errores = self.controlador.obtener_resultados()
         
         # Limpiar tablas
-        self._limpiar_tablas()
+        self._limpiar_tabla(self.tabla_correctas)
+        self._limpiar_tabla(self.tabla_errores)
         
         # Cargar datos en las tablas
-        self._cargar_facturas_correctas(facturas_correctas)
-        self._cargar_facturas_con_errores(facturas_con_errores)
+        self._cargar_facturas_en_tabla(self.tabla_correctas, facturas_correctas, es_errores=False)
+        self._cargar_facturas_en_tabla(self.tabla_errores, facturas_con_errores, es_errores=True)
         
         # Actualizar pestañas con conteo
         self.notebook.tab(0, text=f"Facturas Correctas ({len(facturas_correctas)})")
         self.notebook.tab(1, text=f"Facturas con Errores ({len(facturas_con_errores)})")
     
-    def _limpiar_tablas(self):
-        """Limpia las tablas de resultados."""
-        # Limpiar tabla de facturas correctas
-        for item in self.tabla_correctas.get_children():
-            self.tabla_correctas.delete(item)
-        
-        # Limpiar tabla de facturas con errores
-        for item in self.tabla_errores.get_children():
-            self.tabla_errores.delete(item)
+    def _limpiar_tabla(self, tabla):
+        """Limpia una tabla específica."""
+        for item in tabla.tabla.get_children():
+            tabla.tabla.delete(item)
     
-    def _cargar_facturas_correctas(self, facturas: List[Factura]):
+    def _cargar_facturas_en_tabla(self, tabla, facturas, es_errores=False):
         """
-        Carga las facturas correctas en la tabla.
+        Carga las facturas en la tabla especificada.
         
         Args:
-            facturas: Lista de facturas correctas
+            tabla: Instancia de Tabla donde cargar los datos
+            facturas: Lista de facturas a cargar
+            es_errores: Indica si son facturas con errores (para determinar la columna final)
         """
+        datos_tabla = []
+        
         for factura in facturas:
             datos = factura.datos
             
-            # Preparar valores para la tabla
+            # Preparar valores base (comunes a ambas tablas)
             valores = [
                 datos.get(KEY.NUM_FACT, ""),
                 datos.get(KEY.FECHA_FACT, ""),
@@ -208,37 +156,18 @@ class FrameResultados(FrameBase):
                 datos.get(KEY.TIPO_IVA, ""),
                 datos.get(KEY.CUOTA_IVA, ""),
                 datos.get(KEY.TOTAL_FACT, ""),
-                ", ".join(factura.observaciones) if factura.observaciones else ""
             ]
             
-            # Insertar en la tabla
-            self.tabla_correctas.insert("", "end", values=valores)
-    
-    def _cargar_facturas_con_errores(self, facturas: List[Factura]):
-        """
-        Carga las facturas con errores en la tabla.
+            # Añadir columna específica según el tipo de tabla
+            if es_errores:
+                valores.append(", ".join(factura.errores) if factura.errores else "")
+            else:
+                valores.append(", ".join(factura.observaciones) if factura.observaciones else "")
+            
+            datos_tabla.append(valores)
         
-        Args:
-            facturas: Lista de facturas con errores
-        """
-        for factura in facturas:
-            datos = factura.datos
-            
-            # Preparar valores para la tabla
-            valores = [
-                datos.get(KEY.NUM_FACT, ""),
-                datos.get(KEY.FECHA_FACT, ""),
-                datos.get(KEY.NIF, ""),
-                datos.get(KEY.EMPRESA, ""),
-                datos.get(KEY.BASE_IVA, ""),
-                datos.get(KEY.TIPO_IVA, ""),
-                datos.get(KEY.CUOTA_IVA, ""),
-                datos.get(KEY.TOTAL_FACT, ""),
-                ", ".join(factura.errores) if factura.errores else ""
-            ]
-            
-            # Insertar en la tabla
-            self.tabla_errores.insert("", "end", values=valores)
+        # Insertar todos los datos en la tabla
+        tabla.insertar(datos_tabla)
     
     def _on_exportar(self):
         """Maneja el evento de exportar a Excel."""
@@ -250,14 +179,7 @@ class FrameResultados(FrameBase):
             return
         
         # Generar rutas para los archivos Excel automáticamente
-        if ruta_original.lower().endswith(".pdf"):
-            ruta_base = ruta_original.replace(".pdf", "")
-        elif ruta_original.lower().endswith(".xlsx"):
-            ruta_base = ruta_original.replace(".xlsx", "")
-        elif ruta_original.lower().endswith(".xls"):
-            ruta_base = ruta_original.replace(".xls", "")
-        else:
-            ruta_base = ruta_original
+        ruta_base = self._obtener_ruta_base_exportacion(ruta_original)
         
         # Exportar a Excel usando la ruta base generada automáticamente
         try:
@@ -266,6 +188,35 @@ class FrameResultados(FrameBase):
             self.mostrar_mensaje("error", f"Error en exportación: {str(e)}")
             resultado = {}
         
+        # Mostrar resultado de la exportación
+        self._mostrar_resultado_exportacion(resultado)
+    
+    def _obtener_ruta_base_exportacion(self, ruta_original):
+        """
+        Obtiene la ruta base para exportación eliminando la extensión del archivo.
+        
+        Args:
+            ruta_original: Ruta completa del archivo original
+            
+        Returns:
+            str: Ruta base sin extensión
+        """
+        if ruta_original.lower().endswith(".pdf"):
+            return ruta_original.replace(".pdf", "")
+        elif ruta_original.lower().endswith(".xlsx"):
+            return ruta_original.replace(".xlsx", "")
+        elif ruta_original.lower().endswith(".xls"):
+            return ruta_original.replace(".xls", "")
+        else:
+            return ruta_original
+    
+    def _mostrar_resultado_exportacion(self, resultado):
+        """
+        Muestra el resultado de la operación de exportación.
+        
+        Args:
+            resultado: Diccionario con los resultados de la exportación
+        """
         if resultado:
             mensaje = f"Resultados exportados correctamente a:\n"
             if "correctas" in resultado:

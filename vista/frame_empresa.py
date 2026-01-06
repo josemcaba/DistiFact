@@ -26,28 +26,27 @@ class FrameSeleccionEmpresa(FrameBase):
         self.frame_contenido = ttk.Frame(self)
         self.frame_contenido.pack(fill="both", expand=True)
          
-        # Frame para la lista y scrollbar
-        self.frame_lista = ttk.Frame(self.frame_contenido)
-        self.frame_lista.pack(fill="both", expand=True, pady=10)
+        # Frame para la tabla
+        self.frame_tabla = ttk.Frame(self.frame_contenido)
+        self.frame_tabla.pack(fill="both", expand=True, pady=10, padx=10)
         
-        # Scrollbar
-        self.scrollbar = ttk.Scrollbar(self.frame_lista)
-        self.scrollbar.pack(side="right", fill="y")
+        # Crear tabla utilizando la clase Tabla
+        from vista.Tabla import Tabla  # Importar aquí para evitar problemas de importación circular
         
-        # Lista de empresas
-        self.lista_empresas = tk.Listbox(
-            self.frame_lista,
-            height=10,
-            width=50,
-            yscrollcommand=self.scrollbar.set,
-            font=("Arial", 10),
-            selectmode=tk.SINGLE
-        )
-        self.lista_empresas.pack(side="left", fill="both", expand=True)
-        self.scrollbar.config(command=self.lista_empresas.yview)
+        self.tabla_empresas = Tabla(self.frame_tabla)
+        self.tabla_empresas.pack(fill="both", expand=True)
+        
+        # Configurar columnas de la tabla
+        columnas = [
+            {"nombre": "ID", "ancho": 50, "alineacion": tk.CENTER, "expandible": False},
+            {"nombre": "Nombre", "ancho": 175, "alineacion": tk.W, "expandible": True},
+            {"nombre": "NIF", "ancho": 100, "alineacion": tk.CENTER, "expandible": False},
+            {"nombre": "Tipo", "ancho": 100, "alineacion": tk.W, "expandible": False}
+        ]
+        self.tabla_empresas.cabecera(columnas)
         
         # Vincular doble clic a selección
-        self.lista_empresas.bind("<Double-1>", self._on_seleccionar)
+        self.tabla_empresas.tabla.bind("<Double-1>", self._on_seleccionar)
         
         # Frame para botones
         self.frame_botones = ttk.Frame(self.frame_contenido)
@@ -71,13 +70,14 @@ class FrameSeleccionEmpresa(FrameBase):
     
     def inicializar(self):
         """Inicializa el frame cuando se muestra."""
-        # Cargar empresas
+        # Cargar empresas en la tabla
         self._cargar_empresas()
     
     def _cargar_empresas(self):
-        """Carga las empresas en la lista."""
-        # Limpiar lista
-        self.lista_empresas.delete(0, tk.END)
+        """Carga las empresas en la tabla."""
+        # Limpiar tabla (eliminar todas las filas)
+        for item in self.tabla_empresas.tabla.get_children():
+            self.tabla_empresas.tabla.delete(item)
         
         # Obtener empresas del controlador
         empresas = self.controlador.obtener_empresas()
@@ -86,9 +86,17 @@ class FrameSeleccionEmpresa(FrameBase):
             self.mostrar_mensaje("error", "No se pudieron cargar las empresas.")
             return
         
-        # Agregar empresas a la lista
+        # Agregar empresas a la tabla
+        datos_tabla = []
         for id_empresa, empresa in sorted(empresas.items()):
-            self.lista_empresas.insert(tk.END, f"{id_empresa}: {empresa.nombre} ({empresa.nif})")
+            datos_tabla.append((
+                id_empresa,
+                empresa.nombre,
+                empresa.nif,
+                empresa.tipo
+            ))
+        
+        self.tabla_empresas.insertar(datos_tabla)
     
     def _on_seleccionar(self, event=None):
         """
@@ -97,18 +105,15 @@ class FrameSeleccionEmpresa(FrameBase):
         Args:
             event: Evento que desencadenó la acción (opcional)
         """
-        # Obtener índice seleccionado
-        seleccion = self.lista_empresas.curselection()
+        # Obtener fila seleccionada de la tabla
+        valores = self.tabla_empresas.seleccionar()
         
-        if not seleccion:
+        if not valores:
             self.mostrar_mensaje("warning", "Debe seleccionar una empresa.")
             return
         
-        # Obtener texto seleccionado
-        texto = self.lista_empresas.get(seleccion[0])
-        
-        # Extraer ID de empresa
-        id_empresa = int(texto.split(":")[0])
+        # Los valores vienen en el orden: ID, Nombre, NIF, Tipo
+        id_empresa = int(valores[0])
         
         # Seleccionar empresa en el controlador
         if self.controlador.seleccionar_empresa(id_empresa):
