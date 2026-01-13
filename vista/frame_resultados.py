@@ -76,7 +76,7 @@ class FrameResultados(FrameBase):
             {"nombre": "Núm. Factura", "ancho": 100, "alineacion": "w", "expandible": False},
             {"nombre": "Fecha", "ancho": 100, "alineacion": "center", "expandible": False},
             {"nombre": "NIF", "ancho": 100, "alineacion": "center", "expandible": False},
-            {"nombre": "Empresa", "ancho": 350, "alineacion": "w", "expandible": False},
+            {"nombre": "Empresa", "ancho": 300, "alineacion": "w", "expandible": False},
             {"nombre": "Base IVA", "ancho": 75, "alineacion": "e", "expandible": False},
             {"nombre": "Tipo IVA", "ancho": 75, "alineacion": "e", "expandible": False},
             {"nombre": "Cuota IVA", "ancho": 75, "alineacion": "e", "expandible": False},

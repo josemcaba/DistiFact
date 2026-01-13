@@ -8,7 +8,9 @@ def convertir_a_float(valor_str):
     """
     try:
         # Sustituye las comas por puntos
-        valor_str = str(valor_str).replace(",", ".") 
+        valor_str = str(valor_str).replace(",", ".")
+        # Elimina el símbolo de Euro
+        valor_str = str(valor_str).replace("€", "")
         # Elimina todos los puntos salvo el último
         valor_str = re.sub(r"\.(?=.*\.)", "", valor_str)
         return round(float(valor_str), 2)

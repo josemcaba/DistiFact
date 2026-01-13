@@ -28,7 +28,7 @@ class FrameSeleccionEmpresa(FrameBase):
          
         # Frame para la tabla
         self.frame_tabla = ttk.Frame(self.frame_contenido)
-        self.frame_tabla.pack(fill="both", expand=True, pady=10, padx=10)
+        self.frame_tabla.pack(fill="both", expand=True, pady=5, padx=0)
         
         # Crear tabla utilizando la clase Tabla
         from vista.Tabla import Tabla  # Importar aquí para evitar problemas de importación circular
@@ -38,9 +38,9 @@ class FrameSeleccionEmpresa(FrameBase):
         
         # Configurar columnas de la tabla
         columnas = [
-            {"nombre": "ID", "ancho": 50, "alineacion": tk.CENTER, "expandible": False},
-            {"nombre": "Nombre", "ancho": 175, "alineacion": tk.W, "expandible": True},
-            {"nombre": "NIF", "ancho": 100, "alineacion": tk.CENTER, "expandible": False},
+            {"nombre": "Num.", "ancho": 50, "alineacion": tk.CENTER, "expandible": False},
+            {"nombre": "DNI/NIF", "ancho": 125, "alineacion": tk.CENTER, "expandible": False},
+            {"nombre": "Razón Social", "ancho": 150, "alineacion": tk.W, "expandible": True},
             {"nombre": "Tipo", "ancho": 100, "alineacion": tk.W, "expandible": False}
         ]
         self.tabla_empresas.cabecera(columnas)
@@ -50,7 +50,7 @@ class FrameSeleccionEmpresa(FrameBase):
         
         # Frame para botones
         self.frame_botones = ttk.Frame(self.frame_contenido)
-        self.frame_botones.pack(fill="x", pady=10)
+        self.frame_botones.pack(fill="x", pady=0)
         
         # Botón de seleccionar
         self.btn_seleccionar = ttk.Button(
@@ -91,8 +91,8 @@ class FrameSeleccionEmpresa(FrameBase):
         for id_empresa, empresa in sorted(empresas.items()):
             datos_tabla.append((
                 id_empresa,
-                empresa.nombre,
                 empresa.nif,
+                empresa.nombre,
                 empresa.tipo
             ))
         

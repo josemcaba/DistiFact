@@ -6,15 +6,15 @@ class Tabla(tk.Frame):
 		super().__init__(parent)
 		self.columnconfigure(0, weight=1) # Columna para la tabla
 		self.columnconfigure(1, weight=0) # Columna para la scrollbar vertical
-		self.rowconfigure(0, weight=1)    # Columna para la tabla
-		self.rowconfigure(1, weight=0)    # Columna para la scrollbar horizontal
+		self.rowconfigure(0, weight=1)    # Fila para la tabla
+		self.rowconfigure(1, weight=0)    # Fila para la scrollbar horizontal
 
 		self.tabla = ttk.Treeview(self)
 		self.tabla.grid(row=0, column=0, sticky="nsew")
 
 		self.scrollbar_v = ttk.Scrollbar(self, orient=tk.VERTICAL, command=self.tabla.yview)
 		self.tabla.configure(yscrollcommand=self.scrollbar_v.set)
-		self.scrollbar_v.grid(row=0, column=1, sticky="ns", pady=(27, 0))
+		self.scrollbar_v.grid(row=0, column=1, sticky="ns", pady=(28, 0))
 
 		self.scrollbar_h = ttk.Scrollbar(self, orient=tk.HORIZONTAL, command=self.tabla.xview)
 		self.tabla.configure(xscrollcommand=self.scrollbar_h.set)
@@ -23,14 +23,14 @@ class Tabla(tk.Frame):
 		self.estilo = ttk.Style()
 		self.estilo.theme_use('clam')
 		self.estilo.configure('Treeview', 
-							background='#ffffee',      # Color de fondo de las celdas con datos
-                         	fieldbackground='#ffffee', # Color de fondo de las celdas vacías							rowheight=30, 
+							background='#fffbcc',      # Color de fondo de las celdas con datos
+                         	fieldbackground='#ffffee', # Color de fondo de las celdas vacías
 							rowheight=26,
 							font=('Arial', 12))        
 		self.estilo.configure('Treeview.Heading', 
-							background='#a6caf0', 
+							background='#afc3cb', 
 							font=('Arial', 10, 'bold'))
-		self.estilo.map('Treeview', background=[('selected','#0078d7')])
+		self.estilo.map('Treeview', background=[('selected','#2670b2')])
 
 	def cabecera(self, columnas):
         # Extraer solo los nombres de las columnas
