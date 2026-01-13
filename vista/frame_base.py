@@ -1,39 +1,22 @@
-"""
-Módulo que contiene la clase FrameBase, base para todos los frames de la aplicación.
-"""
+import tkinter as tk
 from tkinter import ttk
-from typing import Dict, Any, Optional
+from typing import Optional, Any  # <--- Aquí faltaba 'Any'
+from abc import ABC, abstractmethod
 
-
-class FrameBase(ttk.Frame):
-    """
-    Clase base para todos los frames de la aplicación.
-    """
-    # Nombre del frame para identificación
-    nombre = "base"
+class FrameBase(ttk.Frame, ABC):
+    """Clase base abstracta para todos los frames."""
     
-    def __init__(self, parent, app, controlador):
-        """
-        Inicializa el frame base.
-        
-        Args:
-            parent: Widget padre
-            app: Instancia de la aplicación principal
-            controlador: Instancia del controlador
-        """
+    nombre: str = "base"
+    
+    # Nota: Usamos 'App' como string (Forward reference) para evitar importación circular
+    def __init__(self, parent: tk.Widget, app: 'App', controlador: Any):
         super().__init__(parent)
         self.app = app
         self.controlador = controlador
-
-        # Inicializar componentes
         self._inicializar_componentes()
     
     def _inicializar_componentes(self):
-        """
-        Inicializa los componentes del frame.
-        Este método debe ser sobrescrito por las clases hijas.
-        """
-        # Título del frame
+        """Configuración base común."""
         self.lbl_titulo = ttk.Label(
             self, 
             text=self._obtener_titulo(),
@@ -41,30 +24,15 @@ class FrameBase(ttk.Frame):
         )
         self.lbl_titulo.pack(fill='x')
     
+    @abstractmethod
     def _obtener_titulo(self) -> str:
-        """
-        Retorna el título del frame.
-        Este método debe ser sobrescrito por las clases hijas.
-        
-        Returns:
-            Título del frame
-        """
-        return "Frame Base"
+        """Debe retornar el título del frame."""
+        pass
     
     def inicializar(self):
-        """
-        Método llamado cuando el frame se muestra.
-        Este método puede ser sobrescrito por las clases hijas.
-        """
+        """Hook para lógica al mostrar el frame."""
         pass
     
     def mostrar_mensaje(self, tipo: str, mensaje: str, titulo: Optional[str] = None):
-        """
-        Muestra un mensaje usando el método de la aplicación principal.
-        
-        Args:
-            tipo: Tipo de mensaje ('info', 'error', 'warning')
-            mensaje: Contenido del mensaje
-            titulo: Título del diálogo (opcional)
-        """
+        """Wrapper para mostrar mensajes desde la App."""
         self.app.mostrar_mensaje(tipo, mensaje, titulo)

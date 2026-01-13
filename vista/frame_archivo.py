@@ -1,294 +1,136 @@
-"""
-Módulo que contiene la clase FrameSeleccionArchivo para seleccionar un archivo.
-"""
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk
 import os
-from typing import Dict, Any, Optional
-
 from vista.frame_base import FrameBase
 
-
 class FrameSeleccionArchivo(FrameBase):
-    """
-    Frame para seleccionar un archivo a procesar.
-    """
     nombre = "seleccion_archivo"
     
     def _obtener_titulo(self) -> str:
-        """Retorna el título del frame."""
         return "Selección de Archivo"
     
     def _inicializar_componentes(self):
-        """Inicializa los componentes del frame."""
         super()._inicializar_componentes()
-        
-        # Contenedor principal
         self.frame_contenido = ttk.Frame(self)
         self.frame_contenido.pack(fill="both", expand=True)
         
-        # Contenedor para empresa seleccionada y botón de unificar
-        self.frame_empresa_superior = ttk.Frame(self.frame_contenido)
-        self.frame_empresa_superior.pack(fill="x", padx=5, pady=(10, 5))
-        
-        # Frame para información de la empresa (izquierda)
-        self.frame_empresa_info = ttk.Frame(self.frame_empresa_superior)
-        self.frame_empresa_info.pack(side="left", fill="x", expand=True)
-        
-        self.lbl_empresa_titulo = ttk.Label(
-            self.frame_empresa_info,
-            text="Empresa seleccionada:"
-        )
-        self.lbl_empresa_titulo.pack(anchor="w")
+        self._crear_area_info_empresa()
+        ttk.Separator(self.frame_contenido, orient="horizontal").pack(fill='x', padx=5, pady=5)
+        self._crear_area_seleccion_archivo()
+        self._crear_area_acciones()
 
-        self.lbl_empresa_info = ttk.Label(
-            self.frame_empresa_info,
-            text="",
-            relief="solid", 
-            padding=5,
-        )
+    def _crear_area_info_empresa(self):
+        frame = ttk.Frame(self.frame_contenido)
+        frame.pack(fill="x", padx=5, pady=(10, 5))
+        
+        # Info Empresa
+        f_info = ttk.Frame(frame)
+        f_info.pack(side="left", fill="x", expand=True)
+        ttk.Label(f_info, text="Empresa seleccionada:").pack(anchor="w")
+        self.lbl_empresa_info = ttk.Label(f_info, text="", relief="solid", padding=5)
         self.lbl_empresa_info.pack(anchor="w", pady=(5, 0), padx=(0, 5))
         
-        # Frame para botón de unificar PDFs (derecha)
-        self.frame_boton_unificar = ttk.Frame(self.frame_empresa_superior)
-        self.frame_boton_unificar.pack(side="right", padx=(0, 5), pady=(25, 0))
-        
-        # Botón para unificar PDFs (no se empaqueta aquí, se mostrará según tipo de empresa)
-        self.btn_unificar = ttk.Button(
-            self.frame_boton_unificar,
-            text="Unificar PDFs",
-            command=self._on_unificar_pdfs
-        )
-        # No se empaqueta aquí, se mostrará solo si la empresa NO es "excel"
-        
-        # Separador horizontal
-        separador = ttk.Separator(self.frame_contenido, orient="horizontal")
-        separador.pack(fill='x', padx=5, pady=5)
+        # Botón Unificar
+        self.btn_unificar = ttk.Button(frame, text="Unificar PDFs", command=self._on_unificar_pdfs)
+        # Se empaqueta dinámicamente en inicializar
 
-        # Selección de archivo
-        self.frame_archivo = ttk.Frame(self.frame_contenido)
-        self.frame_archivo.pack(fill="x", padx=5, pady=5)
+    def _crear_area_seleccion_archivo(self):
+        frame = ttk.Frame(self.frame_contenido)
+        frame.pack(fill="x", padx=5, pady=5)
         
-        self.lbl_archivo = ttk.Label(
-            self.frame_archivo,
-            text="Archivo a procesar:"
-        )
-        self.lbl_archivo.pack(anchor="w", pady=(0, 5))
+        ttk.Label(frame, text="Archivo a procesar:").pack(anchor="w", pady=(0, 5))
         
-        # Frame para entrada y botón
-        self.frame_entrada = ttk.Frame(self.frame_archivo)
-        self.frame_entrada.pack(fill="x", pady=5)
-
-        self.btn_examinar = ttk.Button(
-            self.frame_entrada,
-            text="Examinar",
-            command=self._on_examinar
-        )
-        self.btn_examinar.pack(side="left")
-        
-        self.entry_ruta = ttk.Entry(
-            self.frame_entrada,
-            # width=50
-        )
+        f_entrada = ttk.Frame(frame)
+        f_entrada.pack(fill="x", pady=5)
+        ttk.Button(f_entrada, text="Examinar", command=self._on_examinar).pack(side="left")
+        self.entry_ruta = ttk.Entry(f_entrada)
         self.entry_ruta.pack(side="right", fill="x", expand=True, padx=(10, 0))
-        
-        # Frame para botones de acción
-        self.frame_botones_accion = ttk.Frame(self.frame_contenido)
-        self.frame_botones_accion.pack(fill="x", padx=5, pady=10)
 
-        # Botón para crear rectángulos (solo visible para PDF imagen)
-        self.btn_crear = ttk.Button(
-            self.frame_botones_accion,
-            text="Crear rectángulos",
-            command=self._on_crear_rectangulos
-        )
-        # No se empaqueta aquí, se mostrará solo si es PDF imagen
+    def _crear_area_acciones(self):
+        frame = ttk.Frame(self.frame_contenido)
+        frame.pack(fill="x", padx=5, pady=10)
         
-        # Botón para visualizar rectángulos (solo visible para PDF imagen)
-        self.btn_visualizar = ttk.Button(
-            self.frame_botones_accion,
-            text="Ver rectángulos",
-            command=self._on_visualizar_rectangulos
-        )
-        # No se empaqueta aquí, se mostrará solo si es PDF imagen
+        self.btn_crear = ttk.Button(frame, text="Crear rectángulos", command=self._on_crear_rectangulos)
+        self.btn_visualizar = ttk.Button(frame, text="Ver rectángulos", command=self._on_visualizar_rectangulos)
         
-        # Frame para botones de navegación (a la derecha)
-        self.frame_botones_nav = ttk.Frame(self.frame_botones_accion)
-        self.frame_botones_nav.pack(side="right")
-        
-        # Botón de procesar
-        self.btn_procesar = ttk.Button(
-            self.frame_botones_nav,
-            text="Procesar",
-            command=self._on_procesar
-        )
-        self.btn_procesar.pack(side="right", padx=5)
-        
-        # Botón de volver
-        self.btn_volver = ttk.Button(
-            self.frame_botones_nav,
-            text="Volver",
-            command=lambda: self.app.mostrar_frame("seleccion_empresa")
-        )
-        self.btn_volver.pack(side="right", padx=5)
-    
+        # Navegación
+        f_nav = ttk.Frame(frame)
+        f_nav.pack(side="right")
+        ttk.Button(f_nav, text="Volver", command=lambda: self.app.mostrar_frame("seleccion_empresa")).pack(side="right", padx=5)
+        self.btn_procesar = ttk.Button(f_nav, text="Procesar", command=self._on_procesar).pack(side="right", padx=5)
+
     def inicializar(self):
-        """Inicializa el frame cuando se muestra."""
-        # Obtener información de la empresa seleccionada
         empresa = self.controlador.obtener_empresa_actual()
-        
         if not empresa:
-            self.mostrar_mensaje("error", "No hay empresa seleccionada.")
             self.app.mostrar_frame("seleccion_empresa")
             return
-        
-        # Mostrar información de la empresa
-        self.lbl_empresa_info.config(
-            text=f"{empresa.nombre} ({empresa.nif}) - Tipo: {empresa.tipo}"
-        )
-        
-        # Mostrar u ocultar botones según tipo de empresa
-        if empresa.tipo == "PDFimagen":
+            
+        self.lbl_empresa_info.config(text=f"{empresa.nombre} ({empresa.nif}) - Tipo: {empresa.tipo}")
+        self.entry_ruta.delete(0, tk.END)
+        self._actualizar_visibilidad_botones(empresa.tipo)
+
+    def _actualizar_visibilidad_botones(self, tipo_empresa):
+        if tipo_empresa == "PDFimagen":
             self.btn_visualizar.pack(side="left", padx=5)
             self.btn_crear.pack(side="left", padx=5)
         else:
             self.btn_visualizar.pack_forget()
             self.btn_crear.pack_forget()
-        
-        # Mostrar u ocultar botón de unificar PDFs
-        # Solo se muestra si la empresa NO es de tipo "excel"
-        if empresa.tipo != "excel":
-            self.btn_unificar.pack(side="right")
+            
+        if tipo_empresa != "excel":
+            self.btn_unificar.pack(side="right", pady=(25, 0))
         else:
             self.btn_unificar.pack_forget()
-        
-        # Limpiar campo de ruta
-        self.entry_ruta.delete(0, tk.END)
-    
+
+    def _validar_archivo(self, ruta, extensiones):
+        if not ruta or not os.path.isfile(ruta):
+            return False, "El archivo no existe."
+        if not ruta.lower().endswith(extensiones):
+            return False, f"Extensión inválida. Se espera: {extensiones}"
+        return True, ""
+
     def _on_examinar(self):
-        """Maneja el evento de examinar archivo."""
         empresa = self.controlador.obtener_empresa_actual()
-        
-        if not empresa:
-            return
-        
-        # Determinar tipo de archivo según el tipo de empresa
-        if empresa.tipo == "excel":
-            tipos_archivo = [("Archivos Excel", "*.xlsx;*.xls")]
-        else:
-            tipos_archivo = [("Archivos PDF", "*.pdf")]
-        
-        # Mostrar diálogo de selección
-        ruta = self.app.seleccionar_archivo(
-            tipos_archivo=tipos_archivo,
-            titulo=f"Seleccionar archivo para {empresa.nombre}"
-        )
-        
+        ext = "*.xlsx;*.xls" if empresa.tipo == "excel" else "*.pdf"
+        ruta = self.app.seleccionar_archivo([("Archivos", ext)], f"Seleccionar para {empresa.nombre}")
         if ruta:
             self.entry_ruta.delete(0, tk.END)
             self.entry_ruta.insert(0, ruta)
-    
-    def _on_visualizar_rectangulos(self):
-        """Maneja el evento de visualizar rectángulos."""
-        # Obtener ruta del archivo
-        ruta = self.entry_ruta.get().strip()
-        
-        if not ruta:
-            self.mostrar_mensaje("warning", "Debe seleccionar un archivo PDF.")
-            return
-        
-        if not os.path.isfile(ruta):
-            self.mostrar_mensaje("error", f"El archivo '{ruta}' no existe.")
-            return
-        
-        if not ruta.lower().endswith(".pdf"):
-            self.mostrar_mensaje("error", "El archivo debe ser un PDF.")
-            return
-        
-        # Obtener empresa actual
-        empresa = self.controlador.obtener_empresa_actual()
 
-        # Visualizar rectángulos
-        self.controlador.visualizar_rectangulos(ruta, empresa.to_dict())
+    def _on_procesar(self):
+        ruta = self.entry_ruta.get().strip()
+        empresa = self.controlador.obtener_empresa_actual()
+        
+        exts = (".xlsx", ".xls") if empresa.tipo == "excel" else (".pdf",)
+        valido, msg = self._validar_archivo(ruta, exts)
+        
+        if not valido:
+            self.mostrar_mensaje("error", msg)
+            return
+            
+        self.controlador.establecer_ruta_archivo(ruta)
+        self.app.mostrar_frame("procesamiento")
+    
+    # ... (Resto de métodos _on_crear_rectangulos, _on_visualizar, etc. se mantienen similares pero usando _validar_archivo)
+    def _on_visualizar_rectangulos(self):
+        ruta = self.entry_ruta.get().strip()
+        valido, msg = self._validar_archivo(ruta, (".pdf",))
+        if valido:
+            self.controlador.visualizar_rectangulos(ruta, self.controlador.obtener_empresa_actual().to_dict())
+        else:
+             self.mostrar_mensaje("error", msg)
 
     def _on_crear_rectangulos(self):
-        """Maneja el evento de crear rectángulos."""
         ruta = self.entry_ruta.get().strip()
-    
-        if not ruta:
-            self.mostrar_mensaje("warning", "Debe seleccionar un archivo PDF.")
-            return
-    
-        if not os.path.isfile(ruta):
-            self.mostrar_mensaje("error", f"El archivo '{ruta}' no existe.")
-            return
-    
-        if not ruta.lower().endswith(".pdf"):
-            self.mostrar_mensaje("error", "El archivo debe ser un PDF.")
-            return
-    
-        empresa = self.controlador.obtener_empresa_actual()
-    
-        # Llamar al controlador para crear los rectángulos
-        self.controlador.crear_rectangulos(ruta, empresa.to_dict())
-    
+        valido, msg = self._validar_archivo(ruta, (".pdf",))
+        if valido:
+             self.controlador.crear_rectangulos(ruta, self.controlador.obtener_empresa_actual().to_dict())
+        else:
+             self.mostrar_mensaje("error", msg)
+
     def _on_unificar_pdfs(self):
-        """Maneja el evento de unificar PDFs."""
-        try:
-            # Pedir al usuario que seleccione un directorio
-            directorio = self.app.seleccionar_directorio(
-                titulo="Seleccionar directorio con PDFs a unificar"
-            )
-            
-            if not directorio:
-                return  # El usuario canceló
-            
-            # Verificar que el directorio existe
-            if not os.path.isdir(directorio):
-                self.mostrar_mensaje("error", f"El directorio '{directorio}' no existe.")
-                return
-            
-            # Llamar al controlador para unificar los PDFs
-            resultado = self.controlador.unificar_pdfs(directorio)
-            
-            # Mostrar mensaje de resultado usando el mismo estilo de la aplicación
-            if resultado["exito"]:
-                mensaje = resultado["mensaje"]
-                if resultado.get("ruta_salida"):
-                    mensaje += f"\n\nArchivo generado: {resultado.get('ruta_salida')}"
-                self.mostrar_mensaje("info", mensaje, titulo="Operación completada")
-            else:
-                self.mostrar_mensaje("error", resultado["mensaje"], titulo="Error en la operación")
-                
-        except Exception as e:
-            self.mostrar_mensaje("error", f"Error inesperado: {str(e)}", titulo="Error")
-        
-    def _on_procesar(self):
-        """Maneja el evento de procesar archivo."""
-        # Obtener ruta del archivo
-        ruta = self.entry_ruta.get().strip()
-        
-        if not ruta:
-            self.mostrar_mensaje("warning", "Debe seleccionar un archivo.")
-            return
-        
-        if not os.path.isfile(ruta):
-            self.mostrar_mensaje("error", f"El archivo '{ruta}' no existe.")
-            return
-        
-        # Verificar extensión según tipo de empresa
-        empresa = self.controlador.obtener_empresa_actual()
-        
-        if empresa.tipo in ["PDFtexto", "PDFimagen"] and not ruta.lower().endswith(".pdf"):
-            self.mostrar_mensaje("error", "El archivo debe ser un PDF.")
-            return
-        
-        if empresa.tipo == "excel" and not ruta.lower().endswith((".xlsx", ".xls")):
-            self.mostrar_mensaje("error", "El archivo debe ser un Excel.")
-            return
-        
-        # Establecer ruta en el controlador
-        self.controlador.establecer_ruta_archivo(ruta)
-        
-        # Avanzar al frame de procesamiento
-        self.app.mostrar_frame("procesamiento")
+        directorio = self.app.seleccionar_directorio("Directorio con PDFs a unificar")
+        if directorio:
+            res = self.controlador.unificar_pdfs(directorio)
+            tipo = "info" if res["exito"] else "error"
+            self.mostrar_mensaje(tipo, res["mensaje"] + (f"\nGenerado: {res.get('ruta_salida')}" if res.get('ruta_salida') else ""))

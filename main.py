@@ -1,46 +1,88 @@
 """
 Punto de entrada principal de la aplicación DistiFact con interfaz gráfica Tkinter.
+Refactorizado para mayor robustez y manejo de errores visual.
 """
-import os
 import sys
+import tkinter as tk
+from tkinter import messagebox
+from pathlib import Path
 
-# Agregar directorio actual al path para importaciones
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# Configuración del path para asegurar que se encuentren los módulos
+# Esto es útil si ejecutas el script directamente desde su carpeta
+raiz_proyecto = Path(__file__).parent.absolute()
+if str(raiz_proyecto) not in sys.path:
+    sys.path.append(str(raiz_proyecto))
 
 # Importar componentes de la aplicación
-from controlador.controlador import Controlador
-from vista.app import App
+# Se asume que controlador y vista están en el mismo nivel que main.py
+try:
+    from controlador.controlador import Controlador
+    from vista.app import App
+except ImportError as e:
+    # Capturar error si faltan dependencias críticas
+    root = tk.Tk()
+    root.withdraw()
+    messagebox.showerror("Error Fatal", f"No se pudieron importar componentes necesarios:\n{e}")
+    sys.exit(1)
 
+def mostrar_error_critico(titulo: str, mensaje: str):
+    """
+    Muestra un mensaje de error utilizando Tkinter sin iniciar la app completa.
+    Útil para errores de arranque (configuración faltante, etc).
+    """
+    root = tk.Tk()
+    root.withdraw()  # Ocultar la ventana raíz vacía
+    messagebox.showerror(titulo, mensaje)
+    root.destroy()
 
 def main():
     """Función principal que inicia la aplicación."""
-    # Crear instancia del controlador
-    controlador = Controlador()
-
-    # Definir ruta del archivo empresas.json usando una ruta relativa
-    # El archivo está en el directorio 'datos' dentro del proyecto
-    ruta_base = os.path.dirname(os.path.abspath(__file__))
-    ruta_empresas = os.path.join(ruta_base, "datos", "empresas.json")
     
-    print(f"Buscando archivo de empresas en: {ruta_empresas}")
+    # 1. Definir rutas usando pathlib
+    ruta_base = Path(__file__).parent.absolute()
+    ruta_empresas = ruta_base / "datos" / "empresas.json"
     
-    # Verificar si el archivo existe antes de intentar cargarlo
-    if not os.path.exists(ruta_empresas):
-        print(f"Error: No se encontró el archivo {ruta_empresas}")
-        print("Por favor, asegúrate de que el archivo empresas.json existe en el directorio 'datos'.")
-        return
+    # print(f"Iniciando aplicación en: {ruta_base}") # Debug opcional
     
-    # Inicializar controlador
-    if not controlador.iniciar(ruta_empresas):
-        print("Error al cargar el archivo de empresas.")
-        return
+    # 2. Validación robusta del archivo de configuración
+    if not ruta_empresas.exists():
+        mensaje = (
+            f"No se encontró el archivo de configuración en:\n{ruta_empresas}\n\n"
+            "Por favor, asegúrese de que el archivo 'empresas.json' existe "
+            "dentro de la carpeta 'datos'."
+        )
+        print(f"Error: {mensaje}") # Log en consola por si acaso
+        mostrar_error_critico("Archivo no encontrado", mensaje)
+        sys.exit(1)
     
-    # Crear y configurar la aplicación
-    app = App(controlador)
-    
-    # Iniciar el bucle principal de la aplicación
-    app.mainloop()
-
+    try:
+        # 3. Inicializar Controlador
+        controlador = Controlador()
+        
+        # Convertimos a string porque algunas librerías antiguas de IO prefieren str sobre Path
+        exito_carga = controlador.iniciar(str(ruta_empresas))
+        
+        if not exito_carga:
+            mostrar_error_critico(
+                "Error de Datos", 
+                "El controlador no pudo cargar el archivo de empresas.\n"
+                "Verifique que el formato JSON sea correcto."
+            )
+            sys.exit(1)
+            
+        # 4. Iniciar Aplicación (Vista)
+        app = App(controlador)
+        app.mainloop()
+        
+    except Exception as e:
+        # Captura cualquier otro error no previsto (ej. errores de sintaxis en controlador, etc.)
+        import traceback
+        traceback.print_exc() # Imprimir detalle técnico en consola
+        mostrar_error_critico(
+            "Error Inesperado", 
+            f"Ocurrió un error crítico al iniciar la aplicación:\n{str(e)}"
+        )
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
