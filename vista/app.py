@@ -39,6 +39,13 @@ class App(tk.Tk):
             "Header.TLabel": {
                 "background": "#3d8624", "foreground": "#ffffee",
                 "anchor": "c", "font": ('Arial', 14, 'bold')
+            },
+            "Info.TLabel": {  # <--- Añadir este nuevo estilo
+                "background": "#e8f4ff", 
+                "foreground": "#003366",
+                "font": ('Arial', 10),
+                "relief": "solid",
+                "borderwidth": 1
             }
         }
         

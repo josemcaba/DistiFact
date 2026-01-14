@@ -12,6 +12,9 @@ class FrameProcesamiento(FrameBase):
     def _inicializar_componentes(self):
         super()._inicializar_componentes()
         
+        # Crear cabecera con información de empresa (sin botón)
+        self._crear_cabecera_empresa(mostrar_boton=False)
+        
         self.frame_contenido = ttk.Frame(self)
         self.frame_contenido.pack(fill="both", expand=True)
         
@@ -56,6 +59,9 @@ class FrameProcesamiento(FrameBase):
         self.cancelar_procesamiento = False
 
     def inicializar(self):
+        # Actualizar información de empresa en la cabecera
+        self._actualizar_info_empresa()
+        
         self.btn_continuar.config(state="disabled")
         ruta = self.controlador.obtener_ruta_archivo()
         

@@ -12,6 +12,9 @@ class FrameResultados(FrameBase):
     def _inicializar_componentes(self):
         super()._inicializar_componentes()
         
+        # Crear cabecera con información de empresa (sin botón)
+        self._crear_cabecera_empresa(mostrar_boton=False)
+        
         self.frame_contenido = ttk.Frame(self)
         self.frame_contenido.pack(fill="both", expand=True)
         
@@ -66,6 +69,9 @@ class FrameResultados(FrameBase):
         return tabla
     
     def inicializar(self):
+        # Actualizar información de empresa en la cabecera
+        self._actualizar_info_empresa()
+        
         facturas_correctas, facturas_errores = self.controlador.obtener_resultados()
         
         self._cargar_datos(self.tabla_correctas, facturas_correctas, lambda f: ", ".join(f.observaciones))

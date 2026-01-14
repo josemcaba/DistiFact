@@ -11,29 +11,16 @@ class FrameSeleccionArchivo(FrameBase):
     
     def _inicializar_componentes(self):
         super()._inicializar_componentes()
+        
+        # Crear cabecera con información de empresa y botón Unificar
+        self._crear_cabecera_empresa(mostrar_boton=True)
+        
         self.frame_contenido = ttk.Frame(self)
         self.frame_contenido.pack(fill="both", expand=True)
         
-        self._crear_area_info_empresa()
-        ttk.Separator(self.frame_contenido, orient="horizontal").pack(fill='x', padx=5, pady=5)
         self._crear_area_seleccion_archivo()
         self._crear_area_acciones()
-
-    def _crear_area_info_empresa(self):
-        frame = ttk.Frame(self.frame_contenido)
-        frame.pack(fill="x", padx=5, pady=(10, 5))
-        
-        # Info Empresa
-        f_info = ttk.Frame(frame)
-        f_info.pack(side="left", fill="x", expand=True)
-        ttk.Label(f_info, text="Empresa seleccionada:").pack(anchor="w")
-        self.lbl_empresa_info = ttk.Label(f_info, text="", relief="solid", padding=5)
-        self.lbl_empresa_info.pack(anchor="w", pady=(5, 0), padx=(0, 5))
-        
-        # Botón Unificar
-        self.btn_unificar = ttk.Button(frame, text="Unificar PDFs", command=self._on_unificar_pdfs)
-        # Se empaqueta dinámicamente en inicializar
-
+    
     def _crear_area_seleccion_archivo(self):
         frame = ttk.Frame(self.frame_contenido)
         frame.pack(fill="x", padx=5, pady=5)
@@ -57,18 +44,20 @@ class FrameSeleccionArchivo(FrameBase):
         f_nav = ttk.Frame(frame)
         f_nav.pack(side="right")
         ttk.Button(f_nav, text="Volver", command=lambda: self.app.mostrar_frame("seleccion_empresa")).pack(side="right", padx=5)
-        self.btn_procesar = ttk.Button(f_nav, text="Procesar", command=self._on_procesar).pack(side="right", padx=5)
+        ttk.Button(f_nav, text="Procesar", command=self._on_procesar).pack(side="right", padx=5)
 
     def inicializar(self):
+        # Actualizar información de empresa en la cabecera
+        self._actualizar_info_empresa()
+        
         empresa = self.controlador.obtener_empresa_actual()
         if not empresa:
             self.app.mostrar_frame("seleccion_empresa")
             return
             
-        self.lbl_empresa_info.config(text=f"{empresa.nombre} ({empresa.nif}) - Tipo: {empresa.tipo}")
         self.entry_ruta.delete(0, tk.END)
         self._actualizar_visibilidad_botones(empresa.tipo)
-
+    
     def _actualizar_visibilidad_botones(self, tipo_empresa):
         if tipo_empresa == "PDFimagen":
             self.btn_visualizar.pack(side="left", padx=5)
@@ -76,11 +65,6 @@ class FrameSeleccionArchivo(FrameBase):
         else:
             self.btn_visualizar.pack_forget()
             self.btn_crear.pack_forget()
-            
-        if tipo_empresa != "excel":
-            self.btn_unificar.pack(side="right", pady=(25, 0))
-        else:
-            self.btn_unificar.pack_forget()
 
     def _validar_archivo(self, ruta, extensiones):
         if not ruta or not os.path.isfile(ruta):
