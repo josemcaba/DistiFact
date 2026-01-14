@@ -158,6 +158,7 @@ class ProcesadorFacturas:
 
     def _procesar_pdf_texto(self, ruta_pdf: str, identificador: str) -> List[List]:
         paginas = []
+        paginas_descartadas = []
         try:
             with pdfplumber.open(ruta_pdf) as pdf:
                 total = len(pdf.pages)
@@ -167,8 +168,13 @@ class ProcesadorFacturas:
                     
                     if identificador in texto:
                         paginas.append([i, texto])
+                    else:
+                        paginas_descartadas.append(str(i))
             
-            self._mostrar_mensaje('info', f'PDF Texto: {len(paginas)} páginas útiles encontradas.')
+            self._mostrar_mensaje('info', f'Procesadas {total} páginas del archivo PDF')
+            self._mostrar_mensaje('info', f'Encontradas {len(paginas)} páginas válidas')
+            if paginas_descartadas:
+                self._mostrar_mensaje('info', f"Páginas descartadas: {', '.join(paginas_descartadas)}")
             return paginas
         except Exception as e:
             self._mostrar_mensaje('error', f'Error lectura PDF Texto: {e}')
@@ -182,7 +188,7 @@ class ProcesadorFacturas:
         
         angulo = rectangulos.get("angulo", 0)
         paginas = []
-        
+        paginas_descartadas = []
         try:
             with fitz.open(ruta_pdf) as doc:
                 total = doc.page_count
@@ -196,8 +202,13 @@ class ProcesadorFacturas:
                     
                     if texto and identificador in texto:
                         paginas.append([i + 1, texto])
+                    else:
+                        paginas_descartadas.append(str(i + 1))
             
-            self._mostrar_mensaje('info', f'PDF Imagen: {len(paginas)} páginas útiles encontradas.')
+            self._mostrar_mensaje('info', f'Procesadas {total} páginas en archivo PDF')
+            self._mostrar_mensaje('info', f'Encontradas {len(paginas)} páginas válidas')
+            if paginas_descartadas:
+                self._mostrar_mensaje('info', f"Páginas descartadas: {' - '.join(paginas_descartadas)}")
             return paginas
         except Exception as e:
             self._mostrar_mensaje('error', f'Error lectura PDF Imagen: {e}')
@@ -220,7 +231,7 @@ class ProcesadorFacturas:
                     # Convertimos tupla a lista para consistencia
                     filas_procesadas.append([i, list(fila)])
             
-            self._mostrar_mensaje('info', f'Excel: {len(filas_procesadas)} filas leídas.')
+            self._mostrar_mensaje('info', f'Procesadas {len(filas_procesadas)} filas de Excel.')
             return filas_procesadas
             
         except Exception as e:
