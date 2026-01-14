@@ -30,8 +30,8 @@ class ClasificadorFacturas:
 
         vistos = {}
         for factura in facturas:
-            # Detectamos duplicados por número de factura
-            numero = factura.datos[KEY.NUM_FACT]
+            # Detectamos duplicados por número de factura y tipo de IVA
+            numero = f"{factura.datos[KEY.NUM_FACT]}+{factura.datos[KEY.TIPO_IVA]}"
             if not numero:
                 continue
             if numero in vistos:

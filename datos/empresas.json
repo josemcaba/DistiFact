@@ -13,5 +13,5 @@
     "12": {"nombre": "Maria Carmen Blanco Sepulveda", "nif": "33391919J", "funciones": "extractores_Blanco_Sepulveda.py", "tipo": "PDFtexto"},
     "13": {"nombre": "Norelis Andrea Eslava", "nif": "Y7080956Y", "funciones": "extractores_Norelis_Andrea_Eslava.py", "tipo": "PDFtexto"},
     "14": {"nombre": "Heber Dutra Pessoa", "nif": "Y7743208L", "funciones": "extractores_Heber_Dutra.py", "tipo": "excel"},
-    "15": {"nombre": "JOAQUIN JOSE GARCIA BERNAL", "nif": "33363963W", "funciones": "extractores_JOAQUIN_GARCIA.py", "tipo": "PDFimagen"}
+    "15": {"nombre": "MERCADONA, S.A.", "nif": "A46103834", "funciones": "extractores_MERCADONA.py", "tipo": "PDFtexto"}
 }

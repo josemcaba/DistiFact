@@ -170,43 +170,5 @@
             "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "angulo": 0
-    },
-    "33363963W": {
-        "angulo": 270,
-        "rectangulo_1": {
-            "x1": 133,
-            "y1": 135,
-            "x2": 809,
-            "y2": 884,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
-        },
-        "rectangulo_2": {
-            "x1": 1311,
-            "y1": 643,
-            "x2": 2421,
-            "y2": 872,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
-        },
-        "rectangulo_3": {
-            "x1": 124,
-            "y1": 876,
-            "x2": 766,
-            "y2": 1024,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
-        },
-        "rectangulo_4": {
-            "x1": 146,
-            "y1": 2323,
-            "x2": 2178,
-            "y2": 2611,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
-        },
-        "rectangulo_5": {
-            "x1": 1614,
-            "y1": 2590,
-            "x2": 2440,
-            "y2": 2772,
-            "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
-        }
     }
 }
