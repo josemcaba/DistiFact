@@ -15,6 +15,7 @@ class FrameProcesamiento(FrameBase):
         # Crear cabecera con información de empresa (sin botón)
         self._crear_cabecera_empresa(mostrar_boton=False)
         
+        # Frame principal que contendrá todo el contenido
         self.frame_contenido = ttk.Frame(self)
         self.frame_contenido.pack(fill="both", expand=True)
         
@@ -96,7 +97,7 @@ class FrameProcesamiento(FrameBase):
             
             if res:
                 self._actualizar_estado("Completado", 100)
-                self._agregar_mensaje("info", f"Generadaos {len(res)} apuntes")
+                self._agregar_mensaje("info", f"Generados {len(res)} apuntes")
             else:
                 self._actualizar_estado("Error", 0)
                 self._agregar_mensaje("error", "No se procesaron facturas.")

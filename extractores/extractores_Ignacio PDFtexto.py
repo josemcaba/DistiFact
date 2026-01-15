@@ -36,7 +36,6 @@ def extraerDatosFactura(pagina, empresa):
 
     regex = r"\n(.+)\n\d{6}\nN"
     factura[KEY.NIF] = fb.re_search(regex, pagina)
-    factura[KEY.NIF] = re.sub(r"['. -]", "", factura[KEY.NIF])
     
     regex = r"TOTAL\n.*?%\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s"
     grupos = fb.re_search_multiple(regex, pagina)

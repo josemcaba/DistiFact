@@ -14,6 +14,14 @@ class App(tk.Tk):
         super().__init__()
         self.controlador = controlador
         self.frames: Dict[str, FrameBase] = {}
+
+        # Geometrias especificas para cada frame
+        self.geometrias = {
+            "seleccion_empresa": "560x520",
+            "seleccion_archivo": "560x520",
+            "procesamiento": "560x520",
+            "resultados": "1120x520"
+        }
         
         self._configurar_ventana()
         self._configurar_estilos()
@@ -22,8 +30,7 @@ class App(tk.Tk):
         self.mostrar_frame("seleccion_empresa")
     
     def _configurar_ventana(self):
-        self.title("DistiScan V2.0 - Distirel ©")
-        self.geometry("600x600")
+        self.title("DistiScan V2.1 - Distirel ©")
         
     def _configurar_estilos(self):
         self.style = ttk.Style()
@@ -33,20 +40,21 @@ class App(tk.Tk):
             "TFrame": {"background": "#f0f0f0", "font": ('Arial', 10)},
             "TButton": {
                 "background": "#e1e1e1", "font": ('Arial', 10, 'bold'),
-                "width": 17, "padding": (0, 7, 0, 7)
+                "width": 14, "padding": (0, 7, 0, 7)
             },
             "TLabel": {"background": "#f0f0f0", "font": ('Arial', 10, 'bold')},
             "Header.TLabel": {
                 "background": "#3d8624", "foreground": "#ffffee",
                 "anchor": "c", "font": ('Arial', 14, 'bold')
             },
-            "Info.TLabel": {  # <--- Añadir este nuevo estilo
+            "Info.TLabel": { 
                 "background": "#e8f4ff", 
                 "foreground": "#003366",
                 "font": ('Arial', 10),
                 "relief": "solid",
                 "borderwidth": 1
-            }
+            },
+            "TNotebook":{"background": "#f0f0f0"}
         }
         
         for nombre, config in estilos.items():
@@ -74,6 +82,11 @@ class App(tk.Tk):
         if nombre_frame in self.frames:
             frame = self.frames[nombre_frame]
             frame.tkraise()
+
+            # Aplicar geometria correspondiente al frame
+            if nombre_frame in self.geometrias:
+                self.geometry(self.geometrias[nombre_frame])
+
             frame.inicializar()
 
     def mostrar_mensaje(self, tipo: str, mensaje: str, titulo: Optional[str] = None):

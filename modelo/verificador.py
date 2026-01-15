@@ -28,6 +28,11 @@ class VerificadorFactura:
     def nif(self):
         if self.factura[KEY.NIF] is None:
             return (f"{KEY.NIF} no encontrado")
+        
+        self.factura[KEY.NIF] = str(self.factura[KEY.NIF]).upper()
+        self.factura[KEY.NIF] = self.factura[KEY.NIF].replace(' ','')
+        self.factura[KEY.NIF] = self.factura[KEY.NIF].replace('-','')
+        self.factura[KEY.NIF] = self.factura[KEY.NIF].replace('.','')
 
         if not fb.validar_nif(self.factura[KEY.NIF]):
             return (f"{KEY.NIF} incorrecto")

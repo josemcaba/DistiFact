@@ -15,15 +15,24 @@ class FrameSeleccionArchivo(FrameBase):
         # Crear cabecera con información de empresa y botón Unificar
         self._crear_cabecera_empresa(mostrar_boton=True)
         
-        self.frame_contenido = ttk.Frame(self)
-        self.frame_contenido.pack(fill="both", expand=True)
+        # Frame principal que contendrá todo el contenido
+        self.frame_principal = ttk.Frame(self)
+        self.frame_principal.pack(fill="both", expand=True)
+        
+        # Frame para el contenido que debe expandirse (arriba)
+        self.frame_contenido = ttk.Frame(self.frame_principal)
+        self.frame_contenido.pack(fill="both", expand=True, padx=5, pady=5)
+        
+        # Frame fijo para botones de navegación (abajo)
+        self.frame_botones_inferiores = ttk.Frame(self.frame_principal)
+        self.frame_botones_inferiores.pack(side="bottom", fill="x", padx=5)
         
         self._crear_area_seleccion_archivo()
         self._crear_area_acciones()
     
     def _crear_area_seleccion_archivo(self):
         frame = ttk.Frame(self.frame_contenido)
-        frame.pack(fill="x", padx=5, pady=5)
+        frame.pack(fill="x", pady=5)
         
         ttk.Label(frame, text="Archivo a procesar:").pack(anchor="w", pady=(0, 5))
         
@@ -34,17 +43,19 @@ class FrameSeleccionArchivo(FrameBase):
         self.entry_ruta.pack(side="right", fill="x", expand=True, padx=(10, 0))
 
     def _crear_area_acciones(self):
-        frame = ttk.Frame(self.frame_contenido)
-        frame.pack(fill="x", padx=5, pady=10)
+        # Botones de navegación en el frame inferior (siempre pegados abajo)
+        f_nav = ttk.Frame(self.frame_botones_inferiores)
+        f_nav.pack(fill="x")
         
-        self.btn_crear = ttk.Button(frame, text="Crear rectángulos", command=self._on_crear_rectangulos)
-        self.btn_visualizar = ttk.Button(frame, text="Ver rectángulos", command=self._on_visualizar_rectangulos)
-        
-        # Navegación
-        f_nav = ttk.Frame(frame)
-        f_nav.pack(side="right")
+        ttk.Button(f_nav, text="Procesar", command=self._on_procesar).pack(side="right")
         ttk.Button(f_nav, text="Volver", command=lambda: self.app.mostrar_frame("seleccion_empresa")).pack(side="right", padx=5)
-        ttk.Button(f_nav, text="Procesar", command=self._on_procesar).pack(side="right", padx=5)
+
+        self.btn_crear = ttk.Button(f_nav, text="Crear rectángulos", width=17, command=self._on_crear_rectangulos)
+        self.btn_visualizar = ttk.Button(f_nav, text="Ver rectángulos", width=17, command=self._on_visualizar_rectangulos)
+        
+        # Inicialmente no los empaquetamos
+        self.btn_crear.pack_forget()
+        self.btn_visualizar.pack_forget()
 
     def inicializar(self):
         # Actualizar información de empresa en la cabecera
@@ -60,7 +71,7 @@ class FrameSeleccionArchivo(FrameBase):
     
     def _actualizar_visibilidad_botones(self, tipo_empresa):
         if tipo_empresa == "PDFimagen":
-            self.btn_visualizar.pack(side="left", padx=5)
+            self.btn_visualizar.pack(side="left")
             self.btn_crear.pack(side="left", padx=5)
         else:
             self.btn_visualizar.pack_forget()
@@ -95,7 +106,6 @@ class FrameSeleccionArchivo(FrameBase):
         self.controlador.establecer_ruta_archivo(ruta)
         self.app.mostrar_frame("procesamiento")
     
-    # ... (Resto de métodos _on_crear_rectangulos, _on_visualizar, etc. se mantienen similares pero usando _validar_archivo)
     def _on_visualizar_rectangulos(self):
         ruta = self.entry_ruta.get().strip()
         valido, msg = self._validar_archivo(ruta, (".pdf",))
@@ -118,3 +128,4 @@ class FrameSeleccionArchivo(FrameBase):
             res = self.controlador.unificar_pdfs(directorio)
             tipo = "info" if res["exito"] else "error"
             self.mostrar_mensaje(tipo, res["mensaje"] + (f"\nGenerado: {res.get('ruta_salida')}" if res.get('ruta_salida') else ""))
+            

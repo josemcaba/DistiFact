@@ -19,8 +19,6 @@ identificador="Descripción"
 def extraerDatosFactura(pagina, empresa):
     pagina = pagina[1]
 
-    print(pagina)
-
     # 1. EXTRACCIÓN DE DATOS COMUNES (Cabecera)
     # Estos datos se repiten en todas las líneas de desglose de IVA
     datos_comunes = {}
@@ -40,10 +38,21 @@ def extraerDatosFactura(pagina, empresa):
     # Datos de la empresa
     datos_comunes[KEY.NIF] = empresa["nif"]
     datos_comunes[KEY.EMPRESA] = empresa["nombre"]
+    datos_comunes[KEY.BASE_IVA] = ""
+    datos_comunes[KEY.TIPO_IVA] = ""
+    datos_comunes[KEY.CUOTA_IVA] = ""
+    datos_comunes[KEY.BASE_IRPF] = ""
+    datos_comunes[KEY.TIPO_IRPF] = ""
+    datos_comunes[KEY.CUOTA_IRPF] = ""
+    datos_comunes[KEY.BASE_RE] = ""
+    datos_comunes[KEY.TIPO_RE] = ""
+    datos_comunes[KEY.CUOTA_RE] = ""
+    datos_comunes[KEY.TOTAL_FACT] = ""
 
     # 2. EXTRACCIÓN DE DESGLOSE DE IVA
     # Lista donde guardaremos cada fila resultante (una por tipo de IVA)
     facturas = []
+    facturas.append(datos_comunes)
 
     # Localizar el bloque donde están los totales       
     # Busca texto entre "Base Imponible...Total...Total Factura"
@@ -56,6 +65,8 @@ def extraerDatosFactura(pagina, empresa):
         # Ejemplo línea: 10%  100,50  10,05  110,55
         regex = r"(\d+)%\s+([\d,.]+)\s+([\d,.]+)\s+([\d,.]+)"
         datos = re.findall(regex, bloque)
+        if datos:
+            facturas = []
 
         for iva, base, cuota, total in datos:
             # Creamos una COPIA de los datos comunes para esta línea

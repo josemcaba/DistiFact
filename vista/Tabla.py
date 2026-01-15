@@ -33,7 +33,7 @@ class Tabla(tk.Frame):
         estilo = ttk.Style()
         estilo.configure('Treeview', 
                          background='#fffbcc',
-                         fieldbackground='#ffffee',
+                         fieldbackground='#fffbcc',
                          rowheight=26,
                          font=('Arial', 12))        
         estilo.configure('Treeview.Heading', 

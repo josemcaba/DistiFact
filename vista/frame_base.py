@@ -49,7 +49,7 @@ class FrameBase(ttk.Frame, ABC):
         f_info = ttk.Frame(self.frame_empresa)
         f_info.pack(side="left", fill="x", expand=True)
         
-        ttk.Label(f_info, text="Empresa seleccionada:").pack(anchor="w")
+        ttk.Label(f_info, text="Empresa:").pack(anchor="w")
         self.lbl_empresa_info = ttk.Label(
             f_info, 
             text="", 

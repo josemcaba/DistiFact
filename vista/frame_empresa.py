@@ -12,6 +12,7 @@ class FrameSeleccionEmpresa(FrameBase):
     def _inicializar_componentes(self):
         super()._inicializar_componentes()
         
+        # Contenedor principal
         self.frame_contenido = ttk.Frame(self)
         self.frame_contenido.pack(fill="both", expand=True)
          
@@ -26,7 +27,7 @@ class FrameSeleccionEmpresa(FrameBase):
             {"nombre": "Num.", "ancho": 50, "alineacion": tk.CENTER, "expandible": False},
             {"nombre": "DNI/NIF", "ancho": 125, "alineacion": tk.CENTER, "expandible": False},
             {"nombre": "Razón Social", "ancho": 150, "alineacion": tk.W, "expandible": True},
-            {"nombre": "Tipo", "ancho": 100, "alineacion": tk.W, "expandible": False}
+            {"nombre": "Tipo", "ancho": 115, "alineacion": tk.W, "expandible": False}
         ]
         self.tabla_empresas.cabecera(columnas)
         self.tabla_empresas.tabla.bind("<Double-1>", self._on_seleccionar)
@@ -35,8 +36,8 @@ class FrameSeleccionEmpresa(FrameBase):
         self.frame_botones = ttk.Frame(self.frame_contenido)
         self.frame_botones.pack(fill="x")
         
-        ttk.Button(self.frame_botones, text="Salir", command=self.app.quit).pack(side="right", padx=5)
         ttk.Button(self.frame_botones, text="Seleccionar", command=self._on_seleccionar).pack(side="right", padx=5)
+        ttk.Button(self.frame_botones, text="Salir", command=self.app.quit).pack(side="right")
     
     def inicializar(self):
         self._cargar_empresas()
