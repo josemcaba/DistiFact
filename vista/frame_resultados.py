@@ -42,10 +42,10 @@ class FrameResultados(FrameBase):
         frame_btns = ttk.Frame(self.frame_contenido)
         frame_btns.pack(fill="x", pady=10)
         
-        ttk.Button(frame_btns, text="Nueva Consulta", 
+        ttk.Button(frame_btns, text="Inicio", 
                    command=lambda: self.app.mostrar_frame("seleccion_empresa")).pack(side="right", padx=5)
         
-        ttk.Button(frame_btns, text="Exportar a Excel", 
+        ttk.Button(frame_btns, text="Exportar", 
                    command=self._on_exportar).pack(side="right", padx=5)
     
     def _obtener_columnas_base(self):

@@ -14,27 +14,31 @@ class FrameProcesamiento(FrameBase):
         
         # Crear cabecera con información de empresa (sin botón)
         self._crear_cabecera_empresa(mostrar_boton=False)
+
+        # Crear sub-cabecera con información del archivo a procesar
+        self._crear_cabecera_archivo()
         
-        # Frame principal que contendrá todo el contenido
+        # Frame para el contenido que debe expandirse
         self.frame_contenido = ttk.Frame(self)
-        self.frame_contenido.pack(fill="both", expand=True)
+        self.frame_contenido.pack(fill="both", expand=True, padx=5, pady=5)
         
-        # Info Archivo
-        self.lbl_archivo_info = ttk.Label(self.frame_contenido, text="", padding=(20, 10))
-        self.lbl_archivo_info.pack(anchor="w")
-        
-        # Estado y Progreso
+        # Estado y Barra de Progreso
         f_estado = ttk.Frame(self.frame_contenido)
-        f_estado.pack(fill="x", pady=10)
+        f_estado.pack(fill="x")
         
-        self.lbl_estado = ttk.Label(f_estado, text="Preparando...")
-        self.lbl_estado.pack(anchor="w")
+        # Frame para los labels
+        f_labels = ttk.Frame(f_estado)
+        f_labels.pack(fill="x", side="top")
+
+        self.lbl_estado = ttk.Label(f_labels, text="Preparando...")
+        self.lbl_estado.pack(side="left")
         
-        self.progreso = ttk.Progressbar(f_estado, orient="horizontal", length=500, mode="determinate")
-        self.progreso.pack(fill="x", pady=5)
+        self.lbl_detalle = ttk.Label(f_labels, text="")
+        self.lbl_detalle.pack(side="right")
+
+        self.progreso = ttk.Progressbar(f_estado, orient="horizontal", mode="determinate")
+        self.progreso.pack(fill="x", pady=(5, 0))
         
-        self.lbl_detalle = ttk.Label(f_estado, text="")
-        self.lbl_detalle.pack(anchor="w")
         
         # Log de mensajes
         f_msgs = ttk.Frame(self.frame_contenido)
@@ -59,26 +63,48 @@ class FrameProcesamiento(FrameBase):
         
         self.cancelar_procesamiento = False
 
+    def _crear_cabecera_archivo(self):
+        """Crea la cabecera con información de la empresa seleccionada."""
+        # Frame para información de archivo
+        self.frame_archivo = ttk.Frame(self)
+        self.frame_archivo.pack(fill="x", padx=5, pady=5)
+        
+        # Información del archivo (izquierda)
+        f_info_archivo = ttk.Frame(self.frame_archivo)
+        f_info_archivo.pack(side="left", fill="x", expand=True)
+        
+        ttk.Label(f_info_archivo, text="Archivo:").pack(anchor="w")
+        self.lbl_archivo = ttk.Label(f_info_archivo,
+            relief="solid", padding=5, text="", 
+            style="Info.TLabel")  # Nuevo estilo para información de empresa
+        
+        self.lbl_archivo.pack(anchor="w", pady=(5, 0), padx=(0, 5))
+
+        # Separador
+        ttk.Separator(self, orient="horizontal").pack(fill='x', padx=5, pady=5)
+    
+    def _actualizar_info_archivo(self):
+        """Actualiza la información del archivo en la cabecera."""
+        ruta_archivo = self.controlador.obtener_ruta_archivo()
+        print(ruta_archivo)
+        if len(ruta_archivo) > 75:
+            ruta_archivo = ruta_archivo[-75:]
+            ruta_archivo = "..." + ruta_archivo[ruta_archivo.index("/"):]
+        self.lbl_archivo.config(text=ruta_archivo)
+
     def inicializar(self):
-        # Actualizar información de empresa en la cabecera
-        self._actualizar_info_empresa()
-        
         self.btn_continuar.config(state="disabled")
-        ruta = self.controlador.obtener_ruta_archivo()
-        
-        if not ruta:
-            self.app.mostrar_frame("seleccion_archivo")
-            return
-            
-        ruta_display = "..." + ruta[-70:] if len(ruta) > 75 else ruta
-        self.lbl_archivo_info.config(text=f"Procesando: {ruta_display}")
+
+        # Actualizar información en la cabecera
+        self._actualizar_info_empresa()
+        self._actualizar_info_archivo()
         
         self._limpiar_log()
         self.progreso["value"] = 0
         self.cancelar_procesamiento = False
         
         threading.Thread(target=self._procesar_archivo, daemon=True).start()
-    
+
     def _limpiar_log(self):
         self.txt_mensajes.config(state=tk.NORMAL)
         self.txt_mensajes.delete(1.0, tk.END)
@@ -96,7 +122,7 @@ class FrameProcesamiento(FrameBase):
             if self.cancelar_procesamiento: return
             
             if res:
-                self._actualizar_estado("Completado", 100)
+                # self._actualizar_estado("Completado", 100)
                 self._agregar_mensaje("info", f"Generados {len(res)} apuntes")
             else:
                 self._actualizar_estado("Error", 0)
@@ -110,12 +136,12 @@ class FrameProcesamiento(FrameBase):
 
     def _actualizar_progreso(self, actual, total):
         pct = int((actual / total) * 100) if total > 0 else 0
-        self.after(0, lambda: self._actualizar_estado(f"Procesando {actual}/{total}", pct))
+        self.after(0, lambda: self._actualizar_estado(f"Procesando {actual} de {total}", pct))
 
     def _actualizar_estado(self, texto, porcentaje):
         self.lbl_estado.config(text=texto)
         self.progreso["value"] = porcentaje
-        self.lbl_detalle.config(text=f"{porcentaje}%")
+        self.lbl_detalle.config(text=f"{porcentaje}% completado")
 
     def _agregar_mensaje(self, tipo, mensaje):
         iconos = {"error": "❌ ", "warning": "⚠️ ", "info": "ℹ️ "}

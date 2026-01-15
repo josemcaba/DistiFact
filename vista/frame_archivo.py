@@ -28,7 +28,7 @@ class FrameSeleccionArchivo(FrameBase):
         self.frame_botones_inferiores.pack(side="bottom", fill="x", padx=5)
         
         self._crear_area_seleccion_archivo()
-        self._crear_area_acciones()
+        self._crear_area_botones()
     
     def _crear_area_seleccion_archivo(self):
         frame = ttk.Frame(self.frame_contenido)
@@ -42,7 +42,7 @@ class FrameSeleccionArchivo(FrameBase):
         self.entry_ruta = ttk.Entry(f_entrada)
         self.entry_ruta.pack(side="right", fill="x", expand=True, padx=(10, 0))
 
-    def _crear_area_acciones(self):
+    def _crear_area_botones(self):
         # Botones de navegación en el frame inferior (siempre pegados abajo)
         f_nav = ttk.Frame(self.frame_botones_inferiores)
         f_nav.pack(fill="x")
