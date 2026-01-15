@@ -18,12 +18,12 @@ class FrameProcesamiento(FrameBase):
         # Crear sub-cabecera con información del archivo a procesar
         self._crear_cabecera_archivo()
         
-        # Frame para el contenido que debe expandirse
-        self.frame_contenido = ttk.Frame(self)
-        self.frame_contenido.pack(fill="both", expand=True, padx=5, pady=5)
+        # Frame principal que contendrá todo el contenido
+        self.frame_principal = ttk.Frame(self)
+        self.frame_principal.pack(fill="both", expand=True, padx=5, pady=(5, 0))
         
         # Estado y Barra de Progreso
-        f_estado = ttk.Frame(self.frame_contenido)
+        f_estado = ttk.Frame(self.frame_principal)
         f_estado.pack(fill="x")
         
         # Frame para los labels
@@ -41,27 +41,31 @@ class FrameProcesamiento(FrameBase):
         
         
         # Log de mensajes
-        f_msgs = ttk.Frame(self.frame_contenido)
+        f_msgs = ttk.Frame(self.frame_principal)
         f_msgs.pack(fill="both", expand=True, pady=10)
         
-        self.txt_mensajes = tk.Text(f_msgs, height=10, state=tk.DISABLED, font=("Consolas", 9))
+        self.txt_mensajes = tk.Text(f_msgs, height=0, width=0, state=tk.DISABLED, font=("Consolas", 9))
         self.txt_mensajes.pack(side="left", fill="both", expand=True)
         
         scroll = ttk.Scrollbar(f_msgs, command=self.txt_mensajes.yview)
         scroll.pack(side="right", fill="y")
         self.txt_mensajes.config(yscrollcommand=scroll.set)
         
-        # Botones
-        f_btns = ttk.Frame(self.frame_contenido)
-        f_btns.pack(fill="x", pady=10)
-        
-        self.btn_continuar = ttk.Button(f_btns, text="Continuar", command=lambda: self.app.mostrar_frame("resultados"), state="disabled")
-        self.btn_continuar.pack(side="right", padx=5)
-        
-        self.btn_cancelar = ttk.Button(f_btns, text="Cancelar", command=self._on_cancelar)
-        self.btn_cancelar.pack(side="right", padx=5)
-        
+        self._crear_area_botones()
+
         self.cancelar_procesamiento = False
+
+    def _crear_area_botones(self):
+        # Botones de navegación en el frame inferior (siempre pegados abajo)
+        f_botones = ttk.Frame(self.frame_principal)
+        f_botones.pack(side="bottom", fill="x")
+
+        self.boton_continuar = ttk.Button(f_botones, text="Continuar", command=lambda: self.app.mostrar_frame("resultados"), state="disabled")
+        self.boton_continuar.pack(side="right")
+
+        self.boton_cancelar = ttk.Button(f_botones, text="Cancelar", command=self._on_cancelar)
+        self.boton_cancelar.pack(side="right", padx=5)
+   
 
     def _crear_cabecera_archivo(self):
         """Crea la cabecera con información de la empresa seleccionada."""
@@ -93,7 +97,7 @@ class FrameProcesamiento(FrameBase):
         self.lbl_archivo.config(text=ruta_archivo)
 
     def inicializar(self):
-        self.btn_continuar.config(state="disabled")
+        self.boton_continuar.config(state="disabled")
 
         # Actualizar información en la cabecera
         self._actualizar_info_empresa()
@@ -122,7 +126,6 @@ class FrameProcesamiento(FrameBase):
             if self.cancelar_procesamiento: return
             
             if res:
-                # self._actualizar_estado("Completado", 100)
                 self._agregar_mensaje("info", f"Generados {len(res)} apuntes")
             else:
                 self._actualizar_estado("Error", 0)
@@ -132,7 +135,7 @@ class FrameProcesamiento(FrameBase):
             self._actualizar_estado(f"Error crítico", 0)
             self._agregar_mensaje("error", str(e))
         finally:
-            self.after(0, lambda: self.btn_continuar.config(state="normal"))
+            self.after(0, lambda: self.boton_continuar.config(state="normal"))
 
     def _actualizar_progreso(self, actual, total):
         pct = int((actual / total) * 100) if total > 0 else 0
