@@ -8,6 +8,8 @@ import extractores.conceptos_factura as KEY
 # facturas. Sin ningún tipo de ajuste o manipulación. Eso se hace en la
 # fase de verificación
 #
+identificador=""
+
 def extraerDatosFactura(pagina, empresa):
     num_pag = pagina[0]
     columna = pagina[1]

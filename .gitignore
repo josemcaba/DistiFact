@@ -4,5 +4,4 @@
 *.pdf
 __pycache__
 .vscode
-venv/
 DistiFact-Facturas/

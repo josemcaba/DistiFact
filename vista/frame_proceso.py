@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import threading
 from vista.frame_base import FrameBase
+import extractores.conceptos_factura as KEY
 
 class FrameProcesamiento(FrameBase):
     nombre = "procesamiento"
@@ -90,7 +91,6 @@ class FrameProcesamiento(FrameBase):
     def _actualizar_info_archivo(self):
         """Actualiza la información del archivo en la cabecera."""
         ruta_archivo = self.controlador.obtener_ruta_archivo()
-        print(ruta_archivo)
         if len(ruta_archivo) > 75:
             ruta_archivo = ruta_archivo[-75:]
             ruta_archivo = "..." + ruta_archivo[ruta_archivo.index("/"):]
@@ -116,9 +116,11 @@ class FrameProcesamiento(FrameBase):
 
     def _procesar_archivo(self):
         try:
+            # Configurar callbacks incluyendo el de factura
             self.controlador.configurar_callbacks(
                 progreso_callback=self._actualizar_progreso,
-                mensaje_callback=self._agregar_mensaje
+                mensaje_callback=self._agregar_mensaje,
+                factura_callback=self._agregar_info_factura
             )
             
             res = self.controlador.procesar_archivo()
@@ -157,8 +159,23 @@ class FrameProcesamiento(FrameBase):
             self.txt_mensajes.config(state=tk.DISABLED)
             
         self.after(0, _write)
+    
+    def _agregar_info_factura(self, factura: dict):
+        """
+        Agrega información de una factura procesada al log
+        """
+        icono = "📄 "
+        texto = f"{icono}Factura: {factura[KEY.NUM_FACT]} {factura[KEY.FECHA_FACT]} {factura[KEY.BASE_IVA]} {factura[KEY.CUOTA_IVA]} {factura[KEY.TOTAL_FACT]}\n"
+        
+        def _write():
+            self.txt_mensajes.config(state=tk.NORMAL)
+            self.txt_mensajes.insert(tk.END, texto)
+            self.txt_mensajes.see(tk.END)
+            self.txt_mensajes.config(state=tk.DISABLED)
+            
+        self.after(0, _write)
 
     def _on_cancelar(self):
         self.cancelar_procesamiento = True
         self._agregar_mensaje("warning", "Cancelando...")
-        self.after(1000, lambda: self.app.mostrar_frame("seleccion_archivo"))
+        self.after(500, lambda: self.app.mostrar_frame("seleccion_archivo"))

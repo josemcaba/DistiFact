@@ -32,6 +32,9 @@ class Controlador:
         self._facturas = []
         self._facturas_correctas = []
         self._facturas_con_errores = []
+        
+        # Callbacks
+        self._factura_callback = None  # <--- Nuevo callback para información de factura
     
     def iniciar(self, ruta_json: str = "empresas.json") -> bool:
         """
@@ -126,15 +129,17 @@ class Controlador:
         return self._ruta_archivo
     
     def configurar_callbacks(self, progreso_callback: Callable[[int, int], None], 
-                           mensaje_callback: Callable[[str, str], None]) -> None:
+                           mensaje_callback: Callable[[str, str], None],
+                           factura_callback: Callable[[Dict[str, Any]], None] = None) -> None:  # <--- Añadir parámetro
         """
         Configura las funciones de callback para reportar progreso y mensajes.
         
         Args:
             progreso_callback: Función para reportar progreso (página actual, total)
             mensaje_callback: Función para mostrar mensajes (tipo, mensaje)
+            factura_callback: Función para mostrar información de factura procesada
         """
-        self._procesador.set_callbacks(progreso_callback, mensaje_callback)
+        self._procesador.set_callbacks(progreso_callback, mensaje_callback, factura_callback)  # <--- Pasar al procesador
         self._exportador.set_mensaje_callback(mensaje_callback)
         self._creador.set_mensaje_callback(mensaje_callback)
     

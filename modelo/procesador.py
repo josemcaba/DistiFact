@@ -3,10 +3,9 @@ Módulo que contiene la clase ProcesadorFacturas para procesar archivos de factu
 Refactorizado para soportar múltiples desgloses de IVA por factura.
 """
 from importlib import import_module
-from pathlib import Path
 import sys
 import os
-from typing import List, Callable, Dict, Any, Union, Optional
+from typing import List, Callable, Dict, Any, Optional
 
 # Librerías de terceros
 import pdfplumber
@@ -26,14 +25,24 @@ class ProcesadorFacturas:
     def __init__(self):
         self._progreso_callback: Optional[Callable[[int, int], None]] = None
         self._mensaje_callback: Optional[Callable[[str, str], None]] = None
+        self._factura_callback: Optional[Callable[[Dict[str, Any]], None]] = None
         self.extractor = ExtractorImagenes()
         self.ocr = ExtractorTexto()
     
     def set_callbacks(self, progreso_callback: Callable[[int, int], None], 
-                     mensaje_callback: Callable[[str, str], None]) -> None:
-        """Establece las funciones de callback para reportar progreso y mensajes."""
+                     mensaje_callback: Callable[[str, str], None],
+                     factura_callback: Optional[Callable[[Dict[str, Any]], None]] = None) -> None:
+        """
+        Establece las funciones de callback para reportar progreso y mensajes.
+        
+        Args:
+            progreso_callback: Función para reportar progreso
+            mensaje_callback: Función para mostrar mensajes
+            factura_callback: Función para mostrar información de factura procesada
+        """
         self._progreso_callback = progreso_callback
         self._mensaje_callback = mensaje_callback
+        self._factura_callback = factura_callback  # <--- Añadir
     
     def _mostrar_mensaje(self, tipo: str, mensaje: str) -> None:
         """Muestra un mensaje usando el callback si está disponible."""
@@ -49,6 +58,11 @@ class ProcesadorFacturas:
         else:
             sys.stdout.write(f'\rProcesando: {actual}/{total}')
             sys.stdout.flush()
+    
+    def _mostrar_info_factura(self, info_factura: Dict[str, Any]) -> None:
+        """Muestra información de una factura usando el callback """
+        if self._factura_callback:
+            self._factura_callback(info_factura)
 
     def _cargar_modulo_extractor(self, nombre_funcion: str):
         """Intenta cargar dinámicamente el módulo extractor."""
@@ -80,24 +94,22 @@ class ProcesadorFacturas:
             # Verificamos si es una lista de diccionarios puros
             if isinstance(resultado_extractor[0], dict):
                 for datos in resultado_extractor:
-                    facturas_generadas.append(Factura(num_pagina, datos))
-                return facturas_generadas
+                    factura = Factura(num_pagina, datos)
+                    facturas_generadas.append(factura)
 
             # Caso 2: Estándar Antiguo - [num_pag, dict]
             elif len(resultado_extractor) == 2 and isinstance(resultado_extractor[1], dict):
                 datos = resultado_extractor[1]
-                # Usamos el número de página original del bucle, o el devuelto si se prefiere
-                facturas_generadas.append(Factura(num_pagina, datos))
-                return facturas_generadas
+                factura = Factura(num_pagina, datos)
+                facturas_generadas.append(factura)
+        else:
+            self._mostrar_mensaje('error', f'Formato de retorno desconocido en página {num_pagina}: {type(resultado_extractor)}')
+            return []
 
-        # Caso 3: Retorno de un solo diccionario
-        if isinstance(resultado_extractor, dict):
-            facturas_generadas.append(Factura(num_pagina, resultado_extractor))
-            return facturas_generadas
-
-        self._mostrar_mensaje('error', f'Formato de retorno desconocido en página {num_pagina}: {type(resultado_extractor)}')
-        return []
-
+        # Mostrar información de la factura procesada
+        self._mostrar_info_factura(factura.to_dict())
+        return facturas_generadas
+    
     def procesar_archivo(self, ruta_archivo: str, empresa: Empresa) -> List[Factura]:
         """
         Procesa un archivo según el tipo de empresa y genera las facturas.
