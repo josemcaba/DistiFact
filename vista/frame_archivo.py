@@ -47,8 +47,8 @@ class FrameSeleccionArchivo(FrameBase):
         f_nav = ttk.Frame(self.frame_botones_inferiores)
         f_nav.pack(fill="x")
         
-        ttk.Button(f_nav, text="Procesar", command=self._on_procesar).pack(side="right")
-        ttk.Button(f_nav, text="Volver", command=lambda: self.app.mostrar_frame("seleccion_empresa")).pack(side="right", padx=5)
+        ttk.Button(f_nav, text="Procesar", command=self._on_procesar).pack(side="left")
+        ttk.Button(f_nav, text="Volver", command=lambda: self.app.mostrar_frame("seleccion_empresa")).pack(side="left", padx=5)
 
         self.btn_crear = ttk.Button(f_nav, text="Crear rectángulos", width=17, command=self._on_crear_rectangulos)
         self.btn_visualizar = ttk.Button(f_nav, text="Ver rectángulos", width=17, command=self._on_visualizar_rectangulos)

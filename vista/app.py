@@ -20,7 +20,7 @@ class App(tk.Tk):
             "seleccion_empresa": "560x520",
             "seleccion_archivo": "560x520",
             "procesamiento": "560x520",
-            "resultados": "1120x550"
+            "resultados": "1120x520"
         }
         
         self._configurar_ventana()

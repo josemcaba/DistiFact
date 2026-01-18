@@ -43,7 +43,7 @@ class FrameProcesamiento(FrameBase):
         
         # Log de mensajes
         f_msgs = ttk.Frame(self.frame_principal)
-        f_msgs.pack(fill="both", expand=True, pady=10)
+        f_msgs.pack(fill="both", expand=True, pady=(10, 5))
         
         self.txt_mensajes = tk.Text(f_msgs, height=0, width=0, state=tk.DISABLED, font=("Consolas", 9))
         self.txt_mensajes.pack(side="left", fill="both", expand=True)
@@ -62,10 +62,10 @@ class FrameProcesamiento(FrameBase):
         f_botones.pack(side="bottom", fill="x")
 
         self.boton_continuar = ttk.Button(f_botones, text="Continuar", command=lambda: self.app.mostrar_frame("resultados"), state="disabled")
-        self.boton_continuar.pack(side="right")
+        self.boton_continuar.pack(side="left")
 
         self.boton_cancelar = ttk.Button(f_botones, text="Cancelar", command=self._on_cancelar)
-        self.boton_cancelar.pack(side="right", padx=5)
+        self.boton_cancelar.pack(side="left", padx=5)
    
 
     def _crear_cabecera_archivo(self):
@@ -176,6 +176,6 @@ class FrameProcesamiento(FrameBase):
         self.after(0, _write)
 
     def _on_cancelar(self):
-        self.cancelar_procesamiento = True
         self._agregar_mensaje("warning", "Cancelando...")
-        self.after(500, lambda: self.app.mostrar_frame("seleccion_archivo"))
+        self.after(1000, lambda: self.app.mostrar_frame("seleccion_archivo"))
+        self.cancelar_procesamiento = True

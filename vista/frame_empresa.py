@@ -18,7 +18,7 @@ class FrameSeleccionEmpresa(FrameBase):
          
         # Tabla
         self.frame_tabla = ttk.Frame(self.frame_contenido)
-        self.frame_tabla.pack(fill="both", expand=True, pady=5)
+        self.frame_tabla.pack(fill="both", expand=True, pady=5, padx=5)
         
         self.tabla_empresas = Tabla(self.frame_tabla)
         self.tabla_empresas.pack(fill="both", expand=True)
@@ -36,8 +36,8 @@ class FrameSeleccionEmpresa(FrameBase):
         self.frame_botones = ttk.Frame(self.frame_contenido)
         self.frame_botones.pack(fill="x")
         
-        ttk.Button(self.frame_botones, text="Seleccionar", command=self._on_seleccionar).pack(side="right", padx=5)
-        ttk.Button(self.frame_botones, text="Salir", command=self.app.quit).pack(side="right")
+        ttk.Button(self.frame_botones, text="Seleccionar", command=self._on_seleccionar).pack(side="left", padx=5)
+        ttk.Button(self.frame_botones, text="Salir", command=self.app.quit).pack(side="left")
     
     def inicializar(self):
         self._cargar_empresas()

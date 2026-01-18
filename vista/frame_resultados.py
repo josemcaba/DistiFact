@@ -15,19 +15,20 @@ class FrameResultados(FrameBase):
         # Crear cabecera con información de empresa (sin botón)
         self._crear_cabecera_empresa(mostrar_boton=False)
         
+        # Frame principal que contendrá todo el contenido
         self.frame_contenido = ttk.Frame(self)
-        self.frame_contenido.pack(fill="both", expand=True)
+        self.frame_contenido.pack(fill="both", expand=True, padx=5, pady=(5, 0))
         
-        self.notebook = ttk.Notebook(self.frame_contenido)
-        self.notebook.pack(fill="both", expand=True, pady=10)
+        self.notebook = ttk.Notebook(self.frame_contenido, height=0)
+        self.notebook.pack(fill="both", expand=True, pady=(0, 5))
         
         # Configuración de tablas
-        self.tab_correctas = ttk.Frame(self.notebook)
-        self.tab_errores = ttk.Frame(self.notebook)
+        self.tab_correctas = ttk.Frame(self.notebook, padding=0)
+        self.tab_errores = ttk.Frame(self.notebook, padding=0)
         
         self.notebook.add(self.tab_correctas, text="Facturas Correctas")
         self.notebook.add(self.tab_errores, text="Facturas con Errores")
-        
+
         col_base = self._obtener_columnas_base()
         
         self.tabla_correctas = self._crear_tabla(self.tab_correctas, col_base + [
@@ -40,13 +41,14 @@ class FrameResultados(FrameBase):
         
         # Botones
         frame_btns = ttk.Frame(self.frame_contenido)
-        frame_btns.pack(fill="x", pady=10)
-        
-        ttk.Button(frame_btns, text="Inicio", 
-                   command=lambda: self.app.mostrar_frame("seleccion_empresa")).pack(side="right", padx=5)
-        
+        frame_btns.pack(side="bottom",fill="x")
+
         ttk.Button(frame_btns, text="Exportar", 
-                   command=self._on_exportar).pack(side="right", padx=5)
+                   command=self._on_exportar).pack(side="left")
+        
+        ttk.Button(frame_btns, text="Volver", 
+                   command=lambda: self.app.mostrar_frame("seleccion_empresa")).pack(side="left", padx=5)
+        
     
     def _obtener_columnas_base(self):
         return [
@@ -62,7 +64,7 @@ class FrameResultados(FrameBase):
     
     def _crear_tabla(self, parent, columnas):
         frame = ttk.Frame(parent)
-        frame.pack(fill="both", expand=True, padx=5, pady=5)
+        frame.pack(fill="both", expand=True)
         tabla = Tabla(frame)
         tabla.pack(fill="both", expand=True)
         tabla.cabecera(columnas)
