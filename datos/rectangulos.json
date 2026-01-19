@@ -95,24 +95,24 @@
     "B92421601": {
         "angulo": 0,
         "rectangulo_1": {
-            "x1": 208,
-            "y1": 820,
-            "x2": 1093,
+            "x1": 217,
+            "y1": 836,
+            "x2": 1149,
             "y2": 1091,
             "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_2": {
-            "x1": 752,
-            "y1": 1853,
-            "x2": 1504,
-            "y2": 2113,
+            "x1": 780,
+            "y1": 1476,
+            "x2": 1513,
+            "y2": 3771,
             "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         },
         "rectangulo_3": {
-            "x1": 2602,
-            "y1": 1501,
-            "x2": 3036,
-            "y2": 2569,
+            "x1": 2636,
+            "y1": 1460,
+            "x2": 3013,
+            "y2": 3863,
             "tesseract": "-l spa --psm 6 --oem 3 -c tessedit_char_blacklist=\"\\!|=@#$£&*{}[]:;\" -c preserve_interword_spaces=1"
         }
     },

@@ -71,8 +71,8 @@ class FrameSeleccionArchivo(FrameBase):
     
     def _actualizar_visibilidad_botones(self, tipo_empresa):
         if tipo_empresa == "PDFimagen":
-            self.btn_visualizar.pack(side="left")
-            self.btn_crear.pack(side="left", padx=5)
+            self.btn_visualizar.pack(side="right")
+            self.btn_crear.pack(side="right", padx=5)
         else:
             self.btn_visualizar.pack_forget()
             self.btn_crear.pack_forget()
