@@ -16,6 +16,8 @@ class VerificadorFactura:
     def fecha(self, is_eeuu=False):
         if self.factura[KEY.FECHA_FACT] is None:
             return (f"{KEY.FECHA_FACT} no encontrada")
+        
+        self.factura[KEY.FECHA_FACT] = self.factura[KEY.FECHA_FACT].replace("-","/")
 
         fecha = fb.validar_fecha(self.factura[KEY.FECHA_FACT], is_eeuu)
         if not fecha:
@@ -33,6 +35,9 @@ class VerificadorFactura:
         self.factura[KEY.NIF] = self.factura[KEY.NIF].replace(' ','')
         self.factura[KEY.NIF] = self.factura[KEY.NIF].replace('-','')
         self.factura[KEY.NIF] = self.factura[KEY.NIF].replace('.','')
+        self.factura[KEY.NIF] = self.factura[KEY.NIF].replace(',','')
+        if (len(self.factura[KEY.NIF]) == 11) & (self.factura[KEY.NIF][0:2] == 'ES'):
+            self.factura[KEY.NIF] = self.factura[KEY.NIF].replace('ES','')
 
         if not fb.validar_nif(self.factura[KEY.NIF]):
             return (f"{KEY.NIF} incorrecto")

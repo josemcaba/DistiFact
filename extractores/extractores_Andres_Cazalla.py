@@ -27,7 +27,6 @@ def extraerDatosFactura(pagina, empresa):
 
     regex = r"FACTURA\s+[\d]*\s+(.+)"
     factura[KEY.FECHA_FACT] = fb.re_search(regex, pagina)
-    factura[KEY.FECHA_OPER] = factura[KEY.FECHA_FACT]
     
     factura[KEY.CONCEPTO] = 700
 
