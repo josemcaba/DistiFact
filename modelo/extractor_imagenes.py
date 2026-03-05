@@ -119,16 +119,16 @@ class ExtractorImagenes:
             # imagen = cv2.imdecode(np.frombuffer(imagen_bytes, np.uint8), cv2.IMREAD_COLOR)
 
             # 1. Decodificar la imagen en escala de grises
-            gris = cv2.imdecode(np.frombuffer(imagen_bytes, np.uint8), cv2.IMREAD_GRAYSCALE)
-            _, imagen_bw_auto = cv2.threshold(gris, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+            imagen = cv2.imdecode(np.frombuffer(imagen_bytes, np.uint8), cv2.IMREAD_GRAYSCALE)
+            _, imagen = cv2.threshold(imagen, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
             # 2. Suavizado suave (filtro de mediana) para el ruido granular
             # Usamos un kernel de 3x3, el mínimo para no difuminar demasiado.
-            # suave = cv2.medianBlur(gris, 3)
+            # imagen = cv2.medianBlur(imagen, 3)
 
             # 3. Umbral Adaptativo: Para binarizar la imagen y manejar sombras
             # Este paso ya lo tenías, y es correcto.
-            # bw = cv2.adaptiveThreshold(suave, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
+            # imagen = cv2.adaptiveThreshold(imagen, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
             #                             cv2.THRESH_BINARY, 11, 2)
 
             # 4. Apertura Morfológica: LA SOLUCIÓN AL RUIDO PUNCTUAL
@@ -138,12 +138,10 @@ class ExtractorImagenes:
             # - Aplicamos la Apertura. Esto:
             #   a) Erode la imagen (elimina los puntos negros pequeños).
             #   b) Dilata la imagen (restaura el grosor de las letras).
-            # imagen = cv2.morphologyEx(bw, cv2.MORPH_OPEN, kernel)
+            # imagen = cv2.morphologyEx(imagen, cv2.MORPH_OPEN, kernel)
 
             # (Opcional) Si las letras quedan muy finas, puedes engrosarlas 
             # imagen = cv2.erode(imagen, kernel, iterations=1)
-            
-            imagen = imagen_bw_auto
 
             # Detectar y corregir orientación
             if angulo is None:
