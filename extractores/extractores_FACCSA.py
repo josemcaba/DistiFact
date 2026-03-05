@@ -28,19 +28,18 @@ def extraerDatosFactura(pagina, empresa):
     regex = r"FECHA\s*([\d.]+)"
     factura[KEY.FECHA_FACT] = fb.re_search(regex, pagina)
     factura[KEY.FECHA_FACT] = re.sub(r"\.", "/", factura[KEY.FECHA_FACT]) if factura[KEY.FECHA_FACT] else None
-    factura[KEY.FECHA_OPER] = factura[KEY.FECHA_FACT]
     
     factura[KEY.CONCEPTO] = 600
 
     regex = r"BASE\s*IMPONIB.\s*(.+)"
     factura[KEY.BASE_IVA] = fb.re_search(regex, pagina)
-    factura[KEY.TIPO_IVA] = 10
+    factura[KEY.TIPO_IVA] = 10.0
     regex = r"TOTAL\s*IVA\s*(.+)"
     factura[KEY.CUOTA_IVA] = fb.re_search(regex, pagina)
     
     factura[KEY.BASE_IRPF] = factura[KEY.BASE_IVA]
-    factura[KEY.TIPO_IRPF] = 0
-    factura[KEY.CUOTA_IRPF] = 0
+    factura[KEY.TIPO_IRPF] = 0.0
+    factura[KEY.CUOTA_IRPF] = 0.0
 
     factura[KEY.BASE_RE] = factura[KEY.BASE_IVA]
     factura[KEY.TIPO_RE] = 1.4
@@ -51,7 +50,6 @@ def extraerDatosFactura(pagina, empresa):
 
     factura[KEY.EMPRESA] = "FRIG. AND. CONSERVAS CARNES SA"
 
-    regex = r"TOTAL\s*FACTURA.*?([\d]+\s*,\s*\d+)"
-    factura[KEY.TOTAL_FACT] = fb.re_search(regex, pagina)
+    factura[KEY.TOTAL_FACT] = 0.0
 
     return([num_pag, factura])     

@@ -117,28 +117,33 @@ class VerificadorFactura:
 
     def corrige_por_total(self):
         base = self.factura[KEY.BASE_IVA]
-        tipo = self.factura[KEY.TIPO_IVA]
-        cuota = self.factura[KEY.CUOTA_IVA]
+        cuota_iva = self.factura[KEY.CUOTA_IVA]
+        cuota_re = self.factura[KEY.CUOTA_RE]
+        cuota_irpf = self.factura[KEY.CUOTA_IRPF]
         total = self.factura[KEY.TOTAL_FACT]
-        if not (isinstance(total, float) and isinstance(tipo, float)):
+        if not isinstance(total, float):
             return "Correccion por Total no calculable"
-        base_calculada = round(total / (1 + tipo / 100), 2)
-        cuota_calculada = round(total - base_calculada, 2)
-        if (base_calculada == base) & (cuota_calculada == cuota):
+        
+        self.factura[KEY.BASE_IVA]  = round((total-cuota_re-cuota_irpf) / (1 + self.factura[KEY.TIPO_IVA] / 100), 2)
+        self.factura[KEY.BASE_RE]   = round((total-cuota_iva-cuota_irpf) / (1 + self.factura[KEY.TIPO_RE] / 100), 2)
+        self.factura[KEY.BASE_IRPF] = round((total-cuota_iva-cuota_re) / (1 + self.factura[KEY.TIPO_IRPF] / 100), 2)
+        
+        self.factura[KEY.CUOTA_IVA] = round((total-cuota_re-cuota_irpf) - self.factura[KEY.BASE_IVA], 2)
+        if (self.factura[KEY.BASE_IVA] == base) & (self.factura[KEY.CUOTA_IVA] == cuota_iva):
             return False # No hay errores
-        self.factura[KEY.BASE_IVA] = base_calculada
-        self.factura[KEY.CUOTA_IVA] = cuota_calculada
-        self.factura[KEY.BASE_IRPF] = base_calculada
-        self.factura[KEY.BASE_RE] = base_calculada
-        return (f"Corregido Base ({base}) y/o Cuota ({cuota})")
+
+        return (f"Corregido Base({base}), IVA({cuota_iva})")
 
     def corrige_por_base(self):
-        base = self.factura[KEY.BASE_IVA]
-        tipo = self.factura[KEY.TIPO_IVA]
-        cuota = self.factura[KEY.CUOTA_IVA]
+        cuota_iva = self.factura[KEY.CUOTA_IVA]
+        cuota_re = self.factura[KEY.CUOTA_RE]
+        cuota_irpf = self.factura[KEY.CUOTA_IRPF]
         total = self.factura[KEY.TOTAL_FACT]
-        cuota_calculada = round(base * tipo / 100, 2)
-        total_calculado = round(base + cuota_calculada, 2)
-        self.factura[KEY.CUOTA_IVA] = cuota_calculada
-        self.factura[KEY.TOTAL_FACT] = total_calculado
-        return (f"Corregido Cuota ({cuota}) y/o Total ({total})") 
+
+        self.factura[KEY.CUOTA_IVA]  = round(self.factura[KEY.BASE_IVA] * self.factura[KEY.TIPO_IVA] / 100, 2)
+        self.factura[KEY.CUOTA_RE]   = round(self.factura[KEY.BASE_IVA] * self.factura[KEY.TIPO_RE] / 100, 2)
+        self.factura[KEY.CUOTA_IRPF] = round(self.factura[KEY.BASE_IVA] * self.factura[KEY.TIPO_IRPF] / 100, 2)
+        self.factura[KEY.TOTAL_FACT] = round(self.factura[KEY.BASE_IVA] + self.factura[KEY.CUOTA_IVA] + \
+                                             self.factura[KEY.CUOTA_RE] + self.factura[KEY.CUOTA_IRPF], 2)
+
+        return (f"Corregido IVA({cuota_iva}), RE({cuota_re}), IRPF({cuota_irpf}) y TOTAL ({total})") 
