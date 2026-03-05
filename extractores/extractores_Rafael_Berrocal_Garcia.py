@@ -39,8 +39,6 @@ def extraerDatosFactura(pagina, empresa):
     texto = texto[:-9] + texto[-9:].replace(" ", "")    # Elimina espacios en los últimos 9 caracteres
     regex = r"(\S+)$"                                   # Selecciona la última palabra que es el NIF
     factura[KEY.NIF] = fb.re_search(regex, texto)
-    if factura[KEY.NIF] == "B92573552":
-        factura[KEY.NIF] = "B92573252"
 
     factura[KEY.EMPRESA] = " ".join(texto.split()[:-1]) # Selecciona todo salvo la ultima palabra que es el NIF
     factura[KEY.EMPRESA] = factura[KEY.EMPRESA].replace(" CIF:","").replace(" NIE","").replace(". cif","")

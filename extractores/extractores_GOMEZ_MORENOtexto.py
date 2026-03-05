@@ -30,23 +30,25 @@ def extraerDatosFactura(pagina, empresa):
     regex = r"([0-9]{2}/[0-9]{2}/20[0-9]{2})\s"
     factura[KEY.FECHA_FACT] = ftb.re_search(regex, pagina)
 
+    # regex = r"([0-9][A-Z]/[0-9]{7})\s.*?\s([0-9]{2}/[0-9]{2}/[0-9]{4})"
+    # grupos = ftb.re_search_multiple(regex, pagina)
+    # grupos_ok = grupos and (len(grupos) == 2)
+    # factura[KEY.NUM_FACT] = grupos[0] if grupos_ok else None
+    # factura[KEY.FECHA_FACT] = grupos[1] if grupos_ok else None
+
     # regex = r"FACTURA.*\s([0-9][A-Z]/[0-9]{7})\s"
     # factura[KEY.NUM_FACT] = ftb.re_search(regex, pagina)
 
     # regex = r"FECHA.*\s([0-9]{2}/[0-9]{2}/[0-9]{4})\s"
     # factura[KEY.FECHA_FACT] = ftb.re_search(regex, pagina)
 
-    regex = r"([- —\d]+(?:[,.]\d+)?)"
+    regex = r"([\d]+[,.][\d]+)"
     grupos = re.findall(regex, pagina)
     grupos_ok = grupos and (len(grupos) >= 3)
     if grupos_ok:
-        factura[KEY.BASE_IVA]   = grupos[len(grupos)-3]
-        factura[KEY.CUOTA_IVA]  = grupos[len(grupos)-2]
+        factura[KEY.BASE_IVA] = grupos[len(grupos)-3]
+        factura[KEY.CUOTA_IVA] = grupos[len(grupos)-2]
         factura[KEY.TOTAL_FACT] = grupos[len(grupos)-1]
-
-    factura[KEY.BASE_IVA]   =  asegurar_decimal(re.sub(r"[ —]", "", factura[KEY.BASE_IVA]))
-    factura[KEY.CUOTA_IVA]  =  asegurar_decimal(re.sub(r"[ —]", "", factura[KEY.CUOTA_IVA]))
-    factura[KEY.TOTAL_FACT] =  asegurar_decimal(re.sub(r"[ —]", "", factura[KEY.TOTAL_FACT]))
 
     factura[KEY.TIPO_IVA] = 21.0
 
@@ -63,15 +65,3 @@ def extraerDatosFactura(pagina, empresa):
     factura[KEY.EMPRESA] = "GOMEZ MORENO MIJAS S.L."
 
     return([num_pag, factura]) 
-
-def asegurar_decimal(cadena):
-    # Si ya tiene punto o coma, no hacer nada
-    if "." in cadena or "," in cadena:
-        return cadena
-    
-    # Si no tiene separador, insertar coma en la tercera posición desde el final
-    if len(cadena) >= 3:
-        return cadena[:-2] + "," + cadena[-2:]
-    else:
-        # Por si la cadena es muy corta (ej: "5")
-        return "0," + cadena.zfill(2)
