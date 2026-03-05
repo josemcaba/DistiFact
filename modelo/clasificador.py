@@ -108,7 +108,10 @@ class ClasificadorFacturas:
             for concepto in conceptos_cuota:
                 error = verificador.calculo_cuota(concepto)
                 if error:
-                    factura.agregar_error(error)
+                    if "Corregido" in error:
+                        factura.agregar_observacion(error)
+                    else:
+                        factura.agregar_error(error)
         
             # Verificar cálculos totales
             error = verificador.calculos_totales()

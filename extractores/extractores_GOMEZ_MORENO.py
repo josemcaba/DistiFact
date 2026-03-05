@@ -36,17 +36,19 @@ def extraerDatosFactura(pagina, empresa):
     # regex = r"FECHA.*\s([0-9]{2}/[0-9]{2}/[0-9]{4})\s"
     # factura[KEY.FECHA_FACT] = ftb.re_search(regex, pagina)
 
-    regex = r"([- —\d]+(?:[,.]\d+)?)"
-    grupos = re.findall(regex, pagina)
+    factura[KEY.BASE_IVA] = None
+
+    regex = r"^([- —]*?(?:\d{2,}|\d+[,.]\d+))$"
+    grupos = re.findall(regex, pagina, flags=re.MULTILINE)
     grupos_ok = grupos and (len(grupos) >= 3)
     if grupos_ok:
         factura[KEY.BASE_IVA]   = grupos[len(grupos)-3]
         factura[KEY.CUOTA_IVA]  = grupos[len(grupos)-2]
         factura[KEY.TOTAL_FACT] = grupos[len(grupos)-1]
 
-    factura[KEY.BASE_IVA]   =  asegurar_decimal(re.sub(r"[ —]", "", factura[KEY.BASE_IVA]))
-    factura[KEY.CUOTA_IVA]  =  asegurar_decimal(re.sub(r"[ —]", "", factura[KEY.CUOTA_IVA]))
-    factura[KEY.TOTAL_FACT] =  asegurar_decimal(re.sub(r"[ —]", "", factura[KEY.TOTAL_FACT]))
+        factura[KEY.BASE_IVA]   =  asegurar_decimal(re.sub(r"[ —]", "", factura[KEY.BASE_IVA]))
+        factura[KEY.CUOTA_IVA]  =  asegurar_decimal(re.sub(r"[ —]", "", factura[KEY.CUOTA_IVA]))
+        factura[KEY.TOTAL_FACT] =  asegurar_decimal(re.sub(r"[ —]", "", factura[KEY.TOTAL_FACT]))
 
     factura[KEY.TIPO_IVA] = 21.0
 

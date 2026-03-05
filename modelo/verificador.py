@@ -63,6 +63,21 @@ class VerificadorFactura:
         self.factura[concepto] = valor
         return False # No hay errores
     
+    # def calculo_cuota(self, concepto):
+    #     if concepto == KEY.CUOTA_IVA:
+    #         base, tipo, cuota = KEY.BASE_IVA, KEY.TIPO_IVA, KEY.CUOTA_IVA
+    #     elif concepto == KEY.CUOTA_IRPF:
+    #         base, tipo, cuota = KEY.BASE_IRPF, KEY.TIPO_IRPF, KEY.CUOTA_IRPF
+    #     elif concepto == KEY.CUOTA_RE:
+    #         base, tipo, cuota = KEY.BASE_RE, KEY.TIPO_RE, KEY.CUOTA_RE
+    #     base = self.factura[base]
+    #     tipo = self.factura[tipo]
+    #     cuota = self.factura[cuota]
+    #     cuota_calculada = round(base * tipo / 100, 2)
+    #     if abs(cuota_calculada - cuota) >= 0.015:
+    #         return (f"{concepto}={cuota} != Calculado={cuota_calculada}")
+    #     return False # No hay errores
+
     def calculo_cuota(self, concepto):
         if concepto == KEY.CUOTA_IVA:
             base, tipo, cuota = KEY.BASE_IVA, KEY.TIPO_IVA, KEY.CUOTA_IVA
@@ -73,10 +88,21 @@ class VerificadorFactura:
         base = self.factura[base]
         tipo = self.factura[tipo]
         cuota = self.factura[cuota]
-        cuota_calculada = round(base * tipo / 100, 2)
-        if abs(cuota_calculada - cuota) >= 0.015:
-            return (f"{concepto}={cuota} != Calculado={cuota_calculada}")
-        return False # No hay errores
+        total = self.factura[KEY.TOTAL_FACT]
+        cuota_calculada_base = round(base * tipo / 100, 2)
+        cuota_calculada_total = round(total - (total/(1 + tipo / 100)), 2)
+        if cuota_calculada_base == cuota:
+            if cuota_calculada_total == cuota:
+                return False # No hay errores
+            else:
+                return self.corrige_por_base()
+        elif cuota_calculada_total == cuota:
+            return self.corrige_por_total()
+        elif cuota_calculada_base == cuota_calculada_total:
+            self.factura[concepto] = cuota_calculada_base
+            return (f"Corregido {concepto} ({cuota})")
+        else:
+            return (f"{concepto}={cuota} != Calculado={cuota_calculada_base}")
 
     def calculos_totales(self):
         base = self.factura[KEY.BASE_IVA]
@@ -98,11 +124,13 @@ class VerificadorFactura:
             return "Correccion por Total no calculable"
         base_calculada = round(total / (1 + tipo / 100), 2)
         cuota_calculada = round(total - base_calculada, 2)
+        if (base_calculada == base) & (cuota_calculada == cuota):
+            return False # No hay errores
         self.factura[KEY.BASE_IVA] = base_calculada
         self.factura[KEY.CUOTA_IVA] = cuota_calculada
         self.factura[KEY.BASE_IRPF] = base_calculada
         self.factura[KEY.BASE_RE] = base_calculada
-        return (f"Corregido por total: {total} [Base ({base}) y Cuota ({cuota})]")
+        return (f"Corregido Base ({base}) y/o Cuota ({cuota})")
 
     def corrige_por_base(self):
         base = self.factura[KEY.BASE_IVA]
@@ -113,4 +141,4 @@ class VerificadorFactura:
         total_calculado = round(base + cuota_calculada, 2)
         self.factura[KEY.CUOTA_IVA] = cuota_calculada
         self.factura[KEY.TOTAL_FACT] = total_calculado
-        return (f"Corregido por base: {base} [Cuota ({cuota}) y Total ({total})]") 
+        return (f"Corregido Cuota ({cuota}) y/o Total ({total})") 
