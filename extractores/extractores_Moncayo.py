@@ -6,7 +6,7 @@ import modelo.ft_basicas as fb
 # del PDF para ser validada como factura.
 # Las páginas que no contengan este texto son descartadas.
 
-identificador="FRA. NÚMERO"
+identificador="MONCAYO"
 
 #########################################################################
 #
@@ -19,41 +19,49 @@ identificador="FRA. NÚMERO"
 def extraerDatosFactura(pagina, empresa):
     num_pag = pagina[0]
     pagina = pagina[1]
-
+    print (pagina)
     factura = {}
 
-    regex = r"FRA.\s*NÚMERO:\s+(.+)"
+    regex = r"(\d+).*\s"
     factura[KEY.NUM_FACT] = fb.re_search(regex, pagina)
 
-    regex = r"FECHA\s*FACTURA:\s+(.+)"
-    factura[KEY.FECHA_FACT] = fb.re_search(regex, pagina)
-    factura[KEY.FECHA_OPER] = factura[KEY.FECHA_FACT]
-    
+    regex = r"Página.+\n+(.*)\b"
+    linea = fb.re_search(regex, pagina)
+    linea = re.sub(r" ", "", linea)
+    regex = r"(.{1,2})[/I1](.{2})[/I1](.{4})"
+    fecha = fb.re_search_multiple(regex, linea)
+    if fecha and len(fecha) == 3:
+        factura[KEY.FECHA_FACT] = fecha[0] + "/" + fecha[1] + "/" + fecha[2]
+        factura[KEY.FECHA_FACT] = re.sub(r"o", "0", factura[KEY.FECHA_FACT])
+        factura[KEY.FECHA_FACT] = re.sub(r"s", "5", factura[KEY.FECHA_FACT])
+        factura[KEY.FECHA_FACT] = re.sub(r"S", "5", factura[KEY.FECHA_FACT])
+        factura[KEY.FECHA_FACT] = re.sub(r"D", "0", factura[KEY.FECHA_FACT])
+        factura[KEY.FECHA_FACT] = re.sub(r"E", "0", factura[KEY.FECHA_FACT])
+
     factura[KEY.CONCEPTO] = 700
 
-    regex = r"BASE\s*IMPONIBLE\s+(.+)"
-    factura[KEY.BASE_IVA] = fb.re_search(regex, pagina)
-    
-    regex = r"IVA\s+(.+)\s*%"
-    factura[KEY.TIPO_IVA] = fb.re_search(regex, pagina)
-
-    regex = rf"IVA\s+{factura[KEY.TIPO_IVA]}\s*%\s+(.+)"
-    factura[KEY.CUOTA_IVA] = fb.re_search(regex, pagina)
-    
-    factura[KEY.BASE_IRPF] = factura[KEY.BASE_IVA]
-    factura[KEY.TIPO_IRPF] = 0.0
-    factura[KEY.CUOTA_IRPF] = 0.0
-    factura[KEY.BASE_RE] = factura[KEY.BASE_IVA]
-    factura[KEY.TIPO_RE] = 0.0
-    factura[KEY.CUOTA_RE] = 0.0
-
-    factura[KEY.NIF] = nif_cliente(pagina, empresa)
+    regex = r"(?m)^([\d A-Z]+)\s{3}\S+$"
+    factura[KEY.NIF] = fb.re_search(regex, pagina)
     factura[KEY.NIF] = re.sub(r" ", "", factura[KEY.NIF]) if factura[KEY.NIF] else None
 
-    regex = r"FECHA\s*FACTURA:\s*.+\s*(?:Referencia\s*[^\n]+)?\n([^\n]+)"
+    regex = r"25042336M(?:\n\s*)*\n(?:.\n)?(.+)"
     factura[KEY.EMPRESA] = fb.re_search(regex, pagina)
 
-    regex = r"TOTAL\s+(.+)"
+    regex = r"(?m)^([\d,.]+)\s+([\d,.]+)\s+([\d,.]+)\s+\S+"
+    importes = fb.re_search_multiple(regex, pagina)
+    if importes and len(importes) == 3:
+        factura[KEY.BASE_IVA] = importes[0]
+        factura[KEY.TIPO_IVA] = importes[1]
+        factura[KEY.CUOTA_IVA] = importes[2]    
+        factura[KEY.BASE_IRPF] = factura[KEY.BASE_IVA]
+        factura[KEY.TIPO_IRPF] = 0.0
+        factura[KEY.CUOTA_IRPF] = 0.0
+        factura[KEY.BASE_RE] = factura[KEY.BASE_IVA]
+        factura[KEY.TIPO_RE] = 0.0
+        factura[KEY.CUOTA_RE] = 0.0
+
+
+    regex = r"([\d,.]+)\sEuros"
     factura[KEY.TOTAL_FACT] = fb.re_search(regex, pagina)
 
     return([num_pag, factura])     

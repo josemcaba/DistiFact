@@ -2,7 +2,7 @@
     "1": {"nombre": "Pescadería Marengo", "nif": "33384986A", "funciones": "extractores_Pescaderias.py", "tipo": "PDFtexto"},
     "2": {"nombre": "Pescadería Salvador", "nif": "25041071M", "funciones": "extractores_Pescaderias.py", "tipo": "PDFtexto"},
     "3": {"nombre": "Gregorio Aranda", "nif": "25693621E", "funciones": "extractores_Gregorio.py", "tipo": "PDFtexto"},
-    "4": {"nombre": "Rosa Maria Moncayo", "nif": "25042336M", "funciones": "extractores_Moncayo.py", "tipo": "PDFtexto"},
+    "4": {"nombre": "Rosa Maria Moncayo", "nif": "25042336M", "funciones": "extractores_Moncayo.py", "tipo": "PDFimagen"},
     "5": {"nombre": "FACCSA", "nif": "A17001231", "funciones": "extractores_FACCSA.py", "tipo": "PDFimagen"},
     "6": {"nombre": "ADISADI", "nif": "B93643245", "funciones": "extractores_ADISADI.py", "tipo": "PDFimagen"},
     "7": {"nombre": "Ignacio Ibanez", "nif": "33360360X", "funciones": "extractores_Ignacio PDFtexto.py", "tipo": "PDFtexto"},
