@@ -6,15 +6,15 @@ import modelo.ft_basicas as fb
 # del PDF para ser validada como factura.
 # Las páginas que no contengan este texto son descartadas.
 
-identificador="Descripción"
+identificador="Total Factura"
 
 #########################################################################
 #
 # EXTRACCION
 #
 # Se limita exclusivamente a extraer los datos tal como aparecen en las
-# facturas. Sin ningún tipo de ajuste o manipulación. Eso se hace en la
-# fase de verificación
+# facturas intentando evitar cualquier manipulación. Eso se hace en la
+# fase de verificación para que sirva en todos los casos
 #
 def extraerDatosFactura(pagina, empresa):
     pagina = pagina[1]
@@ -30,12 +30,12 @@ def extraerDatosFactura(pagina, empresa):
     # Fecha Factura
     regex = r"Fecha\s*Factura:\s*(.*?)\s+"
     datos_comunes[KEY.FECHA_FACT] = fb.re_search(regex, pagina)
-    datos_comunes[KEY.FECHA_OPER] = datos_comunes[KEY.FECHA_FACT]
+    # datos_comunes[KEY.FECHA_OPER] = datos_comunes[KEY.FECHA_FACT]
 
     # Concepto fijo
     datos_comunes[KEY.CONCEPTO] = 600
 
-    # Datos de la empresa
+    # Datos de la factura
     datos_comunes[KEY.NIF] = empresa["nif"]
     datos_comunes[KEY.EMPRESA] = empresa["nombre"]
     datos_comunes[KEY.BASE_IVA] = ""

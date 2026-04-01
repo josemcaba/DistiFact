@@ -80,17 +80,27 @@ class VerificadorFactura:
 
     def calculo_cuota(self, concepto):
         if concepto == KEY.CUOTA_IVA:
-            base, tipo, cuota = KEY.BASE_IVA, KEY.TIPO_IVA, KEY.CUOTA_IVA
-        elif concepto == KEY.CUOTA_IRPF:
-            base, tipo, cuota = KEY.BASE_IRPF, KEY.TIPO_IRPF, KEY.CUOTA_IRPF
+            base  = self.factura[KEY.BASE_IVA]
+            tipo  = self.factura[KEY.TIPO_IVA]
+            cuota = self.factura[KEY.CUOTA_IVA]
+            total = self.factura[KEY.TOTAL_FACT] - self.factura[KEY.CUOTA_RE] + self.factura[KEY.CUOTA_IRPF]
+            cuota_calculada_base = round(base * tipo / 100, 2)
+            cuota_calculada_total = round(total - (total/(1 + tipo / 100)), 2)
         elif concepto == KEY.CUOTA_RE:
-            base, tipo, cuota = KEY.BASE_RE, KEY.TIPO_RE, KEY.CUOTA_RE
-        base = self.factura[base]
-        tipo = self.factura[tipo]
-        cuota = self.factura[cuota]
-        total = self.factura[KEY.TOTAL_FACT]
-        cuota_calculada_base = round(base * tipo / 100, 2)
-        cuota_calculada_total = round(total - (total/(1 + tipo / 100)), 2)
+            base  = self.factura[KEY.BASE_RE]
+            tipo  = self.factura[KEY.TIPO_RE]
+            cuota = self.factura[KEY.CUOTA_RE]
+            total = self.factura[KEY.TOTAL_FACT] - self.factura[KEY.CUOTA_IVA] + self.factura[KEY.CUOTA_IRPF]
+            cuota_calculada_base = round(base * tipo / 100, 2)
+            cuota_calculada_total = round(total - (total/(1 + tipo / 100)), 2)
+        elif concepto == KEY.CUOTA_IRPF:
+            base  = self.factura[KEY.BASE_IRPF]
+            tipo  = self.factura[KEY.TIPO_IRPF]
+            cuota = self.factura[KEY.CUOTA_IRPF]
+            total = self.factura[KEY.TOTAL_FACT] - self.factura[KEY.CUOTA_IVA] - self.factura[KEY.CUOTA_RE]
+            cuota_calculada_base = round(base * tipo / 100, 2)
+            cuota_calculada_total = round((total/(1 - tipo / 100)) - total, 2)
+
         if cuota_calculada_base == cuota:
             if cuota_calculada_total == cuota:
                 return False # No hay errores

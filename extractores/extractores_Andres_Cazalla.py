@@ -64,6 +64,10 @@ def nif_cliente(pagina, empresa):
     match = re.findall(regex, pagina)
     # Filtrar para descartar el NIF de la empresa y seleccionar el correcto
     nif_cliente = [nif for nif in match if nif.replace(" ", "") != empresa["nif"]]
-    # Devuelve el primer NIF distinto o None
-    return nif_cliente[0] if nif_cliente else None
-
+    
+    # Devuelve el unico NIF encontrado
+    if len(nif_cliente) != 1:
+        return None
+    
+    return nif_cliente[0]
+    
