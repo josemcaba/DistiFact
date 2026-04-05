@@ -6,7 +6,7 @@ import modelo.ft_basicas as fb
 # del PDF para ser validada como factura.
 # Las páginas que no contengan este texto son descartadas.
 
-identificador = "Datos Cliente"
+identificador = "25693621E"
 
 #########################################################################
 #
