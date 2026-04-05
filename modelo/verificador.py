@@ -101,8 +101,9 @@ class VerificadorFactura:
             cuota_calculada_base = round(base * tipo / 100, 2)
             cuota_calculada_total = round((total/(1 - tipo / 100)) - total, 2)
 
-        if cuota_calculada_base == cuota:
-            if cuota_calculada_total == cuota:
+        tolerancia = 0.015
+        if abs(cuota_calculada_base - cuota) <= tolerancia:
+            if abs(cuota_calculada_total - cuota) <= tolerancia:
                 return False # No hay errores
             else:
                 return self.corrige_por_base()
