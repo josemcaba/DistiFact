@@ -2,9 +2,10 @@
 Módulo que contiene la clase ProcesadorFacturas para procesar archivos de facturas.
 Refactorizado para soportar múltiples desgloses de IVA por factura.
 """
-from importlib import import_module
 import sys
 import os
+import logging
+from importlib import import_module
 from typing import List, Callable, Dict, Any, Optional
 
 # Librerías de terceros
@@ -17,6 +18,8 @@ from .extractor_imagenes import ExtractorImagenes
 from .extractor_texto import ExtractorTexto
 from modelo.factura import Factura
 from modelo.empresa import Empresa
+
+logger = logging.getLogger(__name__)
 
 class ProcesadorFacturas:
     """
@@ -49,15 +52,14 @@ class ProcesadorFacturas:
         if self._mensaje_callback:
             self._mensaje_callback(tipo, mensaje)
         else:
-            print(f"{tipo.upper()}: {mensaje}")
+            logger.info("%s: %s", tipo.upper(), mensaje)
     
     def _actualizar_progreso(self, actual: int, total: int) -> None:
         """Actualiza el progreso usando el callback si está disponible."""
         if self._progreso_callback:
             self._progreso_callback(actual, total)
         else:
-            sys.stdout.write(f'\rProcesando: {actual}/{total}')
-            sys.stdout.flush()
+            logger.info("Procesando: %d/%d", actual, total)
     
     def _mostrar_info_factura(self, info_factura: Dict[str, Any]) -> None:
         """Muestra información de una factura usando el callback """
@@ -80,8 +82,9 @@ class ProcesadorFacturas:
         Normaliza la salida del extractor y genera una lista de objetos Factura.
         Soporta:
         1. Lista de diccionarios (Nuevo estándar: múltiples IVAs).
+           Ejemplo: [{...IVA1...}, {...IVA2...}]
         2. Lista [num_pag, dict] (Estándar antiguo).
-        3. Diccionario único (Caso simple).
+        3. Dicccionario único (Caso simple).
         """
         facturas_generadas = []
 
@@ -89,10 +92,9 @@ class ProcesadorFacturas:
             return []
 
         # Caso 1: Nuevo Estándar - Lista de diccionarios (Uno por tipo de IVA)
-        # Ejemplo: [{...IVA1...}, {...IVA2...}]
         if isinstance(resultado_extractor, list) and len(resultado_extractor) > 0:
-            # Verificamos si es una lista de diccionarios puros
             if isinstance(resultado_extractor[0], dict):
+                # Lista pura de diccionarios
                 for datos in resultado_extractor:
                     factura = Factura(num_pagina, datos)
                     facturas_generadas.append(factura)
@@ -102,12 +104,23 @@ class ProcesadorFacturas:
                 datos = resultado_extractor[1]
                 factura = Factura(num_pagina, datos)
                 facturas_generadas.append(factura)
+
+            else:
+                self._mostrar_mensaje('error', f'Formato de lista no reconocido en página {num_pagina}')
+
+        # Caso 3: Diccionario único
+        elif isinstance(resultado_extractor, dict):
+            factura = Factura(num_pagina, resultado_extractor)
+            facturas_generadas.append(factura)
+
         else:
             self._mostrar_mensaje('error', f'Formato de retorno desconocido en página {num_pagina}: {type(resultado_extractor)}')
             return []
 
-        # Mostrar información de la factura procesada
-        self._mostrar_info_factura(factura.to_dict())
+        # Mostrar información de la última factura procesada
+        if facturas_generadas:
+            self._mostrar_info_factura(facturas_generadas[-1].to_dict())
+
         return facturas_generadas
     
     def procesar_archivo(self, ruta_archivo: str, empresa: Empresa) -> List[Factura]:

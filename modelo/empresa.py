@@ -70,6 +70,10 @@ class Empresa:
         """Representación en cadena de la empresa."""
         return f"{self._nombre} ({self._nif})"
 
+    def __repr__(self) -> str:
+        """Representación legible para debugging."""
+        return f"<Empresa(id={self._id}, nombre='{self._nombre}', nif='{self._nif}', tipo='{self._tipo}')>"
+
 
 class EmpresaManager:
     """

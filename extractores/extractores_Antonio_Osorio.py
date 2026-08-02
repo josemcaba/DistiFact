@@ -1,6 +1,6 @@
 import extractores.conceptos_factura as KEY
 import re
-import modelo.ft_basicas as ftb
+import modelo.ft_basicas as fb
 
 # El parámetro identificador es un texto que debe aparecer en la página
 # del PDF para ser validada como factura.
@@ -23,32 +23,32 @@ def extraerDatosFactura(pagina, empresa):
     factura = {}
 
     regex = r"factura\s*(.+)\s"
-    factura[KEY.NUM_FACT] = ftb.re_search(regex, pagina)
+    factura[KEY.NUM_FACT] = fb.re_search(regex, pagina)
 
     regex = r"(\d{2}\/\d{2}\/\d{4})"
-    factura[KEY.FECHA_FACT] = ftb.re_search(regex, pagina)
+    factura[KEY.FECHA_FACT] = fb.re_search(regex, pagina)
     factura[KEY.FECHA_OPER] = factura[KEY.FECHA_FACT]
 
     factura[KEY.CONCEPTO] = 600
 
     regex = r"factura\s*.+\s*(.+)\s"
-    factura[KEY.EMPRESA] = ftb.re_search(regex, pagina)
+    factura[KEY.EMPRESA] = fb.re_search(regex, pagina)
 
     factura[KEY.NIF] = nif_cliente(pagina, empresa)
     factura[KEY.NIF] = re.sub(r"O", "0", factura[KEY.NIF]) if factura[KEY.NIF] else None
 
     # regex = r"IVA\s*(\d+)\s*%"
-    # factura[KEY.TIPO_IVA] = ftb.re_search(regex, pagina)
+    # factura[KEY.TIPO_IVA] = fb.re_search(regex, pagina)
     factura[KEY.TIPO_IVA] = 21.0
 
     regex = r"Imponible\s*([\d,.]+\s*)"
-    factura[KEY.BASE_IVA] = ftb.re_search(regex, pagina)
+    factura[KEY.BASE_IVA] = fb.re_search(regex, pagina)
 
     regex = r"Total\s*IVA\s*([\d,.]+)\s*"
-    factura[KEY.CUOTA_IVA] = ftb.re_search(regex, pagina)
+    factura[KEY.CUOTA_IVA] = fb.re_search(regex, pagina)
 
     regex = r"TOTAL\s*([\d,.]+)\s*"
-    factura[KEY.TOTAL_FACT] = ftb.re_search(regex, pagina)
+    factura[KEY.TOTAL_FACT] = fb.re_search(regex, pagina)
 
 
     factura[KEY.TIPO_RE] = 0.0

@@ -91,6 +91,9 @@ class FrameProcesamiento(FrameBase):
     def _actualizar_info_archivo(self):
         """Actualiza la información del archivo en la cabecera."""
         ruta_archivo = self.controlador.obtener_ruta_archivo()
+        if not ruta_archivo:
+            self.lbl_archivo.config(text="")
+            return
         if len(ruta_archivo) > 75:
             ruta_archivo = ruta_archivo[-75:]
             ruta_archivo = "..." + ruta_archivo[ruta_archivo.index("/"):]

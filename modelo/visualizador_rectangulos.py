@@ -2,10 +2,13 @@
 Módulo para visualizar los rectángulos definidos en las imágenes de un PDF.
 Adaptado para la estructura orientada a objetos de la aplicación.
 """
+import logging
 import fitz  # PyMuPDF
 from .extractor_imagenes import ExtractorImagenes
 from .extractor_texto import ExtractorTexto
 from .exhibidor_imagenes import ExhibidorImagenes
+
+logger = logging.getLogger(__name__)
 
 # import ft_imagenes as fti
 
@@ -32,7 +35,7 @@ class VisualizadorRectangulos:
         elif self.controlador and hasattr(self.controlador, '_mensaje_callback') and self.controlador._mensaje_callback:
             self.controlador._mensaje_callback(tipo, mensaje)
         else:
-            print(f"[{tipo}] {mensaje}")
+            logger.info("[%s] %s", tipo, mensaje)
 
     def visualizar_rectangulos(self, ruta_pdf, empresa):
         """

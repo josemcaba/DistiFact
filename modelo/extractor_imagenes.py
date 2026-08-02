@@ -2,11 +2,14 @@
 
 import os
 import json
+import logging
 import cv2
 import numpy as np
 from PIL import Image
 import pytesseract
 from typing import Tuple, Optional
+
+logger = logging.getLogger(__name__)
 
 class ExtractorImagenes:
     def __init__(self, mensaje_callback=None):
@@ -16,7 +19,7 @@ class ExtractorImagenes:
         if self._mensaje_callback:
             self._mensaje_callback(tipo, mensaje)
         else:
-            print(f"[{tipo}] {mensaje}")
+            logger.info("[%s] %s", tipo, mensaje)
     
     def cargar_rectangulos_json(self, nif, ruta_json=None):
         """

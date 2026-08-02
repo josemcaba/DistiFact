@@ -46,9 +46,9 @@ def extraerDatosFactura(pagina, empresa):
     regex = r"TOTAL\s*R.E.\s*(.+)"
     factura[KEY.CUOTA_RE] = fb.re_search(regex, pagina)
 
-    factura[KEY.NIF] = "A17001231"
+    factura[KEY.NIF] = empresa["nif"]
 
-    factura[KEY.EMPRESA] = "FRIG. AND. CONSERVAS CARNES SA"
+    factura[KEY.EMPRESA] = empresa["nombre"]
 
     factura[KEY.TOTAL_FACT] = 0.0
 

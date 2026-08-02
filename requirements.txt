@@ -1,0 +1,24 @@
+# DistiFact - Dependencias de Python
+# Instalar con: pip install -r requirements.txt
+
+# --- PDF Processing ---
+pdfplumber>=0.11.0        # Extracción de texto de PDFs
+PyMuPDF>=1.25.0           # fitz - manipulación de PDFs (imágenes, OCR)
+PyPDF2>=3.0.0             # Unificación de PDFs
+
+# --- OCR ---
+pytesseract>=0.3.10       # Interfaz Python para Tesseract OCR
+# Requiere instalar Tesseract OCR en el sistema:
+#   Ubuntu/Debian: sudo apt-get install tesseract-ocr
+#   macOS: brew install tesseract
+#   Windows: descargar de https://github.com/UB-Mannheim/tesseract/wiki
+
+# --- Procesamiento de Imágenes ---
+opencv-python>=4.8.0      # cv2 - procesamiento de imágenes y dibujo de ROI
+pillow>=10.0.0            # PIL - compatibilidad con pytesseract
+numpy>=1.24.0             # Operaciones numéricas (usado por cv2, PIL)
+screeninfo>=0.8.0         # Detección de resolución de pantalla
+
+# --- Excel ---
+openpyxl>=3.1.0           # Lectura/escritura de archivos .xlsx
+pandas>=2.0.0             # Exportación de resultados a Excel

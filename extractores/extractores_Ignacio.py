@@ -36,7 +36,7 @@ def extraerDatosFactura(pagina, empresa):
 
     regex = r"info@servinfotec\.com 29004 MALAGA\s(.*)"
     factura[KEY.NIF] = fb.re_search(regex, pagina)
-    factura[KEY.NIF] = re.sub(r"['. -]", "", factura[KEY.NIF])
+    factura[KEY.NIF] = re.sub(r"['. -]", "", factura[KEY.NIF]) if factura[KEY.NIF] else None
     
     regex = r"TOTAL\n.+?\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s(.+?)\s"
     grupos = fb.re_search_multiple(regex, pagina)

@@ -20,9 +20,6 @@ def extraerDatosFactura(pagina, empresa):
     num_pag = pagina[0]
     pagina = pagina[1]
 
-    print(pagina)
-    print('----------------------------------')
-
     factura = {}
 
     factura[KEY.CONCEPTO] = 700

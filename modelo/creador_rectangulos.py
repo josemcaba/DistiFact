@@ -1,12 +1,15 @@
 # modelo/creador_rectangulos.py
 import os
 import json
+import logging
 import cv2
 from typing import Dict, Any
 from .extractor_imagenes import ExtractorImagenes
 from .interfaz_rectangulos import InterfazRectangulos
 import pytesseract
 import fitz  # PyMuPDF
+
+logger = logging.getLogger(__name__)
 
 class CreadorRectangulos:
     def __init__(self, controlador):
@@ -18,14 +21,20 @@ class CreadorRectangulos:
         self.rectangle_counter = 1
         self.img = None
         
-        # Configuración de Tesseract - mantener la existente
-        # Se mantiene por compatibilidad, aunque lo ideal sería tenerlo configurable
-        try:
-            # Windows (puede fallar en otros sistemas)
-            pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-        except:
-            # En otros sistemas, tesseract debería estar en el PATH
-            pass
+        # Configuración de Tesseract - compatible con Windows, Linux y macOS
+        # En Windows se busca en la ruta por defecto; en otros sistemas
+        # se asume que tesseract está en el PATH (instalado via apt/brew)
+        import shutil
+        tesseract_path = shutil.which("tesseract")
+        if tesseract_path:
+            pytesseract.pytesseract.tesseract_cmd = tesseract_path
+        else:
+            # Windows por defecto
+            for ruta in (r'C:\Program Files\Tesseract-OCR\tesseract.exe',
+                         r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'):
+                if os.path.isfile(ruta):
+                    pytesseract.pytesseract.tesseract_cmd = ruta
+                    break
 
     def _mensaje(self, tipo: str, mensaje: str):
         if self._mensaje_callback:
@@ -33,7 +42,7 @@ class CreadorRectangulos:
         elif self.controlador and hasattr(self.controlador, '_mensaje_callback') and self.controlador._mensaje_callback:
             self.controlador._mensaje_callback(tipo, mensaje)
         else:
-            print(f"[{tipo}] {mensaje}")
+            logger.info("[%s] %s", tipo, mensaje)
 
     def _obtener_ruta_rectangulos_json(self) -> str:
         """

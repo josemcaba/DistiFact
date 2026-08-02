@@ -1,6 +1,6 @@
 import extractores.conceptos_factura as KEY
 import re
-import modelo.ft_basicas as ftb
+import modelo.ft_basicas as fb
 
 # El parámetro identificador es un texto que debe aparecer en la página
 # del PDF para ser validada como factura.
@@ -19,28 +19,27 @@ identificador="TOTAL FACTURA"
 def extraerDatosFactura(pagina, empresa):
     num_pag = pagina[0]
     pagina = pagina[1]
-    print(pagina)
     factura = {}
 
     factura[KEY.CONCEPTO] = 600
 
     regex = r"([0-9][A-Z]/[0-9]{7})\s"
-    factura[KEY.NUM_FACT] = ftb.re_search(regex, pagina)
+    factura[KEY.NUM_FACT] = fb.re_search(regex, pagina)
 
     regex = r"([0-9]{2}/[0-9]{2}/20[0-9]{2})\s"
-    factura[KEY.FECHA_FACT] = ftb.re_search(regex, pagina)
+    factura[KEY.FECHA_FACT] = fb.re_search(regex, pagina)
 
     # regex = r"([0-9][A-Z]/[0-9]{7})\s.*?\s([0-9]{2}/[0-9]{2}/[0-9]{4})"
-    # grupos = ftb.re_search_multiple(regex, pagina)
+    # grupos = fb.re_search_multiple(regex, pagina)
     # grupos_ok = grupos and (len(grupos) == 2)
     # factura[KEY.NUM_FACT] = grupos[0] if grupos_ok else None
     # factura[KEY.FECHA_FACT] = grupos[1] if grupos_ok else None
 
     # regex = r"FACTURA.*\s([0-9][A-Z]/[0-9]{7})\s"
-    # factura[KEY.NUM_FACT] = ftb.re_search(regex, pagina)
+    # factura[KEY.NUM_FACT] = fb.re_search(regex, pagina)
 
     # regex = r"FECHA.*\s([0-9]{2}/[0-9]{2}/[0-9]{4})\s"
-    # factura[KEY.FECHA_FACT] = ftb.re_search(regex, pagina)
+    # factura[KEY.FECHA_FACT] = fb.re_search(regex, pagina)
 
     regex = r"([\d]+[,.][\d]+)"
     grupos = re.findall(regex, pagina)

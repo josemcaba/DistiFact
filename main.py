@@ -3,6 +3,8 @@ Punto de entrada principal de la aplicación DistiFact con interfaz gráfica Tki
 Refactorizado para mayor robustez y manejo de errores visual.
 """
 import sys
+import os
+import logging
 import tkinter as tk
 from tkinter import messagebox
 from pathlib import Path
@@ -12,6 +14,13 @@ from pathlib import Path
 raiz_proyecto = Path(__file__).parent.absolute()
 if str(raiz_proyecto) not in sys.path:
     sys.path.append(str(raiz_proyecto))
+
+# Configurar logging para la aplicación
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+    datefmt='%H:%M:%S'
+)
 
 # Importar componentes de la aplicación
 # Se asume que controlador y vista están en el mismo nivel que main.py
@@ -51,7 +60,7 @@ def main():
             "Por favor, asegúrese de que el archivo 'empresas.json' existe "
             "dentro de la carpeta 'datos'."
         )
-        print(f"Error: {mensaje}") # Log en consola por si acaso
+        logging.error(mensaje)
         mostrar_error_critico("Archivo no encontrado", mensaje)
         sys.exit(1)
     

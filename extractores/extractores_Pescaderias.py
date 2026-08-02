@@ -55,21 +55,20 @@ def extraerDatosFactura(pagina, empresa):
     regex = rf"{empresa['nombre']}\s*(.+)"
     factura[KEY.EMPRESA] = fb.re_search(regex, pagina)
     if factura[KEY.EMPRESA] and len(factura[KEY.EMPRESA]) > 40:
-        acorta_nombre_cliente(factura)
+        factura[KEY.EMPRESA] = acorta_nombre_cliente(factura[KEY.EMPRESA])
 
     regex = r"Total\s*([-\d,\.]+)\s*€?"
     factura[KEY.TOTAL_FACT] = fb.re_search(regex, pagina)
 
     return([num_pag, factura]) 
 
-def acorta_nombre_cliente(factura):
-    nombre = factura[KEY.EMPRESA]
+def acorta_nombre_cliente(nombre):
     if nombre[:20] == "Ramírez Sánchez S.L.":
-        nombre = "Ramírez Sánchez S.L. 'Rest Refrectorium'"
+        return "Ramírez Sánchez S.L. 'Rest Refrectorium'"
     elif nombre[:21] == "Luis Gaspar Rodríguez":
-        nombre = "Luis Gaspar Rodríguez 'Rest. El Rengue'"
+        return "Luis Gaspar Rodríguez 'Rest. El Rengue'"
     elif nombre[:8] == "La Magna":
-        nombre = "La Magna. La oficina se sienta a la mesa"
+        return "La Magna. La oficina se sienta a la mesa"
     elif nombre[:19] == "Bar Mesón `El Tejón":
-        nombre = "Bar Mesón 'El Tejón'"
+        return "Bar Mesón 'El Tejón'"
     return nombre

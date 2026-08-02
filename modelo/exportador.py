@@ -1,10 +1,13 @@
 """
 Módulo que contiene la clase ExportadorExcel para exportar facturas a Excel.
 """
+import logging
 import pandas as pd
 from typing import List, Dict, Any
 import extractores.conceptos_factura as KEY
 from modelo.factura import Factura
+
+logger = logging.getLogger(__name__)
 
 class ExportadorExcel:
     """
@@ -34,7 +37,7 @@ class ExportadorExcel:
         if self._mensaje_callback:
             self._mensaje_callback(tipo, mensaje)
         else:
-            print(f"{tipo.upper()}: {mensaje}")
+            logger.info("%s: %s", tipo.upper(), mensaje)
     
     def exportar(self, facturas_correctas: List[Factura], 
                 facturas_con_errores: List[Factura], 

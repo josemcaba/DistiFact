@@ -118,3 +118,17 @@ class Factura:
         if self._observaciones:
             resultado["Observaciones"] = ", ".join(self._observaciones)
         return resultado
+    
+    def __repr__(self) -> str:
+        """Representación legible de la Factura para debugging."""
+        num_fact = self._datos.get("Factura", "?")
+        empresa = self._datos.get("Empresa", "?")
+        total = self._datos.get("Total Factura", "?")
+        status = "ERROR" if self.tiene_errores() else "OK"
+        return f"<Factura(página={self._num_pagina}, nº={num_fact}, empresa='{empresa}', total={total}, {status})>"
+    
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Factura):
+            return NotImplemented
+        return (self._num_pagina == other._num_pagina 
+                and self._datos == other._datos)

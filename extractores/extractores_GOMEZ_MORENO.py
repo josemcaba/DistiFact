@@ -1,6 +1,6 @@
 import extractores.conceptos_factura as KEY
 import re
-import modelo.ft_basicas as ftb
+import modelo.ft_basicas as fb
 
 # El parámetro identificador es un texto que debe aparecer en la página
 # del PDF para ser validada como factura.
@@ -25,16 +25,16 @@ def extraerDatosFactura(pagina, empresa):
     factura[KEY.CONCEPTO] = 600
 
     regex = r"([0-9][A-Z]/[0-9]{7})\s"
-    factura[KEY.NUM_FACT] = ftb.re_search(regex, pagina)
+    factura[KEY.NUM_FACT] = fb.re_search(regex, pagina)
 
     regex = r"([0-9]{2}/[0-9]{2}/20[0-9]{2})\s"
-    factura[KEY.FECHA_FACT] = ftb.re_search(regex, pagina)
+    factura[KEY.FECHA_FACT] = fb.re_search(regex, pagina)
 
     # regex = r"FACTURA.*\s([0-9][A-Z]/[0-9]{7})\s"
-    # factura[KEY.NUM_FACT] = ftb.re_search(regex, pagina)
+    # factura[KEY.NUM_FACT] = fb.re_search(regex, pagina)
 
     # regex = r"FECHA.*\s([0-9]{2}/[0-9]{2}/[0-9]{4})\s"
-    # factura[KEY.FECHA_FACT] = ftb.re_search(regex, pagina)
+    # factura[KEY.FECHA_FACT] = fb.re_search(regex, pagina)
 
     factura[KEY.BASE_IVA] = None
 
@@ -60,9 +60,9 @@ def extraerDatosFactura(pagina, empresa):
     factura[KEY.TIPO_RE] = 0.0
     factura[KEY.CUOTA_RE] = 0.0
 
-    factura[KEY.NIF] = "B92421601"
+    factura[KEY.NIF] = empresa["nif"]
 
-    factura[KEY.EMPRESA] = "GOMEZ MORENO MIJAS S.L."
+    factura[KEY.EMPRESA] = empresa["nombre"]
 
     return([num_pag, factura]) 
 
