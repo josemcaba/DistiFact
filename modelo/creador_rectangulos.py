@@ -11,6 +11,7 @@ import fitz  # PyMuPDF
 class CreadorRectangulos:
     def __init__(self, controlador):
         self.controlador = controlador
+        self._mensaje_callback = None
         self.extractor = ExtractorImagenes()
         self.interfaz = InterfazRectangulos()
         self.rectangles = {}
@@ -27,7 +28,9 @@ class CreadorRectangulos:
             pass
 
     def _mensaje(self, tipo: str, mensaje: str):
-        if self.controlador and hasattr(self.controlador, '_mensaje_callback'):
+        if self._mensaje_callback:
+            self._mensaje_callback(tipo, mensaje)
+        elif self.controlador and hasattr(self.controlador, '_mensaje_callback') and self.controlador._mensaje_callback:
             self.controlador._mensaje_callback(tipo, mensaje)
         else:
             print(f"[{tipo}] {mensaje}")

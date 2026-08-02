@@ -35,6 +35,8 @@ class Controlador:
         
         # Callbacks
         self._factura_callback = None  # <--- Nuevo callback para información de factura
+        self._mensaje_callback = None   # <--- Callback para mensajes de estado
+        self._progreso_callback = None  # <--- Callback para progreso
     
     def iniciar(self, ruta_json: str = "empresas.json") -> bool:
         """
@@ -139,9 +141,16 @@ class Controlador:
             mensaje_callback: Función para mostrar mensajes (tipo, mensaje)
             factura_callback: Función para mostrar información de factura procesada
         """
-        self._procesador.set_callbacks(progreso_callback, mensaje_callback, factura_callback)  # <--- Pasar al procesador
+        # Almacenar en el controlador para que VisualizadorRectangulos y
+        # CreadorRectangulos puedan acceder cuando no tienen su propio callback
+        self._progreso_callback = progreso_callback
+        self._mensaje_callback = mensaje_callback
+        self._factura_callback = factura_callback
+
+        self._procesador.set_callbacks(progreso_callback, mensaje_callback, factura_callback)
         self._exportador.set_mensaje_callback(mensaje_callback)
         self._creador.set_mensaje_callback(mensaje_callback)
+        self._visualizador.set_mensaje_callback(mensaje_callback)
     
     def procesar_archivo(self) -> List[Factura]:
         """

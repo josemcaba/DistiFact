@@ -21,12 +21,15 @@ class VisualizadorRectangulos:
             controlador: Instancia del controlador de la aplicación
         """
         self.controlador = controlador
+        self._mensaje_callback = None
         self.extractor = ExtractorImagenes()
         self.ocr = ExtractorTexto()
         self.exhibidor = ExhibidorImagenes()
 
     def _mensaje(self, tipo: str, mensaje: str):
-        if self.controlador and hasattr(self.controlador, '_mensaje_callback'):
+        if self._mensaje_callback:
+            self._mensaje_callback(tipo, mensaje)
+        elif self.controlador and hasattr(self.controlador, '_mensaje_callback') and self.controlador._mensaje_callback:
             self.controlador._mensaje_callback(tipo, mensaje)
         else:
             print(f"[{tipo}] {mensaje}")
@@ -68,3 +71,12 @@ class VisualizadorRectangulos:
         except Exception as e:
             self._mensaje("error", f"Error al visualizar rectángulos: {str(e)}")
             return False
+
+    def set_mensaje_callback(self, callback):
+        """
+        Establece la función de callback para mostrar mensajes.
+
+        Args:
+            callback: Función para mostrar mensajes (tipo, mensaje)
+        """
+        self._mensaje_callback = callback
